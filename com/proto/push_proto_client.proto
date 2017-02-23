@@ -1,0 +1,80 @@
+import "push_proto_common.proto";
+
+enum ClientMsgType
+{
+    CMT_LOGIN_REQ = 1;
+    CMT_LOGIN_RESP = 2;
+    CMT_PUSH_MSG = 3;
+    CMT_PUSH_ACK = 4;
+    CMT_UPDATE_READ = 5;
+    CMT_HEATBEAT = 100;
+}
+
+//消息头
+message ClientMsgHead
+{
+    optional string client_id = 1;
+    optional ClientMsgType type = 2;
+}
+
+//消息
+message PushMessage
+{
+    optional ClientMsgHead message_head = 1;
+    optional bytes message_body = 2;    //二进制流，内容为各消息的序列化后内容
+}
+
+
+//客户端登陆请求, 用于client_id生成。
+//如果CientMsgHead里的client_id为空，则生成
+message LoginRequest
+{
+    optional string imsi = 1;
+    optional int32 time = 2;
+}
+
+//服务器返回客户端的登陆请求
+message LoginResponse
+{
+	optional ResultCode result = 1;   //如果失败，则没有以下信息。一般为成功
+    optional string key = 2;    //后续密文的密钥
+    optional bytes cipher = 3;     //密文，为CipherContent序列化后加密
+}
+
+//登录成功后的包含真是密钥的密文
+message CipherContent
+{
+    optional string true_key = 1;
+    optional string client_id = 2;  //如果登录时没有，则会生成填写，否则为空
+}
+
+//服务端推送消息
+message SvrPushMessage
+{
+    optional string appid = 1;
+    optional string appname = 2;
+	optional int64	msgid = 3;
+    optional bytes msg = 4;        //由php推送，格式为json
+}
+
+//客户端收到推送信息确认
+message ClientPushAck
+{
+    optional ResultCode result = 1;
+	optional int64 msgid = 2;
+}
+
+//客户端上报用户点击消息
+message ClientUpdateRead
+{
+    optional int64 msgid = 1;
+}
+
+//客户端发送心跳包
+message HeartbeatMsg
+{
+    //客户端时间
+    optional int32 time = 1;
+}
+
+

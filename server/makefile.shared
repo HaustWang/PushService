@@ -1,0 +1,45 @@
+#tools
+export CC = gcc
+export CXX = g++
+export RM = rm -rf
+export CP = cp -rf
+export AR = ar rcs
+export LD = ld
+export CFLAGS = -Wall -O0 -g -pipe -fno-strict-aliasing -rdynamic -Wno-sign-compare
+export CXXFLAGS = -Wall -O0 -g -pipe -fno-strict-aliasing -rdynamic -Wno-sign-compare
+export SHARED_FLAGS = -shared
+
+#define dirs
+
+RELEASE_DIR := $(PROJECT_DIR)/deploy
+BIN_DIR     := $(RELEASE_DIR)/bin
+CONF_DIR    := $(RELEASE_DIR)/conf
+OPENSOURCE_DIR := $(PROJECT_DIR)/opensource/
+
+INC_DIR := -I$(PROJECT_DIR)/commonlib/ -I$(PROJECT_DIR)/frame/push_common -I$(PROJECT_DIR)/frame/proto -I$(OPENSOURCE_DIR)
+INC_DIR += $(addprefix -I, $(shell ls -dF | grep '/$$'))
+INC_DIR += $(addprefix -I, $(shell ls -dF $(OPENSOURCE_DIR)/* | grep '/$$'))
+INC_DIR += $(addprefix -I, $(addsuffix include, $(shell ls -dF $(OPENSOURCE_DIR)/* | grep '/$$')))
+#INC_DIR     := $(addprefix -I,$(shell find $(SRCDIR) -type d | egrep -v '\.\.$$|\.svn')) 
+#INC_DIR +=  $(addprefix -I,$(shell find $(OPENSOURCE_DIR) -type d -name 'include' | egrep -v '\.\.$$|\.svn'))
+#INC_DIR += $(addprefix -I,$(addsuffix /include,$(shell find $(OPENSOURCE_DIR) -type d | egrep -v '\.\.$$|\.svn|\.git')))
+
+$(shell mkdir -p $(BIN_DIR))
+
+# define options
+LIB_DIR := -L$(PROJECT_DIR)/commonlib/ -L$(OPENSOURCE_DIR)/libs/ -L$(PROJECT_DIR)/frame/proto -L$(PROJECT_DIR)/frame/push_common 
+
+INC_FLAGS := $(INC_DIR)
+LD_FLAGS := -L/usr/lib/x86_64-linux-gnu $(LIB_DIR) -BStatic -lpushcommon -lpushproto -lcommon -ljson -llog4cplus -levent -lprotobuf -rdynamic -lssl -lpthread -lrt 
+
+#define dep dirs
+DEP_DIR := .obj
+$(shell if [ ! -d $(DEP_DIR) ] ; then mkdir -p $(DEP_DIR); fi)
+
+ifeq "$(DEBUG)" "no"
+	VERSION_STR = --- This is a RELEASE version!! ---
+else
+	VERSION_STR = --- This is a DEBUG version!! ---
+	CXXFLAGS += -D_DEBUG_
+endif
+

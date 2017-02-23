@@ -1,0 +1,11 @@
+src/liblog4cplus_la-win32consoleappender.lo \
+  src/liblog4cplus_la-win32consoleappender.o:  \
+ src/win32consoleappender.cxx include/log4cplus/config.hxx \
+  include/log4cplus/config/defines.hxx \
+  include/log4cplus/helpers/thread-config.h
+
+include/log4cplus/config.hxx:
+
+include/log4cplus/config/defines.hxx:
+
+include/log4cplus/helpers/thread-config.h:

@@ -1,0 +1,32 @@
+{
+  "_content":"server_type description: phpproxy-1, connector-2, onliner-3, dbproxy-4, dbworker-5",
+  "center":{
+    "log_level":7,
+    "log_dir":"../log/",
+    "port":19988
+  },
+  "connector":{
+    "log_level":7,
+    "log_dir":"../log/"
+  },
+  "online":{
+    "log_level":7,
+    "log_dir":"../log/"
+  },
+  "dbproxy":{
+    "log_level":7,
+    "log_dir":"../log/"
+  },
+  "dbworker":{
+    "log_level":7,
+    "log_dir":"../log/",
+    "redis_ip":"127.0.0.1",
+    "redis_port":6379
+  },
+  "phpproxy":{
+    "log_level":7,
+    "log_dir":"../log/",
+    "http_listen":12000
+  }
+}
+

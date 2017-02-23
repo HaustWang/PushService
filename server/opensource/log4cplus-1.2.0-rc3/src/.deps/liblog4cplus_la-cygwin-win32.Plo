@@ -1,0 +1,2 @@
+src/liblog4cplus_la-cygwin-win32.lo src/liblog4cplus_la-cygwin-win32.o:  \
+ src/cygwin-win32.cxx

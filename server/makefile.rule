@@ -1,0 +1,23 @@
+# generate dep file
+-include $(patsubst %.c  , $(DEP_DIR)/%.d, $(wildcard *.c  ))
+-include $(patsubst %.cc , $(DEP_DIR)/%.d, $(wildcard *.cc ))
+-include $(patsubst %.cpp, $(DEP_DIR)/%.d, $(wildcard *.cpp))
+
+#default rules
+$(DEP_DIR)/%.o : %.c
+	$(CXX) $(CFLAGS) $(INC_FLAGS) -c -o $@ $<
+
+$(DEP_DIR)/%.o : %.cc
+	$(CXX) $(CXXFLAGS) $(INC_FLAGS) -c -o $@ $<
+
+$(DEP_DIR)/%.o : %.cpp
+	$(CXX) $(CXXFLAGS) $(INC_FLAGS) -c -o $@ $<
+
+$(DEP_DIR)/%.d : %.c
+	@$(CXX) -MM $(CFLAGS) $(INC_FLAGS) $<    | sed 's,\($*\)\.o[ :]*,$(DEP_DIR)/\1.o $@ : ,g' >$@
+
+$(DEP_DIR)/%.d : %.cc
+	@$(CXX) -MM $(CXXFLAGS) $(INC_FLAGS) $<    | sed 's,\($*\)\.o[ :]*,$(DEP_DIR)/\1.o $@ : ,g' >$@
+
+$(DEP_DIR)/%.d : %.cpp
+	@$(CXX) -MM $(CXXFLAGS) $(INC_FLAGS) $<    | sed 's,\($*\)\.o[ :]*,$(DEP_DIR)/\1.o $@ : ,g' >$@

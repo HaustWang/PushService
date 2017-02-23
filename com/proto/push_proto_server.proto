@@ -1,0 +1,138 @@
+import "push_proto_common.proto";
+
+enum SvrMsgType
+{
+    SMT_REG_REQ = 1;    //server注册
+    SMT_REG_RESP = 2;   //server注册回复
+    SMT_UPDATE_USER = 3;    //更新用户状态
+    SMT_USER_MSG_ACK = 4;   //用户收到推送
+    SMT_USER_READ_MSG = 5;  //用户点击推送
+    SMT_KICK_USER = 7;  //广播connector踢掉指定玩家
+    SMT_TRANSFER_MSG = 8;   //转发消息
+    SMT_PUSH_MSG = 9;   //推送消息
+    SMT_INSERT_MSG = 10;    //向redis里插数据
+    SMT_CONFIG_REQ = 13;    //向中心服务请求配置
+    SMT_CONFIG_RESP = 14;   //中心服相应配置
+    SMT_BROADCAST_ADDR = 15; //广播新的服务器地址
+    SMT_BROADCAST_CONFIG = 16; //配置修改广播
+}
+
+message SvrMsgHead
+{
+    optional SvrMsgType type = 1;
+    optional string client_id = 2;
+    optional string appid = 3;
+    optional int32 src_svr_type = 4;
+    optional int32 src_svr_id = 5;
+    optional int32 dst_svr_type = 6;
+    optional int32 dst_svr_id = 7;
+    optional int32 proxy_svr_id = 8;
+    optional bool  is_broadcast = 9;
+}
+
+message SvrMsg
+{
+    optional SvrMsgHead head = 1;
+    optional bytes body = 2;
+}
+
+//客户端登陆请求
+message SvrRegRequest
+{
+	optional int32 svr_id = 1;
+    optional int32 svr_type = 2;
+}
+
+//服务器返回客户端的登陆请求
+message SvrRegResponse
+{
+	optional ResultCode result=1;
+}
+
+message SvrUpdateUser 
+{
+    optional int32 connector_id = 1;
+    optional bool is_online = 2; 
+}
+
+message SvrUserMsgAck 
+{
+    optional int64 msgid = 1;
+}
+
+message SvrUserReadMsg 
+{
+    optional int64 msgid = 1;
+}
+
+message SvrTransferMsg
+{
+    optional int64 msgid = 1;
+    optional bytes content = 2;
+}
+
+//客户端发送心跳包
+message SvrHeartbeatMsg
+{
+    //客户端时间
+    optional int64 time = 1;
+}
+
+message SvrInsertMsg
+{
+    optional uint32 msgid = 1;
+    optional string client_ids = 2;
+    optional bytes msg = 3;
+    optional int32 expire_time = 4;
+}
+
+message SvrAddress
+{
+    optional int32 svr_type = 1;
+    optional string ip = 2;
+    optional int32 port = 3;
+}
+
+message SvrConfigReq
+{
+    optional SvrAddress address = 1;
+}
+
+message SvrConfig
+{
+    //common
+    optional int32 log_type = 1;
+    optional string log_dir = 2;
+    optional int32 log_level = 3;
+    optional bytes log_config = 4;
+
+    //phpproxy
+    optional int32 http_listen = 11;
+    optional string php_host = 12;
+    optional int32 php_port = 13;
+
+    //connector
+    optional int32 client_outoftime = 21;
+
+    //onliner
+
+    //dbproxy
+
+    //dbworker
+    optional string redis_ip = 51;
+    optional int32 redis_port = 52;
+}
+
+message SvrConfigResp
+{
+    optional SvrConfig config = 1;
+
+    //该服务器需要连接的服务器地址
+    repeated SvrAddress peer_addresses = 2;
+}
+
+message SvrBroadcastAddress
+{
+    repeated SvrAddress peer_addresses = 1;
+}
+

@@ -1,0 +1,10 @@
+src/liblog4cplus_la-nteventlogappender.lo \
+  src/liblog4cplus_la-nteventlogappender.o: src/nteventlogappender.cxx \
+  include/log4cplus/config.hxx include/log4cplus/config/defines.hxx \
+  include/log4cplus/helpers/thread-config.h
+
+include/log4cplus/config.hxx:
+
+include/log4cplus/config/defines.hxx:
+
+include/log4cplus/helpers/thread-config.h:
