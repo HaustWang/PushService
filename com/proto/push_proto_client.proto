@@ -51,10 +51,8 @@ message CipherContent
 //服务端推送消息
 message SvrPushMessage
 {
-    optional string appid = 1;
-    optional string appname = 2;
-	optional int64	msgid = 3;
-    optional bytes msg = 4;        //由php推送，格式为json
+	optional int64	msgid = 1;
+    optional bytes msg = 2;        //由php推送，格式为json
 }
 
 //客户端收到推送信息确认

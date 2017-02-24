@@ -1,5 +1,15 @@
 import "push_proto_common.proto";
 
+enum ServerType
+{
+    SERVER_TYPE_CENTER = 0;
+    SERVER_TYPE_PROXY = 1;
+    SERVER_TYPE_CONNECTOR = 2;
+    SERVER_TYPE_PHP_PROXY = 3;
+    SERVER_TYPE_DB_WORKER = 4;
+    SERVER_TYPE_THIRD_PROXY = 5;
+};
+
 enum SvrMsgType
 {
     SMT_REG_REQ = 1;    //server注册
@@ -21,7 +31,6 @@ message SvrMsgHead
 {
     optional SvrMsgType type = 1;
     optional string client_id = 2;
-    optional string appid = 3;
     optional int32 src_svr_type = 4;
     optional int32 src_svr_id = 5;
     optional int32 dst_svr_type = 6;
@@ -49,18 +58,18 @@ message SvrRegResponse
 	optional ResultCode result=1;
 }
 
-message SvrUpdateUser 
+message SvrUpdateUser
 {
     optional int32 connector_id = 1;
-    optional bool is_online = 2; 
+    optional bool is_online = 2;
 }
 
-message SvrUserMsgAck 
+message SvrUserMsgAck
 {
     optional int64 msgid = 1;
 }
 
-message SvrUserReadMsg 
+message SvrUserReadMsg
 {
     optional int64 msgid = 1;
 }
@@ -81,7 +90,7 @@ message SvrHeartbeatMsg
 message SvrInsertMsg
 {
     optional uint32 msgid = 1;
-    optional string client_ids = 2;
+    repeated string client_ids = 2;
     optional bytes msg = 3;
     optional int32 expire_time = 4;
 }
@@ -106,21 +115,19 @@ message SvrConfig
     optional int32 log_level = 3;
     optional bytes log_config = 4;
 
-    //phpproxy
-    optional int32 http_listen = 11;
-    optional string php_host = 12;
-    optional int32 php_port = 13;
+    //proxy
 
     //connector
     optional int32 client_outoftime = 21;
 
-    //onliner
-
-    //dbproxy
+    //phpproxy
+    optional int32 http_listen = 31;
+    optional string php_host = 32;
+    optional int32 php_port = 33;
 
     //dbworker
-    optional string redis_ip = 51;
-    optional int32 redis_port = 52;
+    optional string redis_ip = 41;
+    optional int32 redis_port = 42;
 }
 
 message SvrConfigResp

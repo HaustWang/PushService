@@ -1,7 +1,7 @@
 #!/bin/bash
-md5_push_proto_server=17834f7b1613e9bfc8f2e398abcbd509
+md5_push_proto_server=43656e3f8ac39bcd7ab81395b45031ca
 md5_push_proto_common=36e92ad26d0d12c04449bbd4395eb022
-md5_push_proto_client=d68e9bd4f0ea6b47a576f7a07cd1a51e
+md5_push_proto_client=f3b73e30d7a3f72eb32c423d6dfb2ae1
 
 CPP_OUT="../../server/frame/proto"
 
