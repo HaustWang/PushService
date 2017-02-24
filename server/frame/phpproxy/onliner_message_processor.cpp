@@ -32,7 +32,22 @@ int ConnectToOnlinerMgr::SendPushMsgToDBWorker(int32_t msg_id, std::string const
 
     SvrInsertMsg insert_msg;
     insert_msg.set_msgid(msg_id);
-    insert_msg.set_client_ids(client_id);
+    insert_msg.add_client_ids(client_id);
+    insert_msg.set_expire_time(expire_time);
+    insert_msg.set_msg((const char *)data, length);
+
+    return SendMessageToServer(&mh, &insert_msg);
+}
+
+int ConnectToOnlinerMgr::SendPushMsgToDBWorker(int32_t msg_id, Iter begin, Iter end, int32_t expire_time, unsigned char *data, size_t length)
+{
+    SvrMsgHead mh;
+    OnlinerMessageProcessor::Instance()->FillMsgHead(&mh, SMT_INSERT_MSG, SERVER_TYPE_DB_WORKER);
+
+    SvrInsertMsg insert_msg;
+    insert_msg.set_msgid(msg_id);
+    for(Iter it = begin; end != it; ++it)
+        insert_msg.add_client_ids(it->asString());
     insert_msg.set_expire_time(expire_time);
     insert_msg.set_msg((const char *)data, length);
 

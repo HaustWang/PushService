@@ -17,43 +17,6 @@
 class CPlayer
 {
 public:
-    enum 
-    {
-        WAIT_REGIST = 0,
-        REGISTED = 1,
-        WAIT_UNREGIST = 2,
-    };
-
-    struct AppInfo
-    {
-        AppInfo()
-        {
-        }
-
-        AppInfo(std::string const& appid, std::string const& appname, int32_t mid)
-        {
-            this->appid.assign(appid);
-            this->appname.assign(appname);
-            this->mid = mid;
-            status = WAIT_REGIST;
-        }
-
-        bool operator==(const AppInfo& rh) const
-        {
-            return this->appid == rh.appid;
-        }
-
-        bool operator==(const std::string& rh) const
-        {
-            return this->appid == rh;
-        }
-
-        std::string appid;
-        std::string appname;
-        int32_t mid;
-        int status;
-    };
-
     CPlayer()
     {
         m_client_fd = -1;
@@ -90,67 +53,10 @@ public:
         return m_client_id;
     }
 
-    int AddAppInfo(std::string const& appid, std::string const& appname, int32_t mid)
-    {
-        std::vector<AppInfo>::iterator it = std::find(m_apps.begin(), m_apps.end(), appid);
-        if(m_apps.end() != it)
-        {
-            if(appname != it->appname)
-                return -1;
-
-            it->mid = mid;
-            it->status = WAIT_REGIST;
-            return 0;
-        }
-
-        m_apps.push_back(AppInfo(appid, appname, mid));
-        return 0;
-    }
-
-    void SetAppInfoStatus(std::string const& appid, int status)
-    {
-        std::vector<AppInfo>::iterator it = std::find(m_apps.begin(), m_apps.end(), appid);
-        if(m_apps.end() == it)  return;
-
-        it->status = status;
-    }
-
-    void UpdateAppInfo()
-    {
-        for(std::vector<AppInfo>::iterator it = m_apps.begin(); m_apps.end() != it; )
-        {
-            if(it->status == WAIT_UNREGIST)
-            {
-                it = m_apps.erase(it);
-                continue;
-            }
-
-            if(it->status == WAIT_REGIST)
-                it->status = REGISTED;
-
-            ++it;
-        }
-    }
-
-    std::string GetAppName(std::string const appid)
-    {
-        std::vector<AppInfo>::iterator it = std::find(m_apps.begin(), m_apps.end(), appid);
-        if(m_apps.end() != it)
-            return it->appname;
-
-        return "";
-    }
-
-    std::vector<AppInfo> const& GetAppList() const
-    {
-        return m_apps;
-    }
-
 private:
     int m_client_fd;
     time_t m_last_heartbeat_time; //上一次收到心跳包的时间
     std::string m_client_id;   //client_id;
-    std::vector<AppInfo> m_apps;
 };
 
 //客户端管理类

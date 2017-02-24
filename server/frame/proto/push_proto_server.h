@@ -49,6 +49,29 @@ class SvrConfig;
 class SvrConfigResp;
 class SvrBroadcastAddress;
 
+enum ServerType {
+  SERVER_TYPE_CENTER = 0,
+  SERVER_TYPE_PROXY = 1,
+  SERVER_TYPE_CONNECTOR = 2,
+  SERVER_TYPE_PHP_PROXY = 3,
+  SERVER_TYPE_DB_WORKER = 4,
+  SERVER_TYPE_THIRD_PROXY = 5
+};
+bool ServerType_IsValid(int value);
+const ServerType ServerType_MIN = SERVER_TYPE_CENTER;
+const ServerType ServerType_MAX = SERVER_TYPE_THIRD_PROXY;
+const int ServerType_ARRAYSIZE = ServerType_MAX + 1;
+
+const ::google::protobuf::EnumDescriptor* ServerType_descriptor();
+inline const ::std::string& ServerType_Name(ServerType value) {
+  return ::google::protobuf::internal::NameOfEnum(
+    ServerType_descriptor(), value);
+}
+inline bool ServerType_Parse(
+    const ::std::string& name, ServerType* value) {
+  return ::google::protobuf::internal::ParseNamedEnum<ServerType>(
+    ServerType_descriptor(), name, value);
+}
 enum SvrMsgType {
   SMT_REG_REQ = 1,
   SMT_REG_RESP = 2,
@@ -154,18 +177,6 @@ class SvrMsgHead : public ::google::protobuf::Message {
   inline ::std::string* release_client_id();
   inline void set_allocated_client_id(::std::string* client_id);
 
-  // optional string appid = 3;
-  inline bool has_appid() const;
-  inline void clear_appid();
-  static const int kAppidFieldNumber = 3;
-  inline const ::std::string& appid() const;
-  inline void set_appid(const ::std::string& value);
-  inline void set_appid(const char* value);
-  inline void set_appid(const char* value, size_t size);
-  inline ::std::string* mutable_appid();
-  inline ::std::string* release_appid();
-  inline void set_allocated_appid(::std::string* appid);
-
   // optional int32 src_svr_type = 4;
   inline bool has_src_svr_type() const;
   inline void clear_src_svr_type();
@@ -214,8 +225,6 @@ class SvrMsgHead : public ::google::protobuf::Message {
   inline void clear_has_type();
   inline void set_has_client_id();
   inline void clear_has_client_id();
-  inline void set_has_appid();
-  inline void clear_has_appid();
   inline void set_has_src_svr_type();
   inline void clear_has_src_svr_type();
   inline void set_has_src_svr_id();
@@ -234,7 +243,6 @@ class SvrMsgHead : public ::google::protobuf::Message {
   ::std::string* client_id_;
   int type_;
   ::google::protobuf::int32 src_svr_type_;
-  ::std::string* appid_;
   ::google::protobuf::int32 src_svr_id_;
   ::google::protobuf::int32 dst_svr_type_;
   ::google::protobuf::int32 dst_svr_id_;
@@ -242,7 +250,7 @@ class SvrMsgHead : public ::google::protobuf::Message {
   bool is_broadcast_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(9 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(8 + 31) / 32];
 
   friend void  protobuf_AddDesc_push_5fproto_5fserver_2eproto();
   friend void protobuf_AssignDesc_push_5fproto_5fserver_2eproto();
@@ -1022,17 +1030,21 @@ class SvrInsertMsg : public ::google::protobuf::Message {
   inline ::google::protobuf::uint32 msgid() const;
   inline void set_msgid(::google::protobuf::uint32 value);
 
-  // optional string client_ids = 2;
-  inline bool has_client_ids() const;
+  // repeated string client_ids = 2;
+  inline int client_ids_size() const;
   inline void clear_client_ids();
   static const int kClientIdsFieldNumber = 2;
-  inline const ::std::string& client_ids() const;
-  inline void set_client_ids(const ::std::string& value);
-  inline void set_client_ids(const char* value);
-  inline void set_client_ids(const char* value, size_t size);
-  inline ::std::string* mutable_client_ids();
-  inline ::std::string* release_client_ids();
-  inline void set_allocated_client_ids(::std::string* client_ids);
+  inline const ::std::string& client_ids(int index) const;
+  inline ::std::string* mutable_client_ids(int index);
+  inline void set_client_ids(int index, const ::std::string& value);
+  inline void set_client_ids(int index, const char* value);
+  inline void set_client_ids(int index, const char* value, size_t size);
+  inline ::std::string* add_client_ids();
+  inline void add_client_ids(const ::std::string& value);
+  inline void add_client_ids(const char* value);
+  inline void add_client_ids(const char* value, size_t size);
+  inline const ::google::protobuf::RepeatedPtrField< ::std::string>& client_ids() const;
+  inline ::google::protobuf::RepeatedPtrField< ::std::string>* mutable_client_ids();
 
   // optional bytes msg = 3;
   inline bool has_msg() const;
@@ -1057,8 +1069,6 @@ class SvrInsertMsg : public ::google::protobuf::Message {
  private:
   inline void set_has_msgid();
   inline void clear_has_msgid();
-  inline void set_has_client_ids();
-  inline void clear_has_client_ids();
   inline void set_has_msg();
   inline void clear_has_msg();
   inline void set_has_expire_time();
@@ -1066,7 +1076,7 @@ class SvrInsertMsg : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* client_ids_;
+  ::google::protobuf::RepeatedPtrField< ::std::string> client_ids_;
   ::google::protobuf::uint32 msgid_;
   ::google::protobuf::int32 expire_time_;
   ::std::string* msg_;
@@ -1366,17 +1376,24 @@ class SvrConfig : public ::google::protobuf::Message {
   inline ::std::string* release_log_config();
   inline void set_allocated_log_config(::std::string* log_config);
 
-  // optional int32 http_listen = 11;
+  // optional int32 client_outoftime = 21;
+  inline bool has_client_outoftime() const;
+  inline void clear_client_outoftime();
+  static const int kClientOutoftimeFieldNumber = 21;
+  inline ::google::protobuf::int32 client_outoftime() const;
+  inline void set_client_outoftime(::google::protobuf::int32 value);
+
+  // optional int32 http_listen = 31;
   inline bool has_http_listen() const;
   inline void clear_http_listen();
-  static const int kHttpListenFieldNumber = 11;
+  static const int kHttpListenFieldNumber = 31;
   inline ::google::protobuf::int32 http_listen() const;
   inline void set_http_listen(::google::protobuf::int32 value);
 
-  // optional string php_host = 12;
+  // optional string php_host = 32;
   inline bool has_php_host() const;
   inline void clear_php_host();
-  static const int kPhpHostFieldNumber = 12;
+  static const int kPhpHostFieldNumber = 32;
   inline const ::std::string& php_host() const;
   inline void set_php_host(const ::std::string& value);
   inline void set_php_host(const char* value);
@@ -1385,24 +1402,17 @@ class SvrConfig : public ::google::protobuf::Message {
   inline ::std::string* release_php_host();
   inline void set_allocated_php_host(::std::string* php_host);
 
-  // optional int32 php_port = 13;
+  // optional int32 php_port = 33;
   inline bool has_php_port() const;
   inline void clear_php_port();
-  static const int kPhpPortFieldNumber = 13;
+  static const int kPhpPortFieldNumber = 33;
   inline ::google::protobuf::int32 php_port() const;
   inline void set_php_port(::google::protobuf::int32 value);
 
-  // optional int32 client_outoftime = 21;
-  inline bool has_client_outoftime() const;
-  inline void clear_client_outoftime();
-  static const int kClientOutoftimeFieldNumber = 21;
-  inline ::google::protobuf::int32 client_outoftime() const;
-  inline void set_client_outoftime(::google::protobuf::int32 value);
-
-  // optional string redis_ip = 51;
+  // optional string redis_ip = 41;
   inline bool has_redis_ip() const;
   inline void clear_redis_ip();
-  static const int kRedisIpFieldNumber = 51;
+  static const int kRedisIpFieldNumber = 41;
   inline const ::std::string& redis_ip() const;
   inline void set_redis_ip(const ::std::string& value);
   inline void set_redis_ip(const char* value);
@@ -1411,10 +1421,10 @@ class SvrConfig : public ::google::protobuf::Message {
   inline ::std::string* release_redis_ip();
   inline void set_allocated_redis_ip(::std::string* redis_ip);
 
-  // optional int32 redis_port = 52;
+  // optional int32 redis_port = 42;
   inline bool has_redis_port() const;
   inline void clear_redis_port();
-  static const int kRedisPortFieldNumber = 52;
+  static const int kRedisPortFieldNumber = 42;
   inline ::google::protobuf::int32 redis_port() const;
   inline void set_redis_port(::google::protobuf::int32 value);
 
@@ -1428,14 +1438,14 @@ class SvrConfig : public ::google::protobuf::Message {
   inline void clear_has_log_level();
   inline void set_has_log_config();
   inline void clear_has_log_config();
+  inline void set_has_client_outoftime();
+  inline void clear_has_client_outoftime();
   inline void set_has_http_listen();
   inline void clear_has_http_listen();
   inline void set_has_php_host();
   inline void clear_has_php_host();
   inline void set_has_php_port();
   inline void clear_has_php_port();
-  inline void set_has_client_outoftime();
-  inline void clear_has_client_outoftime();
   inline void set_has_redis_ip();
   inline void clear_has_redis_ip();
   inline void set_has_redis_port();
@@ -1447,11 +1457,11 @@ class SvrConfig : public ::google::protobuf::Message {
   ::google::protobuf::int32 log_type_;
   ::google::protobuf::int32 log_level_;
   ::std::string* log_config_;
-  ::std::string* php_host_;
-  ::google::protobuf::int32 http_listen_;
-  ::google::protobuf::int32 php_port_;
-  ::std::string* redis_ip_;
   ::google::protobuf::int32 client_outoftime_;
+  ::google::protobuf::int32 http_listen_;
+  ::std::string* php_host_;
+  ::std::string* redis_ip_;
+  ::google::protobuf::int32 php_port_;
   ::google::protobuf::int32 redis_port_;
 
   mutable int _cached_size_;
@@ -1746,85 +1756,15 @@ inline void SvrMsgHead::set_allocated_client_id(::std::string* client_id) {
   }
 }
 
-// optional string appid = 3;
-inline bool SvrMsgHead::has_appid() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SvrMsgHead::set_has_appid() {
-  _has_bits_[0] |= 0x00000004u;
-}
-inline void SvrMsgHead::clear_has_appid() {
-  _has_bits_[0] &= ~0x00000004u;
-}
-inline void SvrMsgHead::clear_appid() {
-  if (appid_ != &::google::protobuf::internal::kEmptyString) {
-    appid_->clear();
-  }
-  clear_has_appid();
-}
-inline const ::std::string& SvrMsgHead::appid() const {
-  return *appid_;
-}
-inline void SvrMsgHead::set_appid(const ::std::string& value) {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  appid_->assign(value);
-}
-inline void SvrMsgHead::set_appid(const char* value) {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  appid_->assign(value);
-}
-inline void SvrMsgHead::set_appid(const char* value, size_t size) {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  appid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SvrMsgHead::mutable_appid() {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  return appid_;
-}
-inline ::std::string* SvrMsgHead::release_appid() {
-  clear_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = appid_;
-    appid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SvrMsgHead::set_allocated_appid(::std::string* appid) {
-  if (appid_ != &::google::protobuf::internal::kEmptyString) {
-    delete appid_;
-  }
-  if (appid) {
-    set_has_appid();
-    appid_ = appid;
-  } else {
-    clear_has_appid();
-    appid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
 // optional int32 src_svr_type = 4;
 inline bool SvrMsgHead::has_src_svr_type() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000004u) != 0;
 }
 inline void SvrMsgHead::set_has_src_svr_type() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000004u;
 }
 inline void SvrMsgHead::clear_has_src_svr_type() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void SvrMsgHead::clear_src_svr_type() {
   src_svr_type_ = 0;
@@ -1840,13 +1780,13 @@ inline void SvrMsgHead::set_src_svr_type(::google::protobuf::int32 value) {
 
 // optional int32 src_svr_id = 5;
 inline bool SvrMsgHead::has_src_svr_id() const {
-  return (_has_bits_[0] & 0x00000010u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void SvrMsgHead::set_has_src_svr_id() {
-  _has_bits_[0] |= 0x00000010u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void SvrMsgHead::clear_has_src_svr_id() {
-  _has_bits_[0] &= ~0x00000010u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void SvrMsgHead::clear_src_svr_id() {
   src_svr_id_ = 0;
@@ -1862,13 +1802,13 @@ inline void SvrMsgHead::set_src_svr_id(::google::protobuf::int32 value) {
 
 // optional int32 dst_svr_type = 6;
 inline bool SvrMsgHead::has_dst_svr_type() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000010u) != 0;
 }
 inline void SvrMsgHead::set_has_dst_svr_type() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000010u;
 }
 inline void SvrMsgHead::clear_has_dst_svr_type() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000010u;
 }
 inline void SvrMsgHead::clear_dst_svr_type() {
   dst_svr_type_ = 0;
@@ -1884,13 +1824,13 @@ inline void SvrMsgHead::set_dst_svr_type(::google::protobuf::int32 value) {
 
 // optional int32 dst_svr_id = 7;
 inline bool SvrMsgHead::has_dst_svr_id() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000020u) != 0;
 }
 inline void SvrMsgHead::set_has_dst_svr_id() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000020u;
 }
 inline void SvrMsgHead::clear_has_dst_svr_id() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void SvrMsgHead::clear_dst_svr_id() {
   dst_svr_id_ = 0;
@@ -1906,13 +1846,13 @@ inline void SvrMsgHead::set_dst_svr_id(::google::protobuf::int32 value) {
 
 // optional int32 proxy_svr_id = 8;
 inline bool SvrMsgHead::has_proxy_svr_id() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void SvrMsgHead::set_has_proxy_svr_id() {
-  _has_bits_[0] |= 0x00000080u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void SvrMsgHead::clear_has_proxy_svr_id() {
-  _has_bits_[0] &= ~0x00000080u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void SvrMsgHead::clear_proxy_svr_id() {
   proxy_svr_id_ = 0;
@@ -1928,13 +1868,13 @@ inline void SvrMsgHead::set_proxy_svr_id(::google::protobuf::int32 value) {
 
 // optional bool is_broadcast = 9;
 inline bool SvrMsgHead::has_is_broadcast() const {
-  return (_has_bits_[0] & 0x00000100u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void SvrMsgHead::set_has_is_broadcast() {
-  _has_bits_[0] |= 0x00000100u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void SvrMsgHead::clear_has_is_broadcast() {
-  _has_bits_[0] &= ~0x00000100u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void SvrMsgHead::clear_is_broadcast() {
   is_broadcast_ = false;
@@ -2383,74 +2323,48 @@ inline void SvrInsertMsg::set_msgid(::google::protobuf::uint32 value) {
   msgid_ = value;
 }
 
-// optional string client_ids = 2;
-inline bool SvrInsertMsg::has_client_ids() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SvrInsertMsg::set_has_client_ids() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void SvrInsertMsg::clear_has_client_ids() {
-  _has_bits_[0] &= ~0x00000002u;
+// repeated string client_ids = 2;
+inline int SvrInsertMsg::client_ids_size() const {
+  return client_ids_.size();
 }
 inline void SvrInsertMsg::clear_client_ids() {
-  if (client_ids_ != &::google::protobuf::internal::kEmptyString) {
-    client_ids_->clear();
-  }
-  clear_has_client_ids();
+  client_ids_.Clear();
 }
-inline const ::std::string& SvrInsertMsg::client_ids() const {
-  return *client_ids_;
+inline const ::std::string& SvrInsertMsg::client_ids(int index) const {
+  return client_ids_.Get(index);
 }
-inline void SvrInsertMsg::set_client_ids(const ::std::string& value) {
-  set_has_client_ids();
-  if (client_ids_ == &::google::protobuf::internal::kEmptyString) {
-    client_ids_ = new ::std::string;
-  }
-  client_ids_->assign(value);
+inline ::std::string* SvrInsertMsg::mutable_client_ids(int index) {
+  return client_ids_.Mutable(index);
 }
-inline void SvrInsertMsg::set_client_ids(const char* value) {
-  set_has_client_ids();
-  if (client_ids_ == &::google::protobuf::internal::kEmptyString) {
-    client_ids_ = new ::std::string;
-  }
-  client_ids_->assign(value);
+inline void SvrInsertMsg::set_client_ids(int index, const ::std::string& value) {
+  client_ids_.Mutable(index)->assign(value);
 }
-inline void SvrInsertMsg::set_client_ids(const char* value, size_t size) {
-  set_has_client_ids();
-  if (client_ids_ == &::google::protobuf::internal::kEmptyString) {
-    client_ids_ = new ::std::string;
-  }
-  client_ids_->assign(reinterpret_cast<const char*>(value), size);
+inline void SvrInsertMsg::set_client_ids(int index, const char* value) {
+  client_ids_.Mutable(index)->assign(value);
 }
-inline ::std::string* SvrInsertMsg::mutable_client_ids() {
-  set_has_client_ids();
-  if (client_ids_ == &::google::protobuf::internal::kEmptyString) {
-    client_ids_ = new ::std::string;
-  }
+inline void SvrInsertMsg::set_client_ids(int index, const char* value, size_t size) {
+  client_ids_.Mutable(index)->assign(
+    reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SvrInsertMsg::add_client_ids() {
+  return client_ids_.Add();
+}
+inline void SvrInsertMsg::add_client_ids(const ::std::string& value) {
+  client_ids_.Add()->assign(value);
+}
+inline void SvrInsertMsg::add_client_ids(const char* value) {
+  client_ids_.Add()->assign(value);
+}
+inline void SvrInsertMsg::add_client_ids(const char* value, size_t size) {
+  client_ids_.Add()->assign(reinterpret_cast<const char*>(value), size);
+}
+inline const ::google::protobuf::RepeatedPtrField< ::std::string>&
+SvrInsertMsg::client_ids() const {
   return client_ids_;
 }
-inline ::std::string* SvrInsertMsg::release_client_ids() {
-  clear_has_client_ids();
-  if (client_ids_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = client_ids_;
-    client_ids_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SvrInsertMsg::set_allocated_client_ids(::std::string* client_ids) {
-  if (client_ids_ != &::google::protobuf::internal::kEmptyString) {
-    delete client_ids_;
-  }
-  if (client_ids) {
-    set_has_client_ids();
-    client_ids_ = client_ids;
-  } else {
-    clear_has_client_ids();
-    client_ids_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
+inline ::google::protobuf::RepeatedPtrField< ::std::string>*
+SvrInsertMsg::mutable_client_ids() {
+  return &client_ids_;
 }
 
 // optional bytes msg = 3;
@@ -2893,15 +2807,37 @@ inline void SvrConfig::set_allocated_log_config(::std::string* log_config) {
   }
 }
 
-// optional int32 http_listen = 11;
-inline bool SvrConfig::has_http_listen() const {
+// optional int32 client_outoftime = 21;
+inline bool SvrConfig::has_client_outoftime() const {
   return (_has_bits_[0] & 0x00000010u) != 0;
 }
-inline void SvrConfig::set_has_http_listen() {
+inline void SvrConfig::set_has_client_outoftime() {
   _has_bits_[0] |= 0x00000010u;
 }
-inline void SvrConfig::clear_has_http_listen() {
+inline void SvrConfig::clear_has_client_outoftime() {
   _has_bits_[0] &= ~0x00000010u;
+}
+inline void SvrConfig::clear_client_outoftime() {
+  client_outoftime_ = 0;
+  clear_has_client_outoftime();
+}
+inline ::google::protobuf::int32 SvrConfig::client_outoftime() const {
+  return client_outoftime_;
+}
+inline void SvrConfig::set_client_outoftime(::google::protobuf::int32 value) {
+  set_has_client_outoftime();
+  client_outoftime_ = value;
+}
+
+// optional int32 http_listen = 31;
+inline bool SvrConfig::has_http_listen() const {
+  return (_has_bits_[0] & 0x00000020u) != 0;
+}
+inline void SvrConfig::set_has_http_listen() {
+  _has_bits_[0] |= 0x00000020u;
+}
+inline void SvrConfig::clear_has_http_listen() {
+  _has_bits_[0] &= ~0x00000020u;
 }
 inline void SvrConfig::clear_http_listen() {
   http_listen_ = 0;
@@ -2915,15 +2851,15 @@ inline void SvrConfig::set_http_listen(::google::protobuf::int32 value) {
   http_listen_ = value;
 }
 
-// optional string php_host = 12;
+// optional string php_host = 32;
 inline bool SvrConfig::has_php_host() const {
-  return (_has_bits_[0] & 0x00000020u) != 0;
+  return (_has_bits_[0] & 0x00000040u) != 0;
 }
 inline void SvrConfig::set_has_php_host() {
-  _has_bits_[0] |= 0x00000020u;
+  _has_bits_[0] |= 0x00000040u;
 }
 inline void SvrConfig::clear_has_php_host() {
-  _has_bits_[0] &= ~0x00000020u;
+  _has_bits_[0] &= ~0x00000040u;
 }
 inline void SvrConfig::clear_php_host() {
   if (php_host_ != &::google::protobuf::internal::kEmptyString) {
@@ -2985,15 +2921,15 @@ inline void SvrConfig::set_allocated_php_host(::std::string* php_host) {
   }
 }
 
-// optional int32 php_port = 13;
+// optional int32 php_port = 33;
 inline bool SvrConfig::has_php_port() const {
-  return (_has_bits_[0] & 0x00000040u) != 0;
+  return (_has_bits_[0] & 0x00000080u) != 0;
 }
 inline void SvrConfig::set_has_php_port() {
-  _has_bits_[0] |= 0x00000040u;
+  _has_bits_[0] |= 0x00000080u;
 }
 inline void SvrConfig::clear_has_php_port() {
-  _has_bits_[0] &= ~0x00000040u;
+  _has_bits_[0] &= ~0x00000080u;
 }
 inline void SvrConfig::clear_php_port() {
   php_port_ = 0;
@@ -3007,29 +2943,7 @@ inline void SvrConfig::set_php_port(::google::protobuf::int32 value) {
   php_port_ = value;
 }
 
-// optional int32 client_outoftime = 21;
-inline bool SvrConfig::has_client_outoftime() const {
-  return (_has_bits_[0] & 0x00000080u) != 0;
-}
-inline void SvrConfig::set_has_client_outoftime() {
-  _has_bits_[0] |= 0x00000080u;
-}
-inline void SvrConfig::clear_has_client_outoftime() {
-  _has_bits_[0] &= ~0x00000080u;
-}
-inline void SvrConfig::clear_client_outoftime() {
-  client_outoftime_ = 0;
-  clear_has_client_outoftime();
-}
-inline ::google::protobuf::int32 SvrConfig::client_outoftime() const {
-  return client_outoftime_;
-}
-inline void SvrConfig::set_client_outoftime(::google::protobuf::int32 value) {
-  set_has_client_outoftime();
-  client_outoftime_ = value;
-}
-
-// optional string redis_ip = 51;
+// optional string redis_ip = 41;
 inline bool SvrConfig::has_redis_ip() const {
   return (_has_bits_[0] & 0x00000100u) != 0;
 }
@@ -3099,7 +3013,7 @@ inline void SvrConfig::set_allocated_redis_ip(::std::string* redis_ip) {
   }
 }
 
-// optional int32 redis_port = 52;
+// optional int32 redis_port = 42;
 inline bool SvrConfig::has_redis_port() const {
   return (_has_bits_[0] & 0x00000200u) != 0;
 }
@@ -3224,6 +3138,10 @@ SvrBroadcastAddress::mutable_peer_addresses() {
 namespace google {
 namespace protobuf {
 
+template <>
+inline const EnumDescriptor* GetEnumDescriptor< ::ServerType>() {
+  return ::ServerType_descriptor();
+}
 template <>
 inline const EnumDescriptor* GetEnumDescriptor< ::SvrMsgType>() {
   return ::SvrMsgType_descriptor();

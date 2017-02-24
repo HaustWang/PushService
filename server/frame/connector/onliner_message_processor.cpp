@@ -26,21 +26,21 @@ int TransMsgHandler::ProcessMessage(ClientInfo* client_info, const google::proto
         return -1;
 
     const SvrMsgHead* head = dynamic_cast<const SvrMsgHead*>(phead);
-    if(head->appid().empty())
+    if(head->client_id().empty())
     {
-        log_error("transfer message but appid empty");
+        log_error("transfer message but client_id empty");
         return -1;
     }
 
     const SvrTransferMsg* msg = dynamic_cast<const SvrTransferMsg*>(message);
-    log_info("Transfer msg:svr_id:%d, client_id:%s, appid:%s, content:%s", client_info->server_id, head->client_id().c_str(), head->appid().c_str(), msg->content().c_str());
+    log_info("Transfer msg:svr_id:%d, client_id:%s, content:%s", client_info->server_id, head->client_id().c_str(), msg->content().c_str());
     if(!head->client_id().empty())
     {
-        ConnectorMessageProcessor::Instance()->SendMessageToClient(head->client_id(), head->appid(), msg->content());
+        ConnectorMessageProcessor::Instance()->SendMessageToClient(head->client_id(), msg->msgid(), msg->content());
     }
     else
     {
-        ConnectorMessageProcessor::Instance()->SendMessageToAllClient(head->appid(), msg->content());
+        ConnectorMessageProcessor::Instance()->SendMessageToAllClient(msg->msgid(), msg->content());
     }
 
     return 0;

@@ -26,7 +26,7 @@ int DBWorkManage::ProcessMessage(ClientInfo* client_info, const google::protobuf
     if(it == msg_handler_map_.end())
     {
         log_info("proxy %d transfer msg: src_svr_type:%d, src_svr_id:%d, dst_svr_type:%d, dst_svr_id:%d", GetServerId(), head->src_svr_type(), head->src_svr_id(), head->dst_svr_type(), head->dst_svr_id());
-        if(!head->has_dst_svr_type() || SERVER_TYPE_MIN > head->dst_svr_type() || SERVER_TYPE_MAX <= head->dst_svr_type())
+        if(!head->has_dst_svr_type() || ServerType_MIN > head->dst_svr_type() || ServerType_MAX < head->dst_svr_type())
         {
             log_error("proxy %d transfer msg error cause dst_svr_type error! dst_svr_type:%d", GetServerId(), head->dst_svr_type());
             return -1;
@@ -83,7 +83,7 @@ int DBWorkManage::ProcessMessage(ClientInfo* client_info, const google::protobuf
         int ret = it->second.first->ProcessMessage(client_info, head, message);
         if (ret < 0)
         {
-            log_warning("process :%d failed,client_id:%s, appid:%s", head->type(), head->client_id().c_str(), head->appid().c_str() );
+            log_warning("process :%d failed,client_id:%s", head->type(), head->client_id().c_str());
         }
 
         DestroyMessage(message);

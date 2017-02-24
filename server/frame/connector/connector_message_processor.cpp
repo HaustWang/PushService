@@ -61,7 +61,7 @@ int ConnectorMessageProcessor::ProcessClose(ClientInfo* pclient_info)
 	return PushClientManage::Instance()->DeletePushClientInfo(client_info);
 }
 
-int ConnectorMessageProcessor::SendMessageToClient(std::string const& client_id, std::string const& appid, std::string const& content)
+int ConnectorMessageProcessor::SendMessageToClient(std::string const& client_id, int64_t msgid, std::string const& content)
 {
     if(client_id.empty())   return 0;
 
@@ -69,14 +69,6 @@ int ConnectorMessageProcessor::SendMessageToClient(std::string const& client_id,
     if(NULL == player)
     {
         log_info("client %s is not online", client_id.c_str());
-        return 0;
-    }
-
-    const std::vector<CPlayer::AppInfo> &apps = player->GetAppList();
-    std::vector<CPlayer::AppInfo>::const_iterator it = std::find(apps.begin(), apps.end(), appid);
-    if(apps.end() == it)
-    {
-        log_info("client %s doesnt have appid:%s", client_id.c_str(), appid.c_str());
         return 0;
     }
 
@@ -91,31 +83,24 @@ int ConnectorMessageProcessor::SendMessageToClient(std::string const& client_id,
     FillMsgHead(&mh, client_id, CMT_PUSH_MSG);
 
     SvrPushMessage msg;
-    msg.set_appid(appid);
-    msg.set_appname(it->appname);
+    msg.set_msgid(msgid);
     msg.set_msg(content);
 
     return SendMessageToClient(client_info, &mh, &msg);
 }
 
-int ConnectorMessageProcessor::SendMessageToAllClient(std::string const& appid, std::string const& content)
+int ConnectorMessageProcessor::SendMessageToAllClient(int64_t msgid, std::string const& content)
 {
     ClientMsgHead mh;
     SvrPushMessage msg;
+    msg.set_msgid(msgid);
+    msg.set_msg(content);
 
     const std::map<std::string, CPlayer> &clients = CPlayerFrame::Instance()->GetPlayerList();
     std::map<std::string, CPlayer>::const_iterator it = clients.begin();
     for(; clients.end() != it; ++it)
     {
         const CPlayer& player = it->second;
-
-        const std::vector<CPlayer::AppInfo> &apps = player.GetAppList();
-        std::vector<CPlayer::AppInfo>::const_iterator vec_it = std::find(apps.begin(), apps.end(), appid);
-        if(apps.end() == vec_it)
-        {
-            log_info("client %s doesnt have appid:%s", player.GetClientId().c_str(), appid.c_str());
-            continue;
-        }
 
         PushClientInfo* client_info = PushClientManage::Instance()->GetPushClientInfo(player.GetFd());
         if(NULL == client_info)
@@ -125,10 +110,6 @@ int ConnectorMessageProcessor::SendMessageToAllClient(std::string const& appid, 
         }
 
         FillMsgHead(&mh, player.GetClientId(), CMT_PUSH_MSG);
-
-        msg.set_appid(appid);
-        msg.set_appname(vec_it->appname);
-        msg.set_msg(content);
 
         SendMessageToClient(client_info, &mh, &msg);
     }

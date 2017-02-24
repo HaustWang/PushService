@@ -10,17 +10,6 @@
 #include "comm_config.h"
 #include "log4cpp_log.h"
 
-enum
-{
-    SERVER_TYPE_MIN = 0,
-    SERVER_TYPE_CENTER = 0,
-    SERVER_TYPE_PROXY = 1,
-    SERVER_TYPE_CONNECTOR = 2,
-    SERVER_TYPE_PHP_PROXY = 3,
-    SERVER_TYPE_DB_WORKER = 4,
-    SERVER_TYPE_MAX,
-};
-
 
 struct ServerAddr
 {

@@ -63,6 +63,7 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SvrBroadcastAddress_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SvrBroadcastAddress_reflection_ = NULL;
+const ::google::protobuf::EnumDescriptor* ServerType_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* SvrMsgType_descriptor_ = NULL;
 
 }  // namespace
@@ -75,10 +76,9 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       "push_proto_server.proto");
   GOOGLE_CHECK(file != NULL);
   SvrMsgHead_descriptor_ = file->message_type(0);
-  static const int SvrMsgHead_offsets_[9] = {
+  static const int SvrMsgHead_offsets_[8] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, client_id_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, appid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, src_svr_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, src_svr_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, dst_svr_type_),
@@ -277,10 +277,10 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_dir_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_level_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_config_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, client_outoftime_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, http_listen_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, php_host_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, php_port_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, client_outoftime_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, redis_ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, redis_port_),
   };
@@ -326,7 +326,8 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrBroadcastAddress));
-  SvrMsgType_descriptor_ = file->enum_type(0);
+  ServerType_descriptor_ = file->enum_type(0);
+  SvrMsgType_descriptor_ = file->enum_type(1);
 }
 
 namespace {
@@ -415,41 +416,45 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
   ::protobuf_AddDesc_push_5fproto_5fcommon_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027push_proto_server.proto\032\027push_proto_co"
-    "mmon.proto\"\311\001\n\nSvrMsgHead\022\031\n\004type\030\001 \001(\0162"
-    "\013.SvrMsgType\022\021\n\tclient_id\030\002 \001(\t\022\r\n\005appid"
-    "\030\003 \001(\t\022\024\n\014src_svr_type\030\004 \001(\005\022\022\n\nsrc_svr_"
-    "id\030\005 \001(\005\022\024\n\014dst_svr_type\030\006 \001(\005\022\022\n\ndst_sv"
-    "r_id\030\007 \001(\005\022\024\n\014proxy_svr_id\030\010 \001(\005\022\024\n\014is_b"
-    "roadcast\030\t \001(\010\"1\n\006SvrMsg\022\031\n\004head\030\001 \001(\0132\013"
-    ".SvrMsgHead\022\014\n\004body\030\002 \001(\014\"1\n\rSvrRegReque"
-    "st\022\016\n\006svr_id\030\001 \001(\005\022\020\n\010svr_type\030\002 \001(\005\"-\n\016"
-    "SvrRegResponse\022\033\n\006result\030\001 \001(\0162\013.ResultC"
-    "ode\"8\n\rSvrUpdateUser\022\024\n\014connector_id\030\001 \001"
-    "(\005\022\021\n\tis_online\030\002 \001(\010\"\036\n\rSvrUserMsgAck\022\r"
-    "\n\005msgid\030\001 \001(\003\"\037\n\016SvrUserReadMsg\022\r\n\005msgid"
-    "\030\001 \001(\003\"0\n\016SvrTransferMsg\022\r\n\005msgid\030\001 \001(\003\022"
-    "\017\n\007content\030\002 \001(\014\"\037\n\017SvrHeartbeatMsg\022\014\n\004t"
-    "ime\030\001 \001(\003\"S\n\014SvrInsertMsg\022\r\n\005msgid\030\001 \001(\r"
-    "\022\022\n\nclient_ids\030\002 \001(\t\022\013\n\003msg\030\003 \001(\014\022\023\n\013exp"
-    "ire_time\030\004 \001(\005\"8\n\nSvrAddress\022\020\n\010svr_type"
-    "\030\001 \001(\005\022\n\n\002ip\030\002 \001(\t\022\014\n\004port\030\003 \001(\005\",\n\014SvrC"
-    "onfigReq\022\034\n\007address\030\001 \001(\0132\013.SvrAddress\"\316"
-    "\001\n\tSvrConfig\022\020\n\010log_type\030\001 \001(\005\022\017\n\007log_di"
-    "r\030\002 \001(\t\022\021\n\tlog_level\030\003 \001(\005\022\022\n\nlog_config"
-    "\030\004 \001(\014\022\023\n\013http_listen\030\013 \001(\005\022\020\n\010php_host\030"
-    "\014 \001(\t\022\020\n\010php_port\030\r \001(\005\022\030\n\020client_outoft"
-    "ime\030\025 \001(\005\022\020\n\010redis_ip\0303 \001(\t\022\022\n\nredis_por"
-    "t\0304 \001(\005\"P\n\rSvrConfigResp\022\032\n\006config\030\001 \001(\013"
-    "2\n.SvrConfig\022#\n\016peer_addresses\030\002 \003(\0132\013.S"
-    "vrAddress\":\n\023SvrBroadcastAddress\022#\n\016peer"
-    "_addresses\030\001 \003(\0132\013.SvrAddress*\233\002\n\nSvrMsg"
-    "Type\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_REG_RESP\020\002\022"
-    "\023\n\017SMT_UPDATE_USER\020\003\022\024\n\020SMT_USER_MSG_ACK"
-    "\020\004\022\025\n\021SMT_USER_READ_MSG\020\005\022\021\n\rSMT_KICK_US"
-    "ER\020\007\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n\014SMT_PUSH_M"
-    "SG\020\t\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016SMT_CONFIG_R"
-    "EQ\020\r\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022SMT_BROADCA"
-    "ST_ADDR\020\017\022\030\n\024SMT_BROADCAST_CONFIG\020\020", 1435);
+    "mmon.proto\"\272\001\n\nSvrMsgHead\022\031\n\004type\030\001 \001(\0162"
+    "\013.SvrMsgType\022\021\n\tclient_id\030\002 \001(\t\022\024\n\014src_s"
+    "vr_type\030\004 \001(\005\022\022\n\nsrc_svr_id\030\005 \001(\005\022\024\n\014dst"
+    "_svr_type\030\006 \001(\005\022\022\n\ndst_svr_id\030\007 \001(\005\022\024\n\014p"
+    "roxy_svr_id\030\010 \001(\005\022\024\n\014is_broadcast\030\t \001(\010\""
+    "1\n\006SvrMsg\022\031\n\004head\030\001 \001(\0132\013.SvrMsgHead\022\014\n\004"
+    "body\030\002 \001(\014\"1\n\rSvrRegRequest\022\016\n\006svr_id\030\001 "
+    "\001(\005\022\020\n\010svr_type\030\002 \001(\005\"-\n\016SvrRegResponse\022"
+    "\033\n\006result\030\001 \001(\0162\013.ResultCode\"8\n\rSvrUpdat"
+    "eUser\022\024\n\014connector_id\030\001 \001(\005\022\021\n\tis_online"
+    "\030\002 \001(\010\"\036\n\rSvrUserMsgAck\022\r\n\005msgid\030\001 \001(\003\"\037"
+    "\n\016SvrUserReadMsg\022\r\n\005msgid\030\001 \001(\003\"0\n\016SvrTr"
+    "ansferMsg\022\r\n\005msgid\030\001 \001(\003\022\017\n\007content\030\002 \001("
+    "\014\"\037\n\017SvrHeartbeatMsg\022\014\n\004time\030\001 \001(\003\"S\n\014Sv"
+    "rInsertMsg\022\r\n\005msgid\030\001 \001(\r\022\022\n\nclient_ids\030"
+    "\002 \003(\t\022\013\n\003msg\030\003 \001(\014\022\023\n\013expire_time\030\004 \001(\005\""
+    "8\n\nSvrAddress\022\020\n\010svr_type\030\001 \001(\005\022\n\n\002ip\030\002 "
+    "\001(\t\022\014\n\004port\030\003 \001(\005\",\n\014SvrConfigReq\022\034\n\007add"
+    "ress\030\001 \001(\0132\013.SvrAddress\"\316\001\n\tSvrConfig\022\020\n"
+    "\010log_type\030\001 \001(\005\022\017\n\007log_dir\030\002 \001(\t\022\021\n\tlog_"
+    "level\030\003 \001(\005\022\022\n\nlog_config\030\004 \001(\014\022\030\n\020clien"
+    "t_outoftime\030\025 \001(\005\022\023\n\013http_listen\030\037 \001(\005\022\020"
+    "\n\010php_host\030  \001(\t\022\020\n\010php_port\030! \001(\005\022\020\n\010re"
+    "dis_ip\030) \001(\t\022\022\n\nredis_port\030* \001(\005\"P\n\rSvrC"
+    "onfigResp\022\032\n\006config\030\001 \001(\0132\n.SvrConfig\022#\n"
+    "\016peer_addresses\030\002 \003(\0132\013.SvrAddress\":\n\023Sv"
+    "rBroadcastAddress\022#\n\016peer_addresses\030\001 \003("
+    "\0132\013.SvrAddress*\251\001\n\nServerType\022\026\n\022SERVER_"
+    "TYPE_CENTER\020\000\022\025\n\021SERVER_TYPE_PROXY\020\001\022\031\n\025"
+    "SERVER_TYPE_CONNECTOR\020\002\022\031\n\025SERVER_TYPE_P"
+    "HP_PROXY\020\003\022\031\n\025SERVER_TYPE_DB_WORKER\020\004\022\033\n"
+    "\027SERVER_TYPE_THIRD_PROXY\020\005*\233\002\n\nSvrMsgTyp"
+    "e\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_REG_RESP\020\002\022\023\n\017"
+    "SMT_UPDATE_USER\020\003\022\024\n\020SMT_USER_MSG_ACK\020\004\022"
+    "\025\n\021SMT_USER_READ_MSG\020\005\022\021\n\rSMT_KICK_USER\020"
+    "\007\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n\014SMT_PUSH_MSG\020"
+    "\t\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016SMT_CONFIG_REQ\020"
+    "\r\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022SMT_BROADCAST_"
+    "ADDR\020\017\022\030\n\024SMT_BROADCAST_CONFIG\020\020", 1592);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "push_proto_server.proto", &protobuf_RegisterTypes);
   SvrMsgHead::default_instance_ = new SvrMsgHead();
@@ -491,6 +496,24 @@ struct StaticDescriptorInitializer_push_5fproto_5fserver_2eproto {
     protobuf_AddDesc_push_5fproto_5fserver_2eproto();
   }
 } static_descriptor_initializer_push_5fproto_5fserver_2eproto_;
+const ::google::protobuf::EnumDescriptor* ServerType_descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return ServerType_descriptor_;
+}
+bool ServerType_IsValid(int value) {
+  switch(value) {
+    case 0:
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5:
+      return true;
+    default:
+      return false;
+  }
+}
+
 const ::google::protobuf::EnumDescriptor* SvrMsgType_descriptor() {
   protobuf_AssignDescriptorsOnce();
   return SvrMsgType_descriptor_;
@@ -522,7 +545,6 @@ bool SvrMsgType_IsValid(int value) {
 #ifndef _MSC_VER
 const int SvrMsgHead::kTypeFieldNumber;
 const int SvrMsgHead::kClientIdFieldNumber;
-const int SvrMsgHead::kAppidFieldNumber;
 const int SvrMsgHead::kSrcSvrTypeFieldNumber;
 const int SvrMsgHead::kSrcSvrIdFieldNumber;
 const int SvrMsgHead::kDstSvrTypeFieldNumber;
@@ -549,7 +571,6 @@ void SvrMsgHead::SharedCtor() {
   _cached_size_ = 0;
   type_ = 1;
   client_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  appid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   src_svr_type_ = 0;
   src_svr_id_ = 0;
   dst_svr_type_ = 0;
@@ -566,9 +587,6 @@ SvrMsgHead::~SvrMsgHead() {
 void SvrMsgHead::SharedDtor() {
   if (client_id_ != &::google::protobuf::internal::kEmptyString) {
     delete client_id_;
-  }
-  if (appid_ != &::google::protobuf::internal::kEmptyString) {
-    delete appid_;
   }
   if (this != default_instance_) {
   }
@@ -603,18 +621,11 @@ void SvrMsgHead::Clear() {
         client_id_->clear();
       }
     }
-    if (has_appid()) {
-      if (appid_ != &::google::protobuf::internal::kEmptyString) {
-        appid_->clear();
-      }
-    }
     src_svr_type_ = 0;
     src_svr_id_ = 0;
     dst_svr_type_ = 0;
     dst_svr_id_ = 0;
     proxy_svr_id_ = 0;
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     is_broadcast_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -656,23 +667,6 @@ bool SvrMsgHead::MergePartialFromCodedStream(
                 input, this->mutable_client_id()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
             this->client_id().data(), this->client_id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(26)) goto parse_appid;
-        break;
-      }
-
-      // optional string appid = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_appid:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_appid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->appid().data(), this->appid().length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
@@ -810,15 +804,6 @@ void SvrMsgHead::SerializeWithCachedSizes(
       2, this->client_id(), output);
   }
 
-  // optional string appid = 3;
-  if (has_appid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->appid().data(), this->appid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      3, this->appid(), output);
-  }
-
   // optional int32 src_svr_type = 4;
   if (has_src_svr_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->src_svr_type(), output);
@@ -871,16 +856,6 @@ void SvrMsgHead::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
         2, this->client_id(), target);
-  }
-
-  // optional string appid = 3;
-  if (has_appid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->appid().data(), this->appid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        3, this->appid(), target);
   }
 
   // optional int32 src_svr_type = 4;
@@ -937,13 +912,6 @@ int SvrMsgHead::ByteSize() const {
           this->client_id());
     }
 
-    // optional string appid = 3;
-    if (has_appid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->appid());
-    }
-
     // optional int32 src_svr_type = 4;
     if (has_src_svr_type()) {
       total_size += 1 +
@@ -979,8 +947,6 @@ int SvrMsgHead::ByteSize() const {
           this->proxy_svr_id());
     }
 
-  }
-  if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     // optional bool is_broadcast = 9;
     if (has_is_broadcast()) {
       total_size += 1 + 1;
@@ -1019,9 +985,6 @@ void SvrMsgHead::MergeFrom(const SvrMsgHead& from) {
     if (from.has_client_id()) {
       set_client_id(from.client_id());
     }
-    if (from.has_appid()) {
-      set_appid(from.appid());
-    }
     if (from.has_src_svr_type()) {
       set_src_svr_type(from.src_svr_type());
     }
@@ -1037,8 +1000,6 @@ void SvrMsgHead::MergeFrom(const SvrMsgHead& from) {
     if (from.has_proxy_svr_id()) {
       set_proxy_svr_id(from.proxy_svr_id());
     }
-  }
-  if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (from.has_is_broadcast()) {
       set_is_broadcast(from.is_broadcast());
     }
@@ -1067,7 +1028,6 @@ void SvrMsgHead::Swap(SvrMsgHead* other) {
   if (other != this) {
     std::swap(type_, other->type_);
     std::swap(client_id_, other->client_id_);
-    std::swap(appid_, other->appid_);
     std::swap(src_svr_type_, other->src_svr_type_);
     std::swap(src_svr_id_, other->src_svr_id_);
     std::swap(dst_svr_type_, other->dst_svr_type_);
@@ -2964,7 +2924,6 @@ SvrInsertMsg::SvrInsertMsg(const SvrInsertMsg& from)
 void SvrInsertMsg::SharedCtor() {
   _cached_size_ = 0;
   msgid_ = 0u;
-  client_ids_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   expire_time_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -2975,9 +2934,6 @@ SvrInsertMsg::~SvrInsertMsg() {
 }
 
 void SvrInsertMsg::SharedDtor() {
-  if (client_ids_ != &::google::protobuf::internal::kEmptyString) {
-    delete client_ids_;
-  }
   if (msg_ != &::google::protobuf::internal::kEmptyString) {
     delete msg_;
   }
@@ -3009,11 +2965,6 @@ SvrInsertMsg* SvrInsertMsg::New() const {
 void SvrInsertMsg::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     msgid_ = 0u;
-    if (has_client_ids()) {
-      if (client_ids_ != &::google::protobuf::internal::kEmptyString) {
-        client_ids_->clear();
-      }
-    }
     if (has_msg()) {
       if (msg_ != &::google::protobuf::internal::kEmptyString) {
         msg_->clear();
@@ -3021,6 +2972,7 @@ void SvrInsertMsg::Clear() {
     }
     expire_time_ = 0;
   }
+  client_ids_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -3046,19 +2998,21 @@ bool SvrInsertMsg::MergePartialFromCodedStream(
         break;
       }
 
-      // optional string client_ids = 2;
+      // repeated string client_ids = 2;
       case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_client_ids:
           DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_client_ids()));
+                input, this->add_client_ids()));
           ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->client_ids().data(), this->client_ids().length(),
+            this->client_ids(this->client_ids_size() - 1).data(),
+            this->client_ids(this->client_ids_size() - 1).length(),
             ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(18)) goto parse_client_ids;
         if (input->ExpectTag(26)) goto parse_msg;
         break;
       }
@@ -3116,13 +3070,13 @@ void SvrInsertMsg::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteUInt32(1, this->msgid(), output);
   }
 
-  // optional string client_ids = 2;
-  if (has_client_ids()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->client_ids().data(), this->client_ids().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
+  // repeated string client_ids = 2;
+  for (int i = 0; i < this->client_ids_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->client_ids(i).data(), this->client_ids(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->client_ids(), output);
+      2, this->client_ids(i), output);
   }
 
   // optional bytes msg = 3;
@@ -3149,14 +3103,13 @@ void SvrInsertMsg::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteUInt32ToArray(1, this->msgid(), target);
   }
 
-  // optional string client_ids = 2;
-  if (has_client_ids()) {
+  // repeated string client_ids = 2;
+  for (int i = 0; i < this->client_ids_size(); i++) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->client_ids().data(), this->client_ids().length(),
+      this->client_ids(i).data(), this->client_ids(i).length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->client_ids(), target);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(2, this->client_ids(i), target);
   }
 
   // optional bytes msg = 3;
@@ -3189,13 +3142,6 @@ int SvrInsertMsg::ByteSize() const {
           this->msgid());
     }
 
-    // optional string client_ids = 2;
-    if (has_client_ids()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->client_ids());
-    }
-
     // optional bytes msg = 3;
     if (has_msg()) {
       total_size += 1 +
@@ -3211,6 +3157,13 @@ int SvrInsertMsg::ByteSize() const {
     }
 
   }
+  // repeated string client_ids = 2;
+  total_size += 1 * this->client_ids_size();
+  for (int i = 0; i < this->client_ids_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->client_ids(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -3236,12 +3189,10 @@ void SvrInsertMsg::MergeFrom(const ::google::protobuf::Message& from) {
 
 void SvrInsertMsg::MergeFrom(const SvrInsertMsg& from) {
   GOOGLE_CHECK_NE(&from, this);
+  client_ids_.MergeFrom(from.client_ids_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_msgid()) {
       set_msgid(from.msgid());
-    }
-    if (from.has_client_ids()) {
-      set_client_ids(from.client_ids());
     }
     if (from.has_msg()) {
       set_msg(from.msg());
@@ -3273,7 +3224,7 @@ bool SvrInsertMsg::IsInitialized() const {
 void SvrInsertMsg::Swap(SvrInsertMsg* other) {
   if (other != this) {
     std::swap(msgid_, other->msgid_);
-    std::swap(client_ids_, other->client_ids_);
+    client_ids_.Swap(&other->client_ids_);
     std::swap(msg_, other->msg_);
     std::swap(expire_time_, other->expire_time_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -3816,10 +3767,10 @@ const int SvrConfig::kLogTypeFieldNumber;
 const int SvrConfig::kLogDirFieldNumber;
 const int SvrConfig::kLogLevelFieldNumber;
 const int SvrConfig::kLogConfigFieldNumber;
+const int SvrConfig::kClientOutoftimeFieldNumber;
 const int SvrConfig::kHttpListenFieldNumber;
 const int SvrConfig::kPhpHostFieldNumber;
 const int SvrConfig::kPhpPortFieldNumber;
-const int SvrConfig::kClientOutoftimeFieldNumber;
 const int SvrConfig::kRedisIpFieldNumber;
 const int SvrConfig::kRedisPortFieldNumber;
 #endif  // !_MSC_VER
@@ -3844,10 +3795,10 @@ void SvrConfig::SharedCtor() {
   log_dir_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   log_level_ = 0;
   log_config_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  client_outoftime_ = 0;
   http_listen_ = 0;
   php_host_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   php_port_ = 0;
-  client_outoftime_ = 0;
   redis_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   redis_port_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3909,6 +3860,7 @@ void SvrConfig::Clear() {
         log_config_->clear();
       }
     }
+    client_outoftime_ = 0;
     http_listen_ = 0;
     if (has_php_host()) {
       if (php_host_ != &::google::protobuf::internal::kEmptyString) {
@@ -3916,7 +3868,6 @@ void SvrConfig::Clear() {
       }
     }
     php_port_ = 0;
-    client_outoftime_ = 0;
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
     if (has_redis_ip()) {
@@ -3994,55 +3945,6 @@ bool SvrConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(88)) goto parse_http_listen;
-        break;
-      }
-
-      // optional int32 http_listen = 11;
-      case 11: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_http_listen:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &http_listen_)));
-          set_has_http_listen();
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(98)) goto parse_php_host;
-        break;
-      }
-
-      // optional string php_host = 12;
-      case 12: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_php_host:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_php_host()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->php_host().data(), this->php_host().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(104)) goto parse_php_port;
-        break;
-      }
-
-      // optional int32 php_port = 13;
-      case 13: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_php_port:
-          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
-                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
-                 input, &php_port_)));
-          set_has_php_port();
-        } else {
-          goto handle_uninterpreted;
-        }
         if (input->ExpectTag(168)) goto parse_client_outoftime;
         break;
       }
@@ -4059,12 +3961,61 @@ bool SvrConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(410)) goto parse_redis_ip;
+        if (input->ExpectTag(248)) goto parse_http_listen;
         break;
       }
 
-      // optional string redis_ip = 51;
-      case 51: {
+      // optional int32 http_listen = 31;
+      case 31: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_http_listen:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &http_listen_)));
+          set_has_http_listen();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(258)) goto parse_php_host;
+        break;
+      }
+
+      // optional string php_host = 32;
+      case 32: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_php_host:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_php_host()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->php_host().data(), this->php_host().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(264)) goto parse_php_port;
+        break;
+      }
+
+      // optional int32 php_port = 33;
+      case 33: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_php_port:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &php_port_)));
+          set_has_php_port();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(330)) goto parse_redis_ip;
+        break;
+      }
+
+      // optional string redis_ip = 41;
+      case 41: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_redis_ip:
@@ -4076,12 +4027,12 @@ bool SvrConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(416)) goto parse_redis_port;
+        if (input->ExpectTag(336)) goto parse_redis_port;
         break;
       }
 
-      // optional int32 redis_port = 52;
-      case 52: {
+      // optional int32 redis_port = 42;
+      case 42: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_redis_port:
@@ -4139,42 +4090,42 @@ void SvrConfig::SerializeWithCachedSizes(
       4, this->log_config(), output);
   }
 
-  // optional int32 http_listen = 11;
-  if (has_http_listen()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(11, this->http_listen(), output);
-  }
-
-  // optional string php_host = 12;
-  if (has_php_host()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->php_host().data(), this->php_host().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      12, this->php_host(), output);
-  }
-
-  // optional int32 php_port = 13;
-  if (has_php_port()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(13, this->php_port(), output);
-  }
-
   // optional int32 client_outoftime = 21;
   if (has_client_outoftime()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(21, this->client_outoftime(), output);
   }
 
-  // optional string redis_ip = 51;
+  // optional int32 http_listen = 31;
+  if (has_http_listen()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(31, this->http_listen(), output);
+  }
+
+  // optional string php_host = 32;
+  if (has_php_host()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->php_host().data(), this->php_host().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      32, this->php_host(), output);
+  }
+
+  // optional int32 php_port = 33;
+  if (has_php_port()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(33, this->php_port(), output);
+  }
+
+  // optional string redis_ip = 41;
   if (has_redis_ip()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->redis_ip().data(), this->redis_ip().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      51, this->redis_ip(), output);
+      41, this->redis_ip(), output);
   }
 
-  // optional int32 redis_port = 52;
+  // optional int32 redis_port = 42;
   if (has_redis_port()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(52, this->redis_port(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(42, this->redis_port(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -4212,44 +4163,44 @@ void SvrConfig::SerializeWithCachedSizes(
         4, this->log_config(), target);
   }
 
-  // optional int32 http_listen = 11;
-  if (has_http_listen()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(11, this->http_listen(), target);
+  // optional int32 client_outoftime = 21;
+  if (has_client_outoftime()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(21, this->client_outoftime(), target);
   }
 
-  // optional string php_host = 12;
+  // optional int32 http_listen = 31;
+  if (has_http_listen()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(31, this->http_listen(), target);
+  }
+
+  // optional string php_host = 32;
   if (has_php_host()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->php_host().data(), this->php_host().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        12, this->php_host(), target);
+        32, this->php_host(), target);
   }
 
-  // optional int32 php_port = 13;
+  // optional int32 php_port = 33;
   if (has_php_port()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(13, this->php_port(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(33, this->php_port(), target);
   }
 
-  // optional int32 client_outoftime = 21;
-  if (has_client_outoftime()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(21, this->client_outoftime(), target);
-  }
-
-  // optional string redis_ip = 51;
+  // optional string redis_ip = 41;
   if (has_redis_ip()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->redis_ip().data(), this->redis_ip().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        51, this->redis_ip(), target);
+        41, this->redis_ip(), target);
   }
 
-  // optional int32 redis_port = 52;
+  // optional int32 redis_port = 42;
   if (has_redis_port()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(52, this->redis_port(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(42, this->redis_port(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4291,27 +4242,6 @@ int SvrConfig::ByteSize() const {
           this->log_config());
     }
 
-    // optional int32 http_listen = 11;
-    if (has_http_listen()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->http_listen());
-    }
-
-    // optional string php_host = 12;
-    if (has_php_host()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->php_host());
-    }
-
-    // optional int32 php_port = 13;
-    if (has_php_port()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::Int32Size(
-          this->php_port());
-    }
-
     // optional int32 client_outoftime = 21;
     if (has_client_outoftime()) {
       total_size += 2 +
@@ -4319,16 +4249,37 @@ int SvrConfig::ByteSize() const {
           this->client_outoftime());
     }
 
+    // optional int32 http_listen = 31;
+    if (has_http_listen()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->http_listen());
+    }
+
+    // optional string php_host = 32;
+    if (has_php_host()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->php_host());
+    }
+
+    // optional int32 php_port = 33;
+    if (has_php_port()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->php_port());
+    }
+
   }
   if (_has_bits_[8 / 32] & (0xffu << (8 % 32))) {
-    // optional string redis_ip = 51;
+    // optional string redis_ip = 41;
     if (has_redis_ip()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->redis_ip());
     }
 
-    // optional int32 redis_port = 52;
+    // optional int32 redis_port = 42;
     if (has_redis_port()) {
       total_size += 2 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -4374,6 +4325,9 @@ void SvrConfig::MergeFrom(const SvrConfig& from) {
     if (from.has_log_config()) {
       set_log_config(from.log_config());
     }
+    if (from.has_client_outoftime()) {
+      set_client_outoftime(from.client_outoftime());
+    }
     if (from.has_http_listen()) {
       set_http_listen(from.http_listen());
     }
@@ -4382,9 +4336,6 @@ void SvrConfig::MergeFrom(const SvrConfig& from) {
     }
     if (from.has_php_port()) {
       set_php_port(from.php_port());
-    }
-    if (from.has_client_outoftime()) {
-      set_client_outoftime(from.client_outoftime());
     }
   }
   if (from._has_bits_[8 / 32] & (0xffu << (8 % 32))) {
@@ -4421,10 +4372,10 @@ void SvrConfig::Swap(SvrConfig* other) {
     std::swap(log_dir_, other->log_dir_);
     std::swap(log_level_, other->log_level_);
     std::swap(log_config_, other->log_config_);
+    std::swap(client_outoftime_, other->client_outoftime_);
     std::swap(http_listen_, other->http_listen_);
     std::swap(php_host_, other->php_host_);
     std::swap(php_port_, other->php_port_);
-    std::swap(client_outoftime_, other->client_outoftime_);
     std::swap(redis_ip_, other->redis_ip_);
     std::swap(redis_port_, other->redis_port_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);

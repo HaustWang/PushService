@@ -8,6 +8,7 @@
 #include "push_proto_client.h"
 #include "push_proto_server.h"
 #include "onliner_message_processor.h"
+#include "json.h"
 
 extern struct event_base* g_event_base;
 
@@ -38,7 +39,7 @@ int HttpProcess::Init(const char *addr, unsigned int port)
         return -1;
     }
     //绑定http的回调函数
-    iret = evhttp_set_cb(http, "/proxy/",api_request_cb, NULL);
+    iret = evhttp_set_cb(http, "/push",api_request_cb, NULL);
     if(0 != iret)
     {
         log_error("evhttp_set_cb err!");
@@ -75,7 +76,19 @@ void HttpProcess::HttpRequest(struct evhttp_request *req, void *arg)
     int length = (int)evbuffer_get_length(evinput);
     evbuffer_remove(evinput, data, length);
 
-    ConnectToOnlinerMgr::Instance()->SendPushMsgToDBWorker(atoi(request_parm["msgid"].c_str()), request_parm["client_id"], atoi(request_parm["expire_time"].c_str()), data, length);
+    Json::Reader reader;
+    Json::Value value;
+    if(!reader.parse((const char*)data, (const char*)data+length, value))
+    {
+        SendResponse(req, -1, "format error!");
+        return;
+    }
+
+    Json::FastWriter writer;
+    std::string msg = writer.write(value["msg"]);
+    if(request_parm["platform"] == "0")
+        ConnectToOnlinerMgr::Instance()->SendPushMsgToDBWorker(atoi(request_parm["msgid"].c_str()),
+                value["client_ids"].begin(), value["client_ids"].end(), atoi(request_parm["expire_time"].c_str()), (unsigned char*)msg.data(), msg.length());
 
     SendResponse(req, 0, "success");
     return;

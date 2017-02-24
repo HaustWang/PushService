@@ -186,7 +186,7 @@ int Center::ReloadConfig()
     config.set_log_config(m_log_config);
 
     std::vector<ClientInfo*> client_vec;
-    for(int i = SERVER_TYPE_MIN; i < SERVER_TYPE_MAX; ++i)
+    for(int i = ServerType_MIN; i <= ServerType_MAX; ++i)
     {
         ClientManage::Instance()->GetClientInfoList(i, client_vec);
         if(client_vec.empty())  continue;

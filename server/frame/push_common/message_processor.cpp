@@ -77,7 +77,7 @@ void MessageProcessor::DestroyMessage(google::protobuf::Message* pmsg)
         delete pmsg;
 }
 
-int MessageProcessor::FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const int dst_svr_type, const SvrMsgHead* src_head, const std::string& client_id, const std::string& appid)
+int MessageProcessor::FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const int dst_svr_type, const SvrMsgHead* src_head, const std::string& client_id)
 {
     head->set_type(type);
     head->set_src_svr_type(m_SvrType);
@@ -96,9 +96,6 @@ int MessageProcessor::FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const
 
     if(!client_id.empty())
         head->set_client_id(client_id);
-
-    if(!appid.empty())
-        head->set_appid(appid);
 
     return 0;
 }
@@ -189,7 +186,7 @@ int MessageProcessor::ProcessMessage(ClientInfo* client_info, const google::prot
     int ret = it->second.first->ProcessMessage(client_info, head, message);
     if (ret < 0)
     {
-        log_warning("process :%d failed,client_id:%s, appid:%s", head->type(), head->client_id().c_str(), head->appid().c_str() );
+        log_warning("process :%d failed,client_id:%s", head->type(), head->client_id().c_str());
     }
 
     DestroyMessage(message);

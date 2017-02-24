@@ -629,41 +629,17 @@ class SvrPushMessage : public ::google::protobuf::Message {
 
   // accessors -------------------------------------------------------
 
-  // optional string appid = 1;
-  inline bool has_appid() const;
-  inline void clear_appid();
-  static const int kAppidFieldNumber = 1;
-  inline const ::std::string& appid() const;
-  inline void set_appid(const ::std::string& value);
-  inline void set_appid(const char* value);
-  inline void set_appid(const char* value, size_t size);
-  inline ::std::string* mutable_appid();
-  inline ::std::string* release_appid();
-  inline void set_allocated_appid(::std::string* appid);
-
-  // optional string appname = 2;
-  inline bool has_appname() const;
-  inline void clear_appname();
-  static const int kAppnameFieldNumber = 2;
-  inline const ::std::string& appname() const;
-  inline void set_appname(const ::std::string& value);
-  inline void set_appname(const char* value);
-  inline void set_appname(const char* value, size_t size);
-  inline ::std::string* mutable_appname();
-  inline ::std::string* release_appname();
-  inline void set_allocated_appname(::std::string* appname);
-
-  // optional int64 msgid = 3;
+  // optional int64 msgid = 1;
   inline bool has_msgid() const;
   inline void clear_msgid();
-  static const int kMsgidFieldNumber = 3;
+  static const int kMsgidFieldNumber = 1;
   inline ::google::protobuf::int64 msgid() const;
   inline void set_msgid(::google::protobuf::int64 value);
 
-  // optional bytes msg = 4;
+  // optional bytes msg = 2;
   inline bool has_msg() const;
   inline void clear_msg();
-  static const int kMsgFieldNumber = 4;
+  static const int kMsgFieldNumber = 2;
   inline const ::std::string& msg() const;
   inline void set_msg(const ::std::string& value);
   inline void set_msg(const char* value);
@@ -674,10 +650,6 @@ class SvrPushMessage : public ::google::protobuf::Message {
 
   // @@protoc_insertion_point(class_scope:SvrPushMessage)
  private:
-  inline void set_has_appid();
-  inline void clear_has_appid();
-  inline void set_has_appname();
-  inline void clear_has_appname();
   inline void set_has_msgid();
   inline void clear_has_msgid();
   inline void set_has_msg();
@@ -685,13 +657,11 @@ class SvrPushMessage : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* appid_;
-  ::std::string* appname_;
   ::google::protobuf::int64 msgid_;
   ::std::string* msg_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(2 + 31) / 32];
 
   friend void  protobuf_AddDesc_push_5fproto_5fclient_2eproto();
   friend void protobuf_AssignDesc_push_5fproto_5fclient_2eproto();
@@ -1579,155 +1549,15 @@ inline void CipherContent::set_allocated_client_id(::std::string* client_id) {
 
 // SvrPushMessage
 
-// optional string appid = 1;
-inline bool SvrPushMessage::has_appid() const {
+// optional int64 msgid = 1;
+inline bool SvrPushMessage::has_msgid() const {
   return (_has_bits_[0] & 0x00000001u) != 0;
 }
-inline void SvrPushMessage::set_has_appid() {
+inline void SvrPushMessage::set_has_msgid() {
   _has_bits_[0] |= 0x00000001u;
 }
-inline void SvrPushMessage::clear_has_appid() {
-  _has_bits_[0] &= ~0x00000001u;
-}
-inline void SvrPushMessage::clear_appid() {
-  if (appid_ != &::google::protobuf::internal::kEmptyString) {
-    appid_->clear();
-  }
-  clear_has_appid();
-}
-inline const ::std::string& SvrPushMessage::appid() const {
-  return *appid_;
-}
-inline void SvrPushMessage::set_appid(const ::std::string& value) {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  appid_->assign(value);
-}
-inline void SvrPushMessage::set_appid(const char* value) {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  appid_->assign(value);
-}
-inline void SvrPushMessage::set_appid(const char* value, size_t size) {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  appid_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SvrPushMessage::mutable_appid() {
-  set_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    appid_ = new ::std::string;
-  }
-  return appid_;
-}
-inline ::std::string* SvrPushMessage::release_appid() {
-  clear_has_appid();
-  if (appid_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = appid_;
-    appid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SvrPushMessage::set_allocated_appid(::std::string* appid) {
-  if (appid_ != &::google::protobuf::internal::kEmptyString) {
-    delete appid_;
-  }
-  if (appid) {
-    set_has_appid();
-    appid_ = appid;
-  } else {
-    clear_has_appid();
-    appid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional string appname = 2;
-inline bool SvrPushMessage::has_appname() const {
-  return (_has_bits_[0] & 0x00000002u) != 0;
-}
-inline void SvrPushMessage::set_has_appname() {
-  _has_bits_[0] |= 0x00000002u;
-}
-inline void SvrPushMessage::clear_has_appname() {
-  _has_bits_[0] &= ~0x00000002u;
-}
-inline void SvrPushMessage::clear_appname() {
-  if (appname_ != &::google::protobuf::internal::kEmptyString) {
-    appname_->clear();
-  }
-  clear_has_appname();
-}
-inline const ::std::string& SvrPushMessage::appname() const {
-  return *appname_;
-}
-inline void SvrPushMessage::set_appname(const ::std::string& value) {
-  set_has_appname();
-  if (appname_ == &::google::protobuf::internal::kEmptyString) {
-    appname_ = new ::std::string;
-  }
-  appname_->assign(value);
-}
-inline void SvrPushMessage::set_appname(const char* value) {
-  set_has_appname();
-  if (appname_ == &::google::protobuf::internal::kEmptyString) {
-    appname_ = new ::std::string;
-  }
-  appname_->assign(value);
-}
-inline void SvrPushMessage::set_appname(const char* value, size_t size) {
-  set_has_appname();
-  if (appname_ == &::google::protobuf::internal::kEmptyString) {
-    appname_ = new ::std::string;
-  }
-  appname_->assign(reinterpret_cast<const char*>(value), size);
-}
-inline ::std::string* SvrPushMessage::mutable_appname() {
-  set_has_appname();
-  if (appname_ == &::google::protobuf::internal::kEmptyString) {
-    appname_ = new ::std::string;
-  }
-  return appname_;
-}
-inline ::std::string* SvrPushMessage::release_appname() {
-  clear_has_appname();
-  if (appname_ == &::google::protobuf::internal::kEmptyString) {
-    return NULL;
-  } else {
-    ::std::string* temp = appname_;
-    appname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-    return temp;
-  }
-}
-inline void SvrPushMessage::set_allocated_appname(::std::string* appname) {
-  if (appname_ != &::google::protobuf::internal::kEmptyString) {
-    delete appname_;
-  }
-  if (appname) {
-    set_has_appname();
-    appname_ = appname;
-  } else {
-    clear_has_appname();
-    appname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  }
-}
-
-// optional int64 msgid = 3;
-inline bool SvrPushMessage::has_msgid() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
-}
-inline void SvrPushMessage::set_has_msgid() {
-  _has_bits_[0] |= 0x00000004u;
-}
 inline void SvrPushMessage::clear_has_msgid() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000001u;
 }
 inline void SvrPushMessage::clear_msgid() {
   msgid_ = GOOGLE_LONGLONG(0);
@@ -1741,15 +1571,15 @@ inline void SvrPushMessage::set_msgid(::google::protobuf::int64 value) {
   msgid_ = value;
 }
 
-// optional bytes msg = 4;
+// optional bytes msg = 2;
 inline bool SvrPushMessage::has_msg() const {
-  return (_has_bits_[0] & 0x00000008u) != 0;
+  return (_has_bits_[0] & 0x00000002u) != 0;
 }
 inline void SvrPushMessage::set_has_msg() {
-  _has_bits_[0] |= 0x00000008u;
+  _has_bits_[0] |= 0x00000002u;
 }
 inline void SvrPushMessage::clear_has_msg() {
-  _has_bits_[0] &= ~0x00000008u;
+  _has_bits_[0] &= ~0x00000002u;
 }
 inline void SvrPushMessage::clear_msg() {
   if (msg_ != &::google::protobuf::internal::kEmptyString) {

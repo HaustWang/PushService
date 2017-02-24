@@ -58,17 +58,15 @@ int SvrInsertMsgHandler::ProcessMessage(ClientInfo* pclient_info, const google::
 
     const SvrInsertMsg* msg = dynamic_cast<const SvrInsertMsg*>(pmsg);
 
-    std::vector<std::string> cli_ids_vec;
-    split_str(msg->client_ids().c_str(), ",", cli_ids_vec);
-
-    for(std::vector<std::string>::iterator it = cli_ids_vec.begin(); it != cli_ids_vec.end(); ++it)
+    for(int i = 0; i < msg->client_ids_size(); ++i)
     {
-        if(DbWorkerMgrInst.IsClientOnline(*it))
-            MessageProcessorInst.SendTransferMsg(*it, msg->msgid(), DbWorkerMgrInst.GetClientConnectorId(*it), msg->msg());
+        std::string const& cli_id = msg->client_ids(i);
+        if(DbWorkerMgrInst.IsClientOnline(cli_id))
+            MessageProcessorInst.SendTransferMsg(cli_id, msg->msgid(), DbWorkerMgrInst.GetClientConnectorId(cli_id), msg->msg());
     }
 
     if(0 <= msg->expire_time())
-        DbWorkerMgrInst.InsertMsgToRedis(msg->msgid(), cli_ids_vec, msg->msg(), msg->expire_time());
+        DbWorkerMgrInst.InsertMsgToRedis(msg->msgid(), msg->client_ids().begin(), msg->client_ids().end(), msg->msg(), msg->expire_time());
 
     return 0;
 }

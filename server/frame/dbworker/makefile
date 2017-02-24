@@ -26,3 +26,6 @@ clean:
 	rm -rf $(BINARY) $(DEP_DIR) *.d.* *.d *.o &2>/dev/null
 
 -include $(PROJECT_DIR)/makefile.rule
+
+
+

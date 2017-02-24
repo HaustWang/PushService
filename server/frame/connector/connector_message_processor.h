@@ -39,8 +39,8 @@ public:
 	void InitMessageIdMap();
 public:
 	virtual int ProcessClose(ClientInfo* );
-    int SendMessageToClient(std::string const& client_id, std::string const& appid, std::string const& content);
-    int SendMessageToAllClient(std::string const& appid, std::string const& content);
+    int SendMessageToClient(std::string const& client_id, int64_t msgid, std::string const& content);
+    int SendMessageToAllClient(int64_t msgid, std::string const& content);
 	int SendMessageToClient(PushClientInfo* client_info,   const ClientMsgHead*, const google::protobuf::Message*);
 	int ProcessLoginReq( PushClientInfo* client_info,   const ClientMsgHead*, const google::protobuf::Message*);
 	int ProcessHeartbeat( PushClientInfo* client_info,   const ClientMsgHead*, const google::protobuf::Message*);

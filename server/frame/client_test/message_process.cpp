@@ -203,7 +203,7 @@ int MessageProcess::ProcessClientRegResponse(const ClientMsgHead*, google::proto
 int MessageProcess::ProcessSvrPushMessage(const  ClientMsgHead* head, google::protobuf::Message* message)
 {
     SvrPushMessage* msg = dynamic_cast<SvrPushMessage*>(message);
-    log_debug("client_id:%s, appid:%s, appname:%s, msg:%s", head->client_id().c_str(), msg->appid().c_str(), msg->appname().c_str(), msg->msg().c_str());
+    log_debug("client_id:%s, msg:%s", head->client_id().c_str(),msg->msg().c_str());
 
     ClientMsgHead mh;
     fill_message_head(&mh, head->client_id(), CMT_PUSH_ACK);

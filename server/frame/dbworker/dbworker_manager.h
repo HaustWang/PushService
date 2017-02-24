@@ -10,6 +10,8 @@
 #include <map>
 #include <set>
 
+typedef google::protobuf::internal::RepeatedPtrIterator<std::string const> Iter;
+
 class DbWorkerMgr
 {
 public:
@@ -20,7 +22,7 @@ public:
 
     int UpdateUserStatus(std::string const& client_id, bool is_online, int32_t connector_id);
 
-    int InsertMsgToRedis(uint32_t msgid, std::vector<std::string> const& client_ids, std::string const& msg, int expire_time);
+    int InsertMsgToRedis(uint32_t msgid, Iter begin, Iter end, std::string const& msg, int expire_time);
     void QueryMsgFromRedis(std::string const& client_id);
     int UserReceivedMsg(std::string const& client_id, int64_t msgid);
 

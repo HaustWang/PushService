@@ -98,9 +98,9 @@ void DbWorkerMgr::CheckMsg()
     }
 }
 
-int DbWorkerMgr::InsertMsgToRedis(uint32_t msgid, std::vector<std::string> const& client_ids, std::string const& msg, int expire_time)
+int DbWorkerMgr::InsertMsgToRedis(uint32_t msgid, Iter begin, Iter end, std::string const& msg, int expire_time)
 {
-    if(msg.empty() || client_ids.empty() || expire_time <= 0)
+    if(msg.empty() || begin == end || expire_time <= 0)
         return 0;
 
     if(RedisSuccess != m_RedisManagerMsg.UpdateOneHashField(msgid, FieldInfo(FIELD_MSG_NAME, msg), expire_time))
@@ -110,7 +110,7 @@ int DbWorkerMgr::InsertMsgToRedis(uint32_t msgid, std::vector<std::string> const
     }
 
     static std::string set_key_prefix(MSG_SET_KEY_PREFIX);
-    for(std::vector<std::string>::const_iterator it = client_ids.begin(); client_ids.end() != it; ++it)
+    for(Iter it = begin; end != it; ++it)
     {
         m_MsgMap[*it].insert(msgid);
         m_RedisManagerMsg.AddSet(set_key_prefix + *it, msgid);

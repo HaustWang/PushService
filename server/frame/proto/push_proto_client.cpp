@@ -138,9 +138,7 @@ void protobuf_AssignDesc_push_5fproto_5fclient_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(CipherContent));
   SvrPushMessage_descriptor_ = file->message_type(5);
-  static const int SvrPushMessage_offsets_[4] = {
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrPushMessage, appid_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrPushMessage, appname_),
+  static const int SvrPushMessage_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrPushMessage, msgid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrPushMessage, msg_),
   };
@@ -274,15 +272,14 @@ void protobuf_AddDesc_push_5fproto_5fclient_2eproto() {
     "oginResponse\022\033\n\006result\030\001 \001(\0162\013.ResultCod"
     "e\022\013\n\003key\030\002 \001(\t\022\016\n\006cipher\030\003 \001(\014\"4\n\rCipher"
     "Content\022\020\n\010true_key\030\001 \001(\t\022\021\n\tclient_id\030\002"
-    " \001(\t\"L\n\016SvrPushMessage\022\r\n\005appid\030\001 \001(\t\022\017\n"
-    "\007appname\030\002 \001(\t\022\r\n\005msgid\030\003 \001(\003\022\013\n\003msg\030\004 \001"
-    "(\014\";\n\rClientPushAck\022\033\n\006result\030\001 \001(\0162\013.Re"
-    "sultCode\022\r\n\005msgid\030\002 \001(\003\"!\n\020ClientUpdateR"
-    "ead\022\r\n\005msgid\030\001 \001(\003\"\034\n\014HeartbeatMsg\022\014\n\004ti"
-    "me\030\001 \001(\005*\201\001\n\rClientMsgType\022\021\n\rCMT_LOGIN_"
-    "REQ\020\001\022\022\n\016CMT_LOGIN_RESP\020\002\022\020\n\014CMT_PUSH_MS"
-    "G\020\003\022\020\n\014CMT_PUSH_ACK\020\004\022\023\n\017CMT_UPDATE_READ"
-    "\020\005\022\020\n\014CMT_HEATBEAT\020d", 700);
+    " \001(\t\",\n\016SvrPushMessage\022\r\n\005msgid\030\001 \001(\003\022\013\n"
+    "\003msg\030\002 \001(\014\";\n\rClientPushAck\022\033\n\006result\030\001 "
+    "\001(\0162\013.ResultCode\022\r\n\005msgid\030\002 \001(\003\"!\n\020Clien"
+    "tUpdateRead\022\r\n\005msgid\030\001 \001(\003\"\034\n\014HeartbeatM"
+    "sg\022\014\n\004time\030\001 \001(\005*\201\001\n\rClientMsgType\022\021\n\rCM"
+    "T_LOGIN_REQ\020\001\022\022\n\016CMT_LOGIN_RESP\020\002\022\020\n\014CMT"
+    "_PUSH_MSG\020\003\022\020\n\014CMT_PUSH_ACK\020\004\022\023\n\017CMT_UPD"
+    "ATE_READ\020\005\022\020\n\014CMT_HEATBEAT\020d", 668);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "push_proto_client.proto", &protobuf_RegisterTypes);
   ClientMsgHead::default_instance_ = new ClientMsgHead();
@@ -1732,8 +1729,6 @@ void CipherContent::Swap(CipherContent* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
-const int SvrPushMessage::kAppidFieldNumber;
-const int SvrPushMessage::kAppnameFieldNumber;
 const int SvrPushMessage::kMsgidFieldNumber;
 const int SvrPushMessage::kMsgFieldNumber;
 #endif  // !_MSC_VER
@@ -1754,8 +1749,6 @@ SvrPushMessage::SvrPushMessage(const SvrPushMessage& from)
 
 void SvrPushMessage::SharedCtor() {
   _cached_size_ = 0;
-  appid_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
-  appname_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   msgid_ = GOOGLE_LONGLONG(0);
   msg_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1766,12 +1759,6 @@ SvrPushMessage::~SvrPushMessage() {
 }
 
 void SvrPushMessage::SharedDtor() {
-  if (appid_ != &::google::protobuf::internal::kEmptyString) {
-    delete appid_;
-  }
-  if (appname_ != &::google::protobuf::internal::kEmptyString) {
-    delete appname_;
-  }
   if (msg_ != &::google::protobuf::internal::kEmptyString) {
     delete msg_;
   }
@@ -1802,16 +1789,6 @@ SvrPushMessage* SvrPushMessage::New() const {
 
 void SvrPushMessage::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (has_appid()) {
-      if (appid_ != &::google::protobuf::internal::kEmptyString) {
-        appid_->clear();
-      }
-    }
-    if (has_appname()) {
-      if (appname_ != &::google::protobuf::internal::kEmptyString) {
-        appname_->clear();
-      }
-    }
     msgid_ = GOOGLE_LONGLONG(0);
     if (has_msg()) {
       if (msg_ != &::google::protobuf::internal::kEmptyString) {
@@ -1829,44 +1806,10 @@ bool SvrPushMessage::MergePartialFromCodedStream(
   ::google::protobuf::uint32 tag;
   while ((tag = input->ReadTag()) != 0) {
     switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
-      // optional string appid = 1;
+      // optional int64 msgid = 1;
       case 1: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_appid()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->appid().data(), this->appid().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_appname;
-        break;
-      }
-
-      // optional string appname = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_appname:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_appname()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->appname().data(), this->appname().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(24)) goto parse_msgid;
-        break;
-      }
-
-      // optional int64 msgid = 3;
-      case 3: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
-         parse_msgid:
           DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &msgid_)));
@@ -1874,12 +1817,12 @@ bool SvrPushMessage::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(34)) goto parse_msg;
+        if (input->ExpectTag(18)) goto parse_msg;
         break;
       }
 
-      // optional bytes msg = 4;
-      case 4: {
+      // optional bytes msg = 2;
+      case 2: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_msg:
@@ -1910,33 +1853,15 @@ bool SvrPushMessage::MergePartialFromCodedStream(
 
 void SvrPushMessage::SerializeWithCachedSizes(
     ::google::protobuf::io::CodedOutputStream* output) const {
-  // optional string appid = 1;
-  if (has_appid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->appid().data(), this->appid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      1, this->appid(), output);
-  }
-
-  // optional string appname = 2;
-  if (has_appname()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->appname().data(), this->appname().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->appname(), output);
-  }
-
-  // optional int64 msgid = 3;
+  // optional int64 msgid = 1;
   if (has_msgid()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt64(3, this->msgid(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->msgid(), output);
   }
 
-  // optional bytes msg = 4;
+  // optional bytes msg = 2;
   if (has_msg()) {
     ::google::protobuf::internal::WireFormatLite::WriteBytes(
-      4, this->msg(), output);
+      2, this->msg(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1947,36 +1872,16 @@ void SvrPushMessage::SerializeWithCachedSizes(
 
 ::google::protobuf::uint8* SvrPushMessage::SerializeWithCachedSizesToArray(
     ::google::protobuf::uint8* target) const {
-  // optional string appid = 1;
-  if (has_appid()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->appid().data(), this->appid().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        1, this->appid(), target);
-  }
-
-  // optional string appname = 2;
-  if (has_appname()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->appname().data(), this->appname().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->appname(), target);
-  }
-
-  // optional int64 msgid = 3;
+  // optional int64 msgid = 1;
   if (has_msgid()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(3, this->msgid(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->msgid(), target);
   }
 
-  // optional bytes msg = 4;
+  // optional bytes msg = 2;
   if (has_msg()) {
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
-        4, this->msg(), target);
+        2, this->msg(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1990,28 +1895,14 @@ int SvrPushMessage::ByteSize() const {
   int total_size = 0;
 
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    // optional string appid = 1;
-    if (has_appid()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->appid());
-    }
-
-    // optional string appname = 2;
-    if (has_appname()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->appname());
-    }
-
-    // optional int64 msgid = 3;
+    // optional int64 msgid = 1;
     if (has_msgid()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int64Size(
           this->msgid());
     }
 
-    // optional bytes msg = 4;
+    // optional bytes msg = 2;
     if (has_msg()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::BytesSize(
@@ -2045,12 +1936,6 @@ void SvrPushMessage::MergeFrom(const ::google::protobuf::Message& from) {
 void SvrPushMessage::MergeFrom(const SvrPushMessage& from) {
   GOOGLE_CHECK_NE(&from, this);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
-    if (from.has_appid()) {
-      set_appid(from.appid());
-    }
-    if (from.has_appname()) {
-      set_appname(from.appname());
-    }
     if (from.has_msgid()) {
       set_msgid(from.msgid());
     }
@@ -2080,8 +1965,6 @@ bool SvrPushMessage::IsInitialized() const {
 
 void SvrPushMessage::Swap(SvrPushMessage* other) {
   if (other != this) {
-    std::swap(appid_, other->appid_);
-    std::swap(appname_, other->appname_);
     std::swap(msgid_, other->msgid_);
     std::swap(msg_, other->msg_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);

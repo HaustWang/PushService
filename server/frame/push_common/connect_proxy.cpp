@@ -114,8 +114,6 @@ int  ConnectProxyMgr::SendMessageToServer(const SvrMsgHead* head, google::protob
     if(m_ociv.size()>0)
     {
         unsigned long hash = strhash(head->client_id().c_str(), head->client_id().length());
-        if(0 == hash)
-            hash = strhash(head->appid().c_str(), head->appid().length());
 
         select_proxy_idx = hash % m_ociv.size() ;
     }

@@ -14,6 +14,9 @@
 #include "log4cpp_log.h"
 #include "connect_proxy.h"
 #include "redismanager.h"
+#include "json.h"
+
+typedef Json::ValueIterator Iter;
 
 class OnlinerMessageProcessor : public ProxyMessageProcessor 
 {
@@ -54,6 +57,8 @@ public:
 	}
 
     int SendPushMsgToDBWorker(int32_t msg_id, std::string const& client_id, int32_t expire_time, unsigned char *data, size_t length);
+
+    int SendPushMsgToDBWorker(int32_t msg_id, Iter begin, Iter end, int32_t expire_time, unsigned char *data, size_t length);
 
 };
 
