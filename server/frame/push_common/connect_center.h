@@ -56,7 +56,7 @@ public:
     const SvrConfig& GetConfig() const { return m_svr_config; }
     SvrConfig& Config() { return m_svr_config; }
 
-    bool HasNewAddress(int svr_type) { return m_svr_addr[svr_type].empty(); }
+    bool HasNewAddress(int svr_type) { return !m_svr_addr[svr_type].empty(); }
     const std::vector<SvrAddress>& GetNewAddress(int svr_type) { return m_svr_addr[svr_type]; }
     void EraseNewAddress(int svr_type) { m_svr_addr.erase(svr_type); }
     void SetNewConfig(bool v) { m_new_config = v; }
@@ -69,6 +69,7 @@ private:
 	{
         bevt = NULL;
         m_last_connect_time = 0;
+        m_new_config = false;
 	}
 
 private:
@@ -94,7 +95,7 @@ public:
     }
 
     virtual void InitMessageIdMap();
-	virtual int RegisterToServer(ConnectToCenter* );
+	virtual int RegisterToServer(const ClientInfo* );
 
     int ProcessConfigResponse(ConnectToCenter*, const SvrMsgHead*, const google::protobuf::Message*);
     int ProcessBroadcastAddr(ConnectToCenter*, const SvrMsgHead*, const google::protobuf::Message*);

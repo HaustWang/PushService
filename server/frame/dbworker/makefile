@@ -19,11 +19,12 @@ $(BINARY) : $(OBJ)
 cleantarget:
 	rm -rf $(BINARY)
 
-install:
-	cp -f $(BINARY) ./bin
-
 clean:
 	rm -rf $(BINARY) $(DEP_DIR) *.d.* *.d *.o &2>/dev/null
+
+install:
+	cp -f $(BINARY) $(BIN_DIR)/
+
 
 -include $(PROJECT_DIR)/makefile.rule
 

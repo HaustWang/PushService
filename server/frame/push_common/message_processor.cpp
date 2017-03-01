@@ -28,11 +28,11 @@ int MessageProcessor::GetCompletePackage(struct bufferevent *bev, char* pkg, int
 
     //转换字节序
     pkg_len = htonl(pkg_len);
-    log_debug("pkg len : %d", pkg_len);
+    // log_debug("pkg len : %d", pkg_len);
 
     if(pkg_len > *len || pkg_len <= (int)sizeof(int))
     {
-        log_warning("pkg len :%d is invalid", pkg_len);
+        // log_warning("pkg len :%d is invalid", pkg_len);
         evbuffer_drain(bev->input, pkg_len);
         return -1;
     }
@@ -77,7 +77,7 @@ void MessageProcessor::DestroyMessage(google::protobuf::Message* pmsg)
         delete pmsg;
 }
 
-int MessageProcessor::FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const int dst_svr_type, const SvrMsgHead* src_head, const std::string& client_id)
+int MessageProcessor::FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const int dst_svr_type, const SvrMsgHead* src_head)
 {
     head->set_type(type);
     head->set_src_svr_type(m_SvrType);
@@ -94,9 +94,6 @@ int MessageProcessor::FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const
         head->set_proxy_svr_id(src_head->proxy_svr_id());
     }
 
-    if(!client_id.empty())
-        head->set_client_id(client_id);
-
     return 0;
 }
 
@@ -112,12 +109,13 @@ int MessageProcessor::SendMessageToServer(const ClientInfo* client_info,const Sv
 {
     if(!client_info)
     {
-        log_error("client_info is null");
         return -1;
     }
 
-    client_info->ShortDebugString();
-	log_debug("message head:%s, message body:%s",head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
+    if(client_info->is_register)
+	    log_debug("client_info:%s, message head:%s, message body:%s", client_info->ShortDebugString().c_str(), head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
+    else
+	    printf("[%s:%d] client_info:%s, message head:%s, message body:%s\n", __FILE__, __LINE__, client_info->ShortDebugString().c_str(), head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
 
     std::string message_body_str;
 	message->SerializeToString(&message_body_str);
@@ -129,16 +127,21 @@ int MessageProcessor::SendMessageToServer(const ClientInfo* client_info,const Sv
 {
     if(!client_info)
     {
-        log_error("client_info is null");
         return -1;
     }
 
-    client_info->ShortDebugString();
-	log_debug("message head:%s",head->ShortDebugString().c_str());
+    if(client_info->is_register)
+	    log_debug("client_info:%s, message head:%s", client_info->ShortDebugString().c_str(), head->ShortDebugString().c_str());
+    else
+	    printf("[%s:%d] client_info:%s, message head:%s\n", __FILE__, __LINE__, client_info->ShortDebugString().c_str(), head->ShortDebugString().c_str());
 
     if( client_info->fd <=0 || client_info->bevt==NULL)
     {
-        log_error(" lost connection to server , Reconnect it!  ");
+        if(client_info->is_register)
+            log_error(" lost connection to server , Reconnect it!  ");
+        else
+            printf("[%s:%d] lost connection to server , Reconnect it!\n", __FILE__, __LINE__);
+
         ((ClientInfo*)client_info)->Reconnect();
     }
 
@@ -163,7 +166,11 @@ int MessageProcessor::SendMessageToServer(const ClientInfo* client_info,const Sv
 
 int MessageProcessor::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, std::string const& body)
 {
-    client_info->ShortDebugString();
+    if(client_info->is_register)
+        log_debug("client_info:%s", client_info->ShortDebugString().c_str());
+    else
+        printf("[%s:%d] client_info:%s\n", __FILE__, __LINE__, client_info->ShortDebugString().c_str());
+
 
     const SvrMsgHead* head = dynamic_cast<const SvrMsgHead*>(phead);
 
@@ -171,25 +178,54 @@ int MessageProcessor::ProcessMessage(ClientInfo* client_info, const google::prot
     it = msg_handler_map_.find(head->type());
     if(it == msg_handler_map_.end())
     {
-        log_warning("message id %d not register!", head->type() );
+        if(client_info->is_register)
+            log_warning("message id %d not register!", head->type() );
+        else
+            printf("[%s:%d] message id %d not register!\n", __FILE__, __LINE__, head->type() );
+
         return -1;
     }
 
-    google::protobuf::Message* message = CreateMessage(it->second.second,body);
-    if(!message)
+    if(body.empty())
     {
-        log_error("can not create message body , message head: %s", head->ShortDebugString().c_str());
-        return -1;
+        if(0 < it->second.first->ProcessMessage(client_info, head, NULL))
+        {
+            if(client_info->is_register)
+                log_warning("process :%d failed", head->type());
+            else
+                printf("[%s:%d] process :%d failed\n", __FILE__, __LINE__, head->type());
+        }
+    }
+    else
+    {
+        google::protobuf::Message* message = CreateMessage(it->second.second,body);
+        if(!message)
+        {
+            if(client_info->is_register)
+                log_error("can not create message body , message head: %s, msg_name:%s", head->ShortDebugString().c_str(), it->second.second.c_str());
+            else
+                printf("[%s:%d] can not create message body , message head: %s, msg_name:%s\n", __FILE__, __LINE__, head->ShortDebugString().c_str(), it->second.second.c_str());
+
+            return -1;
+        }
+
+
+        if(client_info->is_register)
+            log_info("message head:%s, message body:%s",head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
+        else
+            printf("[%s:%d] message head:%s, message body:%s\n", __FILE__, __LINE__, head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
+
+        if(0 < it->second.first->ProcessMessage(client_info, head, message))
+        {
+            if(client_info->is_register)
+                log_warning("process :%d failed", head->type());
+            else
+                printf("[%s:%d] process :%d failed\n", __FILE__, __LINE__, head->type());
+        }
+
+        DestroyMessage(message);
     }
 
-    log_debug("message head:%s, message body:%s",head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
-    int ret = it->second.first->ProcessMessage(client_info, head, message);
-    if (ret < 0)
-    {
-        log_warning("process :%d failed,client_id:%s", head->type(), head->client_id().c_str());
-    }
-
-    DestroyMessage(message);
     return 0;
 
 }

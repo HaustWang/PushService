@@ -33,6 +33,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SvrUpdateUser_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SvrUpdateUser_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SvrKickUser_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SvrKickUser_reflection_ = NULL;
 const ::google::protobuf::Descriptor* SvrUserMsgAck_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SvrUserMsgAck_reflection_ = NULL;
@@ -76,9 +79,8 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       "push_proto_server.proto");
   GOOGLE_CHECK(file != NULL);
   SvrMsgHead_descriptor_ = file->message_type(0);
-  static const int SvrMsgHead_offsets_[8] = {
+  static const int SvrMsgHead_offsets_[7] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, type_),
-    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, client_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, src_svr_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, src_svr_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrMsgHead, dst_svr_type_),
@@ -145,8 +147,9 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrRegResponse));
   SvrUpdateUser_descriptor_ = file->message_type(4);
-  static const int SvrUpdateUser_offsets_[2] = {
+  static const int SvrUpdateUser_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUpdateUser, connector_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUpdateUser, client_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUpdateUser, is_online_),
   };
   SvrUpdateUser_reflection_ =
@@ -160,9 +163,26 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrUpdateUser));
-  SvrUserMsgAck_descriptor_ = file->message_type(5);
-  static const int SvrUserMsgAck_offsets_[1] = {
+  SvrKickUser_descriptor_ = file->message_type(5);
+  static const int SvrKickUser_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrKickUser, client_id_),
+  };
+  SvrKickUser_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SvrKickUser_descriptor_,
+      SvrKickUser::default_instance_,
+      SvrKickUser_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrKickUser, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrKickUser, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SvrKickUser));
+  SvrUserMsgAck_descriptor_ = file->message_type(6);
+  static const int SvrUserMsgAck_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUserMsgAck, msgid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUserMsgAck, client_id_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUserMsgAck, code_),
   };
   SvrUserMsgAck_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -175,9 +195,10 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrUserMsgAck));
-  SvrUserReadMsg_descriptor_ = file->message_type(6);
-  static const int SvrUserReadMsg_offsets_[1] = {
+  SvrUserReadMsg_descriptor_ = file->message_type(7);
+  static const int SvrUserReadMsg_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUserReadMsg, msgid_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrUserReadMsg, client_id_),
   };
   SvrUserReadMsg_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -190,10 +211,11 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrUserReadMsg));
-  SvrTransferMsg_descriptor_ = file->message_type(7);
-  static const int SvrTransferMsg_offsets_[2] = {
+  SvrTransferMsg_descriptor_ = file->message_type(8);
+  static const int SvrTransferMsg_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrTransferMsg, msgid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrTransferMsg, content_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrTransferMsg, client_ids_),
   };
   SvrTransferMsg_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -206,7 +228,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrTransferMsg));
-  SvrHeartbeatMsg_descriptor_ = file->message_type(8);
+  SvrHeartbeatMsg_descriptor_ = file->message_type(9);
   static const int SvrHeartbeatMsg_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrHeartbeatMsg, time_),
   };
@@ -221,7 +243,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrHeartbeatMsg));
-  SvrInsertMsg_descriptor_ = file->message_type(9);
+  SvrInsertMsg_descriptor_ = file->message_type(10);
   static const int SvrInsertMsg_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrInsertMsg, msgid_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrInsertMsg, client_ids_),
@@ -239,7 +261,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrInsertMsg));
-  SvrAddress_descriptor_ = file->message_type(10);
+  SvrAddress_descriptor_ = file->message_type(11);
   static const int SvrAddress_offsets_[3] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrAddress, svr_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrAddress, ip_),
@@ -256,7 +278,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrAddress));
-  SvrConfigReq_descriptor_ = file->message_type(11);
+  SvrConfigReq_descriptor_ = file->message_type(12);
   static const int SvrConfigReq_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfigReq, address_),
   };
@@ -271,7 +293,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrConfigReq));
-  SvrConfig_descriptor_ = file->message_type(12);
+  SvrConfig_descriptor_ = file->message_type(13);
   static const int SvrConfig_offsets_[10] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_dir_),
@@ -295,7 +317,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrConfig));
-  SvrConfigResp_descriptor_ = file->message_type(13);
+  SvrConfigResp_descriptor_ = file->message_type(14);
   static const int SvrConfigResp_offsets_[2] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfigResp, config_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfigResp, peer_addresses_),
@@ -311,7 +333,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrConfigResp));
-  SvrBroadcastAddress_descriptor_ = file->message_type(14);
+  SvrBroadcastAddress_descriptor_ = file->message_type(15);
   static const int SvrBroadcastAddress_offsets_[1] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrBroadcastAddress, peer_addresses_),
   };
@@ -351,6 +373,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SvrUpdateUser_descriptor_, &SvrUpdateUser::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SvrKickUser_descriptor_, &SvrKickUser::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SvrUserMsgAck_descriptor_, &SvrUserMsgAck::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SvrUserReadMsg_descriptor_, &SvrUserReadMsg::default_instance());
@@ -385,6 +409,8 @@ void protobuf_ShutdownFile_push_5fproto_5fserver_2eproto() {
   delete SvrRegResponse_reflection_;
   delete SvrUpdateUser::default_instance_;
   delete SvrUpdateUser_reflection_;
+  delete SvrKickUser::default_instance_;
+  delete SvrKickUser_reflection_;
   delete SvrUserMsgAck::default_instance_;
   delete SvrUserMsgAck_reflection_;
   delete SvrUserReadMsg::default_instance_;
@@ -416,45 +442,48 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
   ::protobuf_AddDesc_push_5fproto_5fcommon_2eproto();
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
     "\n\027push_proto_server.proto\032\027push_proto_co"
-    "mmon.proto\"\272\001\n\nSvrMsgHead\022\031\n\004type\030\001 \001(\0162"
-    "\013.SvrMsgType\022\021\n\tclient_id\030\002 \001(\t\022\024\n\014src_s"
-    "vr_type\030\004 \001(\005\022\022\n\nsrc_svr_id\030\005 \001(\005\022\024\n\014dst"
-    "_svr_type\030\006 \001(\005\022\022\n\ndst_svr_id\030\007 \001(\005\022\024\n\014p"
-    "roxy_svr_id\030\010 \001(\005\022\024\n\014is_broadcast\030\t \001(\010\""
-    "1\n\006SvrMsg\022\031\n\004head\030\001 \001(\0132\013.SvrMsgHead\022\014\n\004"
-    "body\030\002 \001(\014\"1\n\rSvrRegRequest\022\016\n\006svr_id\030\001 "
-    "\001(\005\022\020\n\010svr_type\030\002 \001(\005\"-\n\016SvrRegResponse\022"
-    "\033\n\006result\030\001 \001(\0162\013.ResultCode\"8\n\rSvrUpdat"
-    "eUser\022\024\n\014connector_id\030\001 \001(\005\022\021\n\tis_online"
-    "\030\002 \001(\010\"\036\n\rSvrUserMsgAck\022\r\n\005msgid\030\001 \001(\003\"\037"
-    "\n\016SvrUserReadMsg\022\r\n\005msgid\030\001 \001(\003\"0\n\016SvrTr"
-    "ansferMsg\022\r\n\005msgid\030\001 \001(\003\022\017\n\007content\030\002 \001("
-    "\014\"\037\n\017SvrHeartbeatMsg\022\014\n\004time\030\001 \001(\003\"S\n\014Sv"
-    "rInsertMsg\022\r\n\005msgid\030\001 \001(\r\022\022\n\nclient_ids\030"
-    "\002 \003(\t\022\013\n\003msg\030\003 \001(\014\022\023\n\013expire_time\030\004 \001(\005\""
-    "8\n\nSvrAddress\022\020\n\010svr_type\030\001 \001(\005\022\n\n\002ip\030\002 "
-    "\001(\t\022\014\n\004port\030\003 \001(\005\",\n\014SvrConfigReq\022\034\n\007add"
-    "ress\030\001 \001(\0132\013.SvrAddress\"\316\001\n\tSvrConfig\022\020\n"
-    "\010log_type\030\001 \001(\005\022\017\n\007log_dir\030\002 \001(\t\022\021\n\tlog_"
-    "level\030\003 \001(\005\022\022\n\nlog_config\030\004 \001(\014\022\030\n\020clien"
-    "t_outoftime\030\025 \001(\005\022\023\n\013http_listen\030\037 \001(\005\022\020"
-    "\n\010php_host\030  \001(\t\022\020\n\010php_port\030! \001(\005\022\020\n\010re"
-    "dis_ip\030) \001(\t\022\022\n\nredis_port\030* \001(\005\"P\n\rSvrC"
-    "onfigResp\022\032\n\006config\030\001 \001(\0132\n.SvrConfig\022#\n"
-    "\016peer_addresses\030\002 \003(\0132\013.SvrAddress\":\n\023Sv"
-    "rBroadcastAddress\022#\n\016peer_addresses\030\001 \003("
-    "\0132\013.SvrAddress*\251\001\n\nServerType\022\026\n\022SERVER_"
-    "TYPE_CENTER\020\000\022\025\n\021SERVER_TYPE_PROXY\020\001\022\031\n\025"
-    "SERVER_TYPE_CONNECTOR\020\002\022\031\n\025SERVER_TYPE_P"
-    "HP_PROXY\020\003\022\031\n\025SERVER_TYPE_DB_WORKER\020\004\022\033\n"
-    "\027SERVER_TYPE_THIRD_PROXY\020\005*\233\002\n\nSvrMsgTyp"
-    "e\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_REG_RESP\020\002\022\023\n\017"
-    "SMT_UPDATE_USER\020\003\022\024\n\020SMT_USER_MSG_ACK\020\004\022"
-    "\025\n\021SMT_USER_READ_MSG\020\005\022\021\n\rSMT_KICK_USER\020"
-    "\007\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n\014SMT_PUSH_MSG\020"
-    "\t\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016SMT_CONFIG_REQ\020"
-    "\r\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022SMT_BROADCAST_"
-    "ADDR\020\017\022\030\n\024SMT_BROADCAST_CONFIG\020\020", 1592);
+    "mmon.proto\"\247\001\n\nSvrMsgHead\022\031\n\004type\030\001 \001(\0162"
+    "\013.SvrMsgType\022\024\n\014src_svr_type\030\004 \001(\005\022\022\n\nsr"
+    "c_svr_id\030\005 \001(\005\022\024\n\014dst_svr_type\030\006 \001(\005\022\022\n\n"
+    "dst_svr_id\030\007 \001(\005\022\024\n\014proxy_svr_id\030\010 \001(\005\022\024"
+    "\n\014is_broadcast\030\t \001(\010\"1\n\006SvrMsg\022\031\n\004head\030\001"
+    " \001(\0132\013.SvrMsgHead\022\014\n\004body\030\002 \001(\014\"1\n\rSvrRe"
+    "gRequest\022\016\n\006svr_id\030\001 \001(\005\022\020\n\010svr_type\030\002 \001"
+    "(\005\"-\n\016SvrRegResponse\022\033\n\006result\030\001 \001(\0162\013.R"
+    "esultCode\"K\n\rSvrUpdateUser\022\024\n\014connector_"
+    "id\030\001 \001(\005\022\021\n\tclient_id\030\002 \001(\t\022\021\n\tis_online"
+    "\030\003 \001(\010\" \n\013SvrKickUser\022\021\n\tclient_id\030\001 \001(\t"
+    "\"L\n\rSvrUserMsgAck\022\r\n\005msgid\030\001 \001(\003\022\021\n\tclie"
+    "nt_id\030\002 \001(\t\022\031\n\004code\030\003 \001(\0162\013.ResultCode\"2"
+    "\n\016SvrUserReadMsg\022\r\n\005msgid\030\001 \001(\003\022\021\n\tclien"
+    "t_id\030\002 \001(\t\"D\n\016SvrTransferMsg\022\r\n\005msgid\030\001 "
+    "\001(\003\022\017\n\007content\030\002 \001(\014\022\022\n\nclient_ids\030\003 \003(\t"
+    "\"\037\n\017SvrHeartbeatMsg\022\014\n\004time\030\001 \001(\003\"S\n\014Svr"
+    "InsertMsg\022\r\n\005msgid\030\001 \001(\r\022\022\n\nclient_ids\030\002"
+    " \003(\t\022\013\n\003msg\030\003 \001(\014\022\023\n\013expire_time\030\004 \001(\005\"8"
+    "\n\nSvrAddress\022\020\n\010svr_type\030\001 \001(\005\022\n\n\002ip\030\002 \001"
+    "(\t\022\014\n\004port\030\003 \001(\005\",\n\014SvrConfigReq\022\034\n\007addr"
+    "ess\030\001 \001(\0132\013.SvrAddress\"\316\001\n\tSvrConfig\022\020\n\010"
+    "log_type\030\001 \001(\005\022\017\n\007log_dir\030\002 \001(\t\022\021\n\tlog_l"
+    "evel\030\003 \001(\005\022\022\n\nlog_config\030\004 \001(\014\022\030\n\020client"
+    "_outoftime\030\025 \001(\005\022\023\n\013http_listen\030\037 \001(\005\022\020\n"
+    "\010php_host\030  \001(\t\022\020\n\010php_port\030! \001(\005\022\020\n\010red"
+    "is_ip\030) \001(\t\022\022\n\nredis_port\030* \001(\005\"P\n\rSvrCo"
+    "nfigResp\022\032\n\006config\030\001 \001(\0132\n.SvrConfig\022#\n\016"
+    "peer_addresses\030\002 \003(\0132\013.SvrAddress\":\n\023Svr"
+    "BroadcastAddress\022#\n\016peer_addresses\030\001 \003(\013"
+    "2\013.SvrAddress*\251\001\n\nServerType\022\026\n\022SERVER_T"
+    "YPE_CENTER\020\000\022\025\n\021SERVER_TYPE_PROXY\020\001\022\031\n\025S"
+    "ERVER_TYPE_CONNECTOR\020\002\022\031\n\025SERVER_TYPE_PH"
+    "P_PROXY\020\003\022\031\n\025SERVER_TYPE_DB_WORKER\020\004\022\033\n\027"
+    "SERVER_TYPE_THIRD_PROXY\020\005*\233\002\n\nSvrMsgType"
+    "\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_REG_RESP\020\002\022\023\n\017S"
+    "MT_UPDATE_USER\020\003\022\024\n\020SMT_USER_MSG_ACK\020\004\022\025"
+    "\n\021SMT_USER_READ_MSG\020\005\022\021\n\rSMT_KICK_USER\020\007"
+    "\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n\014SMT_PUSH_MSG\020\t"
+    "\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016SMT_CONFIG_REQ\020\r"
+    "\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022SMT_BROADCAST_A"
+    "DDR\020\017\022\030\n\024SMT_BROADCAST_CONFIG\020\020", 1711);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "push_proto_server.proto", &protobuf_RegisterTypes);
   SvrMsgHead::default_instance_ = new SvrMsgHead();
@@ -462,6 +491,7 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
   SvrRegRequest::default_instance_ = new SvrRegRequest();
   SvrRegResponse::default_instance_ = new SvrRegResponse();
   SvrUpdateUser::default_instance_ = new SvrUpdateUser();
+  SvrKickUser::default_instance_ = new SvrKickUser();
   SvrUserMsgAck::default_instance_ = new SvrUserMsgAck();
   SvrUserReadMsg::default_instance_ = new SvrUserReadMsg();
   SvrTransferMsg::default_instance_ = new SvrTransferMsg();
@@ -477,6 +507,7 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
   SvrRegRequest::default_instance_->InitAsDefaultInstance();
   SvrRegResponse::default_instance_->InitAsDefaultInstance();
   SvrUpdateUser::default_instance_->InitAsDefaultInstance();
+  SvrKickUser::default_instance_->InitAsDefaultInstance();
   SvrUserMsgAck::default_instance_->InitAsDefaultInstance();
   SvrUserReadMsg::default_instance_->InitAsDefaultInstance();
   SvrTransferMsg::default_instance_->InitAsDefaultInstance();
@@ -544,7 +575,6 @@ bool SvrMsgType_IsValid(int value) {
 
 #ifndef _MSC_VER
 const int SvrMsgHead::kTypeFieldNumber;
-const int SvrMsgHead::kClientIdFieldNumber;
 const int SvrMsgHead::kSrcSvrTypeFieldNumber;
 const int SvrMsgHead::kSrcSvrIdFieldNumber;
 const int SvrMsgHead::kDstSvrTypeFieldNumber;
@@ -570,7 +600,6 @@ SvrMsgHead::SvrMsgHead(const SvrMsgHead& from)
 void SvrMsgHead::SharedCtor() {
   _cached_size_ = 0;
   type_ = 1;
-  client_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   src_svr_type_ = 0;
   src_svr_id_ = 0;
   dst_svr_type_ = 0;
@@ -585,9 +614,6 @@ SvrMsgHead::~SvrMsgHead() {
 }
 
 void SvrMsgHead::SharedDtor() {
-  if (client_id_ != &::google::protobuf::internal::kEmptyString) {
-    delete client_id_;
-  }
   if (this != default_instance_) {
   }
 }
@@ -616,11 +642,6 @@ SvrMsgHead* SvrMsgHead::New() const {
 void SvrMsgHead::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     type_ = 1;
-    if (has_client_id()) {
-      if (client_id_ != &::google::protobuf::internal::kEmptyString) {
-        client_id_->clear();
-      }
-    }
     src_svr_type_ = 0;
     src_svr_id_ = 0;
     dst_svr_type_ = 0;
@@ -651,23 +672,6 @@ bool SvrMsgHead::MergePartialFromCodedStream(
           } else {
             mutable_unknown_fields()->AddVarint(1, value);
           }
-        } else {
-          goto handle_uninterpreted;
-        }
-        if (input->ExpectTag(18)) goto parse_client_id;
-        break;
-      }
-
-      // optional string client_id = 2;
-      case 2: {
-        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
-            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
-         parse_client_id:
-          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
-                input, this->mutable_client_id()));
-          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-            this->client_id().data(), this->client_id().length(),
-            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -795,15 +799,6 @@ void SvrMsgHead::SerializeWithCachedSizes(
       1, this->type(), output);
   }
 
-  // optional string client_id = 2;
-  if (has_client_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->client_id().data(), this->client_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->client_id(), output);
-  }
-
   // optional int32 src_svr_type = 4;
   if (has_src_svr_type()) {
     ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->src_svr_type(), output);
@@ -846,16 +841,6 @@ void SvrMsgHead::SerializeWithCachedSizes(
   if (has_type()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
       1, this->type(), target);
-  }
-
-  // optional string client_id = 2;
-  if (has_client_id()) {
-    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
-      this->client_id().data(), this->client_id().length(),
-      ::google::protobuf::internal::WireFormat::SERIALIZE);
-    target =
-      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->client_id(), target);
   }
 
   // optional int32 src_svr_type = 4;
@@ -903,13 +888,6 @@ int SvrMsgHead::ByteSize() const {
     if (has_type()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::EnumSize(this->type());
-    }
-
-    // optional string client_id = 2;
-    if (has_client_id()) {
-      total_size += 1 +
-        ::google::protobuf::internal::WireFormatLite::StringSize(
-          this->client_id());
     }
 
     // optional int32 src_svr_type = 4;
@@ -982,9 +960,6 @@ void SvrMsgHead::MergeFrom(const SvrMsgHead& from) {
     if (from.has_type()) {
       set_type(from.type());
     }
-    if (from.has_client_id()) {
-      set_client_id(from.client_id());
-    }
     if (from.has_src_svr_type()) {
       set_src_svr_type(from.src_svr_type());
     }
@@ -1027,7 +1002,6 @@ bool SvrMsgHead::IsInitialized() const {
 void SvrMsgHead::Swap(SvrMsgHead* other) {
   if (other != this) {
     std::swap(type_, other->type_);
-    std::swap(client_id_, other->client_id_);
     std::swap(src_svr_type_, other->src_svr_type_);
     std::swap(src_svr_id_, other->src_svr_id_);
     std::swap(dst_svr_type_, other->dst_svr_type_);
@@ -1776,6 +1750,7 @@ void SvrRegResponse::Swap(SvrRegResponse* other) {
 
 #ifndef _MSC_VER
 const int SvrUpdateUser::kConnectorIdFieldNumber;
+const int SvrUpdateUser::kClientIdFieldNumber;
 const int SvrUpdateUser::kIsOnlineFieldNumber;
 #endif  // !_MSC_VER
 
@@ -1796,6 +1771,7 @@ SvrUpdateUser::SvrUpdateUser(const SvrUpdateUser& from)
 void SvrUpdateUser::SharedCtor() {
   _cached_size_ = 0;
   connector_id_ = 0;
+  client_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   is_online_ = false;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
@@ -1805,6 +1781,9 @@ SvrUpdateUser::~SvrUpdateUser() {
 }
 
 void SvrUpdateUser::SharedDtor() {
+  if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete client_id_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -1833,6 +1812,11 @@ SvrUpdateUser* SvrUpdateUser::New() const {
 void SvrUpdateUser::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     connector_id_ = 0;
+    if (has_client_id()) {
+      if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+        client_id_->clear();
+      }
+    }
     is_online_ = false;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -1856,12 +1840,29 @@ bool SvrUpdateUser::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(16)) goto parse_is_online;
+        if (input->ExpectTag(18)) goto parse_client_id;
         break;
       }
 
-      // optional bool is_online = 2;
+      // optional string client_id = 2;
       case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_client_id:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_client_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->client_id().data(), this->client_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_is_online;
+        break;
+      }
+
+      // optional bool is_online = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_is_online:
@@ -1899,9 +1900,18 @@ void SvrUpdateUser::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->connector_id(), output);
   }
 
-  // optional bool is_online = 2;
+  // optional string client_id = 2;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->client_id(), output);
+  }
+
+  // optional bool is_online = 3;
   if (has_is_online()) {
-    ::google::protobuf::internal::WireFormatLite::WriteBool(2, this->is_online(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteBool(3, this->is_online(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -1917,9 +1927,19 @@ void SvrUpdateUser::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->connector_id(), target);
   }
 
-  // optional bool is_online = 2;
+  // optional string client_id = 2;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->client_id(), target);
+  }
+
+  // optional bool is_online = 3;
   if (has_is_online()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(2, this->is_online(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteBoolToArray(3, this->is_online(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -1940,7 +1960,14 @@ int SvrUpdateUser::ByteSize() const {
           this->connector_id());
     }
 
-    // optional bool is_online = 2;
+    // optional string client_id = 2;
+    if (has_client_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->client_id());
+    }
+
+    // optional bool is_online = 3;
     if (has_is_online()) {
       total_size += 1 + 1;
     }
@@ -1975,6 +2002,9 @@ void SvrUpdateUser::MergeFrom(const SvrUpdateUser& from) {
     if (from.has_connector_id()) {
       set_connector_id(from.connector_id());
     }
+    if (from.has_client_id()) {
+      set_client_id(from.client_id());
+    }
     if (from.has_is_online()) {
       set_is_online(from.is_online());
     }
@@ -2002,6 +2032,7 @@ bool SvrUpdateUser::IsInitialized() const {
 void SvrUpdateUser::Swap(SvrUpdateUser* other) {
   if (other != this) {
     std::swap(connector_id_, other->connector_id_);
+    std::swap(client_id_, other->client_id_);
     std::swap(is_online_, other->is_online_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
@@ -2021,7 +2052,234 @@ void SvrUpdateUser::Swap(SvrUpdateUser* other) {
 // ===================================================================
 
 #ifndef _MSC_VER
+const int SvrKickUser::kClientIdFieldNumber;
+#endif  // !_MSC_VER
+
+SvrKickUser::SvrKickUser()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SvrKickUser::InitAsDefaultInstance() {
+}
+
+SvrKickUser::SvrKickUser(const SvrKickUser& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SvrKickUser::SharedCtor() {
+  _cached_size_ = 0;
+  client_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SvrKickUser::~SvrKickUser() {
+  SharedDtor();
+}
+
+void SvrKickUser::SharedDtor() {
+  if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete client_id_;
+  }
+  if (this != default_instance_) {
+  }
+}
+
+void SvrKickUser::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SvrKickUser::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SvrKickUser_descriptor_;
+}
+
+const SvrKickUser& SvrKickUser::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_push_5fproto_5fserver_2eproto();
+  return *default_instance_;
+}
+
+SvrKickUser* SvrKickUser::default_instance_ = NULL;
+
+SvrKickUser* SvrKickUser::New() const {
+  return new SvrKickUser;
+}
+
+void SvrKickUser::Clear() {
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (has_client_id()) {
+      if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+        client_id_->clear();
+      }
+    }
+  }
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SvrKickUser::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // optional string client_id = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_client_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->client_id().data(), this->client_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SvrKickUser::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // optional string client_id = 1;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      1, this->client_id(), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SvrKickUser::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // optional string client_id = 1;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        1, this->client_id(), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SvrKickUser::ByteSize() const {
+  int total_size = 0;
+
+  if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    // optional string client_id = 1;
+    if (has_client_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->client_id());
+    }
+
+  }
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SvrKickUser::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SvrKickUser* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SvrKickUser*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SvrKickUser::MergeFrom(const SvrKickUser& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
+    if (from.has_client_id()) {
+      set_client_id(from.client_id());
+    }
+  }
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SvrKickUser::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SvrKickUser::CopyFrom(const SvrKickUser& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SvrKickUser::IsInitialized() const {
+
+  return true;
+}
+
+void SvrKickUser::Swap(SvrKickUser* other) {
+  if (other != this) {
+    std::swap(client_id_, other->client_id_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SvrKickUser::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SvrKickUser_descriptor_;
+  metadata.reflection = SvrKickUser_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
 const int SvrUserMsgAck::kMsgidFieldNumber;
+const int SvrUserMsgAck::kClientIdFieldNumber;
+const int SvrUserMsgAck::kCodeFieldNumber;
 #endif  // !_MSC_VER
 
 SvrUserMsgAck::SvrUserMsgAck()
@@ -2041,6 +2299,8 @@ SvrUserMsgAck::SvrUserMsgAck(const SvrUserMsgAck& from)
 void SvrUserMsgAck::SharedCtor() {
   _cached_size_ = 0;
   msgid_ = GOOGLE_LONGLONG(0);
+  client_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  code_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2049,6 +2309,9 @@ SvrUserMsgAck::~SvrUserMsgAck() {
 }
 
 void SvrUserMsgAck::SharedDtor() {
+  if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete client_id_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -2077,6 +2340,12 @@ SvrUserMsgAck* SvrUserMsgAck::New() const {
 void SvrUserMsgAck::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     msgid_ = GOOGLE_LONGLONG(0);
+    if (has_client_id()) {
+      if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+        client_id_->clear();
+      }
+    }
+    code_ = 0;
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2096,6 +2365,44 @@ bool SvrUserMsgAck::MergePartialFromCodedStream(
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &msgid_)));
           set_has_msgid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_client_id;
+        break;
+      }
+
+      // optional string client_id = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_client_id:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_client_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->client_id().data(), this->client_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(24)) goto parse_code;
+        break;
+      }
+
+      // optional .ResultCode code = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_code:
+          int value;
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   int, ::google::protobuf::internal::WireFormatLite::TYPE_ENUM>(
+                 input, &value)));
+          if (::ResultCode_IsValid(value)) {
+            set_code(static_cast< ::ResultCode >(value));
+          } else {
+            mutable_unknown_fields()->AddVarint(3, value);
+          }
         } else {
           goto handle_uninterpreted;
         }
@@ -2126,6 +2433,21 @@ void SvrUserMsgAck::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->msgid(), output);
   }
 
+  // optional string client_id = 2;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->client_id(), output);
+  }
+
+  // optional .ResultCode code = 3;
+  if (has_code()) {
+    ::google::protobuf::internal::WireFormatLite::WriteEnum(
+      3, this->code(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2137,6 +2459,22 @@ void SvrUserMsgAck::SerializeWithCachedSizes(
   // optional int64 msgid = 1;
   if (has_msgid()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->msgid(), target);
+  }
+
+  // optional string client_id = 2;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->client_id(), target);
+  }
+
+  // optional .ResultCode code = 3;
+  if (has_code()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteEnumToArray(
+      3, this->code(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2155,6 +2493,19 @@ int SvrUserMsgAck::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int64Size(
           this->msgid());
+    }
+
+    // optional string client_id = 2;
+    if (has_client_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->client_id());
+    }
+
+    // optional .ResultCode code = 3;
+    if (has_code()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::EnumSize(this->code());
     }
 
   }
@@ -2187,6 +2538,12 @@ void SvrUserMsgAck::MergeFrom(const SvrUserMsgAck& from) {
     if (from.has_msgid()) {
       set_msgid(from.msgid());
     }
+    if (from.has_client_id()) {
+      set_client_id(from.client_id());
+    }
+    if (from.has_code()) {
+      set_code(from.code());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2211,6 +2568,8 @@ bool SvrUserMsgAck::IsInitialized() const {
 void SvrUserMsgAck::Swap(SvrUserMsgAck* other) {
   if (other != this) {
     std::swap(msgid_, other->msgid_);
+    std::swap(client_id_, other->client_id_);
+    std::swap(code_, other->code_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2230,6 +2589,7 @@ void SvrUserMsgAck::Swap(SvrUserMsgAck* other) {
 
 #ifndef _MSC_VER
 const int SvrUserReadMsg::kMsgidFieldNumber;
+const int SvrUserReadMsg::kClientIdFieldNumber;
 #endif  // !_MSC_VER
 
 SvrUserReadMsg::SvrUserReadMsg()
@@ -2249,6 +2609,7 @@ SvrUserReadMsg::SvrUserReadMsg(const SvrUserReadMsg& from)
 void SvrUserReadMsg::SharedCtor() {
   _cached_size_ = 0;
   msgid_ = GOOGLE_LONGLONG(0);
+  client_id_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -2257,6 +2618,9 @@ SvrUserReadMsg::~SvrUserReadMsg() {
 }
 
 void SvrUserReadMsg::SharedDtor() {
+  if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+    delete client_id_;
+  }
   if (this != default_instance_) {
   }
 }
@@ -2285,6 +2649,11 @@ SvrUserReadMsg* SvrUserReadMsg::New() const {
 void SvrUserReadMsg::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     msgid_ = GOOGLE_LONGLONG(0);
+    if (has_client_id()) {
+      if (client_id_ != &::google::protobuf::internal::kEmptyString) {
+        client_id_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -2304,6 +2673,23 @@ bool SvrUserReadMsg::MergePartialFromCodedStream(
                    ::google::protobuf::int64, ::google::protobuf::internal::WireFormatLite::TYPE_INT64>(
                  input, &msgid_)));
           set_has_msgid();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(18)) goto parse_client_id;
+        break;
+      }
+
+      // optional string client_id = 2;
+      case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_client_id:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_client_id()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->client_id().data(), this->client_id().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
         } else {
           goto handle_uninterpreted;
         }
@@ -2334,6 +2720,15 @@ void SvrUserReadMsg::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt64(1, this->msgid(), output);
   }
 
+  // optional string client_id = 2;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      2, this->client_id(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2345,6 +2740,16 @@ void SvrUserReadMsg::SerializeWithCachedSizes(
   // optional int64 msgid = 1;
   if (has_msgid()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt64ToArray(1, this->msgid(), target);
+  }
+
+  // optional string client_id = 2;
+  if (has_client_id()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_id().data(), this->client_id().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        2, this->client_id(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2363,6 +2768,13 @@ int SvrUserReadMsg::ByteSize() const {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int64Size(
           this->msgid());
+    }
+
+    // optional string client_id = 2;
+    if (has_client_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->client_id());
     }
 
   }
@@ -2395,6 +2807,9 @@ void SvrUserReadMsg::MergeFrom(const SvrUserReadMsg& from) {
     if (from.has_msgid()) {
       set_msgid(from.msgid());
     }
+    if (from.has_client_id()) {
+      set_client_id(from.client_id());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -2419,6 +2834,7 @@ bool SvrUserReadMsg::IsInitialized() const {
 void SvrUserReadMsg::Swap(SvrUserReadMsg* other) {
   if (other != this) {
     std::swap(msgid_, other->msgid_);
+    std::swap(client_id_, other->client_id_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);
@@ -2439,6 +2855,7 @@ void SvrUserReadMsg::Swap(SvrUserReadMsg* other) {
 #ifndef _MSC_VER
 const int SvrTransferMsg::kMsgidFieldNumber;
 const int SvrTransferMsg::kContentFieldNumber;
+const int SvrTransferMsg::kClientIdsFieldNumber;
 #endif  // !_MSC_VER
 
 SvrTransferMsg::SvrTransferMsg()
@@ -2504,6 +2921,7 @@ void SvrTransferMsg::Clear() {
       }
     }
   }
+  client_ids_.Clear();
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
 }
@@ -2539,6 +2957,25 @@ bool SvrTransferMsg::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(26)) goto parse_client_ids;
+        break;
+      }
+
+      // repeated string client_ids = 3;
+      case 3: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_client_ids:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->add_client_ids()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->client_ids(this->client_ids_size() - 1).data(),
+            this->client_ids(this->client_ids_size() - 1).length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_client_ids;
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -2572,6 +3009,15 @@ void SvrTransferMsg::SerializeWithCachedSizes(
       2, this->content(), output);
   }
 
+  // repeated string client_ids = 3;
+  for (int i = 0; i < this->client_ids_size(); i++) {
+  ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+    this->client_ids(i).data(), this->client_ids(i).length(),
+    ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      3, this->client_ids(i), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -2590,6 +3036,15 @@ void SvrTransferMsg::SerializeWithCachedSizes(
     target =
       ::google::protobuf::internal::WireFormatLite::WriteBytesToArray(
         2, this->content(), target);
+  }
+
+  // repeated string client_ids = 3;
+  for (int i = 0; i < this->client_ids_size(); i++) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->client_ids(i).data(), this->client_ids(i).length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteStringToArray(3, this->client_ids(i), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -2618,6 +3073,13 @@ int SvrTransferMsg::ByteSize() const {
     }
 
   }
+  // repeated string client_ids = 3;
+  total_size += 1 * this->client_ids_size();
+  for (int i = 0; i < this->client_ids_size(); i++) {
+    total_size += ::google::protobuf::internal::WireFormatLite::StringSize(
+      this->client_ids(i));
+  }
+
   if (!unknown_fields().empty()) {
     total_size +=
       ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
@@ -2643,6 +3105,7 @@ void SvrTransferMsg::MergeFrom(const ::google::protobuf::Message& from) {
 
 void SvrTransferMsg::MergeFrom(const SvrTransferMsg& from) {
   GOOGLE_CHECK_NE(&from, this);
+  client_ids_.MergeFrom(from.client_ids_);
   if (from._has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     if (from.has_msgid()) {
       set_msgid(from.msgid());
@@ -2675,6 +3138,7 @@ void SvrTransferMsg::Swap(SvrTransferMsg* other) {
   if (other != this) {
     std::swap(msgid_, other->msgid_);
     std::swap(content_, other->content_);
+    client_ids_.Swap(&other->client_ids_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

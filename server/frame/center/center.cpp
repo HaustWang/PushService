@@ -19,8 +19,9 @@
 #define LOG_NAME "center"
 
 extern volatile int loadcmd;
+extern volatile int stop;
 
-const static char server_name[][20] = {"", "phpproxy", "connector", "onliner", "dbproxy", "dbworker" };
+const static char server_name[][20] = {"center", "proxy", "connector", "phpproxy", "dbworker" };
 
 int ConfigReqHandler::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, const google::protobuf::Message* message)
 {
@@ -39,6 +40,7 @@ Center::~Center()
 
 int Center::InitService()
 {
+    InitMessageIdMap();
     return InitListener("0.0.0.0", m_listen_port, m_event_base, this);
 }
 
@@ -48,10 +50,9 @@ void Center::InitMessageIdMap()
     REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_CONFIG_REQ, new ConfigReqHandler, "SvrConfigReq");
 }
 
-int Center::ProcessClose(const ClientInfo* client_info)
+int Center::ProcessClose(ClientInfo* client_info)
 {
-    if(NULL != client_info)
-        client_info->ShortDebugString();
+    log_info("close connection:%s", client_info->ShortDebugString().c_str());
 
     m_server_addr.erase(client_info->fd);
     return ClientManage::Instance()->DeleteClientInfo((ClientInfo*)client_info);
@@ -59,11 +60,12 @@ int Center::ProcessClose(const ClientInfo* client_info)
 
 int Center::ProcessConfigReq(ClientInfo* client_info, const SvrMsgHead* head, const google::protobuf::Message* message)
 {
-    if(NULL == client_info || NULL == head || NULL == message)
+    if(NULL == client_info || NULL == head)
         return -1;
 
-    const SvrConfigReq* req = dynamic_cast<const SvrConfigReq*>(message);
-    m_server_addr[client_info->fd] = req->address();
+    client_info->server_type = head->src_svr_type();
+    client_info->server_id = head->src_svr_id();
+    client_info->is_register = true;
 
     //response get config
     SvrConfigResp resp;
@@ -73,8 +75,11 @@ int Center::ProcessConfigReq(ClientInfo* client_info, const SvrMsgHead* head, co
     FillMsgHead(&msg_head, SMT_CONFIG_RESP, head->src_svr_type(), head);
     SendMessageToServer(client_info, &msg_head, &resp);
 
-    if(head->src_svr_type() != SERVER_TYPE_PROXY)
+    if(head->src_svr_type() != SERVER_TYPE_PROXY || NULL == message)
       return 0;
+
+    const SvrConfigReq* req = dynamic_cast<const SvrConfigReq*>(message);
+    m_server_addr[client_info->fd] = req->address();
 
     SvrBroadcastAddress broad_msg;
     broad_msg.add_peer_addresses()->CopyFrom(req->address());
@@ -82,6 +87,9 @@ int Center::ProcessConfigReq(ClientInfo* client_info, const SvrMsgHead* head, co
     const std::map<int, ClientInfo*>& client_map = ClientManage::Instance()->GetClientMap();
     for(std::map<int, ClientInfo*>::const_iterator client_it = client_map.begin(); client_it != client_map.end(); ++client_it)
     {
+        if(SERVER_TYPE_PROXY == client_it->second->server_type)
+            continue;
+
         FillMsgHead(&msg_head, SMT_BROADCAST_ADDR, client_it->second->server_type);
         SendMessageToServer(client_it->second, &msg_head, &broad_msg);
     }
@@ -95,9 +103,13 @@ void Center::FillConfigResp(int svr_type, SvrConfigResp& resp)
     json_protobuf::update_from_json(m_json_value[server_name[svr_type]], *resp.mutable_config());
     resp.mutable_config()->set_log_config(m_log_config);
 
+    if(SERVER_TYPE_PROXY == svr_type)
+        return;
+
     std::vector<ClientInfo*> client_vec;
     ClientManage::Instance()->GetClientInfoList(SERVER_TYPE_PROXY, client_vec);
 
+    log_debug("get proxy list size:%ld, client_size:%ld\n", client_vec.size(), ClientManage::Instance()->GetClientCnt());
     for(std::vector<ClientInfo*>::iterator client_it = client_vec.begin(); client_it != client_vec.end(); ++client_it)
         resp.add_peer_addresses()->CopyFrom(m_server_addr[(*client_it)->fd]);
 }
@@ -153,15 +165,17 @@ int Center::LoadConfig()
     set_log_level(log_level);
 
     //read log config, and log config is applied for all
-    const static short log_configsize = 4096;
-    m_log_config.resize(log_configsize);
+    static char log_configcontent[4096]; 
+    memset(log_configcontent, 0, sizeof(log_configcontent));
 
     std::ifstream ilogconfig("../conf/local_logger.properties");
     if(ilogconfig.is_open())
     {
-        ilogconfig.read(&m_log_config[0], log_configsize);
+        ilogconfig.read(log_configcontent, sizeof(log_configcontent));
         ilogconfig.close();
     }
+
+    m_log_config.assign(log_configcontent);
 
     //read listen port
     if(0 == m_listen_port && center_value.isMember("port") && center_value["port"].isInt())
@@ -205,9 +219,24 @@ int Center::Run(int argc, char **argv)
     int ret = ParseArgs(argc, argv);
     if(0 != ret)
     {
-        log_error("parse args error!");
+        printf("parse args error!");
         Usage(argv[0]);
         return -1;
+    }
+
+    if(0 != InitService())
+    {
+        log_error("Init service failed!");
+        return 0;
+    }
+
+    while (1 != stop)
+    {
+        event_base_loop(m_event_base, EVLOOP_NONBLOCK);
+
+        //静默加载配置
+        ReloadConfig();
+        usleep(1000);
     }
 
     return 0;
@@ -255,6 +284,8 @@ void Center::Usage(const char *name)
 int main(int argc, char **argv)
 {
     SingleInstance(argv[0]);
+
+    daemon (1, 1);
     InitSignal();
     Center::Instance().Run(argc, argv);
     return 0;

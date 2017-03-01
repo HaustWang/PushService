@@ -46,7 +46,7 @@ void GetServerAddr(CConfigFile& config, const char* server_name,std::vector<Serv
 int ParseArg(int argc, char **argv, Config& config);
 
 bool IsAddressListening(const char *ip, unsigned short port);
-std::string GetLocalIp(bool is_lan);
+std::string GetLocalListenIp(unsigned short port);
 
 
 class MessageProcessor;

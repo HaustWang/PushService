@@ -23,18 +23,9 @@
 
 const int kMaxDBWorkNum = 64;
 struct event_base *g_event_base = NULL;
+extern volatile int stop;
 
-#define LOG_NAME "dbproxy"
-
-int CheckFlag()
-{
-    if (stop)
-    {
-        log_warning("dbproxy recv quit signal, quit......\n");
-        exit(0);
-    }
-    return 0;
-}
+#define LOG_NAME "proxy"
 
  int InitProxySvr(Config const& config)
 {
@@ -63,6 +54,8 @@ bool ReloadConfig()
         snprintf(log_name, sizeof(log_name), LOG_NAME "_%d", getpid());
         init_log(log_name, config.log_dir().c_str(),config.log_config().c_str());
         set_log_level(config.log_level());
+        ConnectToCenter::Instance()->SetNewConfig(false);
+        return true;
     }
 
     return false;
@@ -83,9 +76,10 @@ int main(int argc, char **argv)
     }
 
     InitLibevent(g_event_base);
-    ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id);
+    ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id, "0.0.0.0", config.listen_port);
     while(true)
     {
+        event_base_loop(g_event_base, EVLOOP_ONCE);
         if(ReloadConfig())
             break;
     }
@@ -100,13 +94,17 @@ int main(int argc, char **argv)
 
 	DBWorkManage::Instance();
 	log_warning("dbproxy start runing\n");
-	daemon(1, 1);
 
-    while (true)
+    struct timeval tm;
+    tm.tv_sec = 1;
+    tm.tv_usec = 0;
+
+    while(1 != stop)
     {
+        event_base_loopexit(g_event_base, &tm);
         event_base_loop(g_event_base, EVLOOP_NONBLOCK);
 
-        CheckFlag();
+        ConnectToCenter::Instance()->Reconnect();
 
         //静默加载配置
         ReloadConfig();

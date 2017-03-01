@@ -18,6 +18,7 @@
 #include "connect_center.h"
 
 struct event_base *g_event_base = NULL;
+extern volatile int stop;
 
 #define LOG_NAME "phpproxy"
 
@@ -32,6 +33,8 @@ bool ReloadConfig()
         snprintf(log_name, sizeof(log_name), LOG_NAME "_%d", getpid());
         init_log(log_name, config.log_dir().c_str(),config.log_config().c_str());
         set_log_level(config.log_level());
+        ConnectToCenter::Instance()->SetNewConfig(false);
+        return true;
     }
 
     return false;
@@ -39,13 +42,13 @@ bool ReloadConfig()
 
 void NewConnect()
 {
-    if(ConnectToCenter::Instance()->HasNewAddress(SERVER_TYPE_ONLINER))
+    if(ConnectToCenter::Instance()->HasNewAddress(SERVER_TYPE_PROXY))
     {
-        const std::vector<SvrAddress>& addrs = ConnectToCenter::Instance()->GetNewAddress(SERVER_TYPE_ONLINER);
+        const std::vector<SvrAddress>& addrs = ConnectToCenter::Instance()->GetNewAddress(SERVER_TYPE_PROXY);
         for(std::vector<SvrAddress>::const_iterator it = addrs.begin(); it != addrs.end(); ++it)
             ConnectToOnlinerMgr::Instance()->AddServer(it->ip(), it->port());
 
-        ConnectToCenter::Instance()->EraseNewAddress(SERVER_TYPE_ONLINER);
+        ConnectToCenter::Instance()->EraseNewAddress(SERVER_TYPE_PROXY);
     }
 }
 
@@ -72,6 +75,7 @@ int main(int argc, char** argv)
     ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id);
     while(true)
     {
+        event_base_loop(g_event_base, EVLOOP_ONCE);
         if(ReloadConfig())
             break;
     }
@@ -88,12 +92,16 @@ int main(int argc, char** argv)
 
     log_warning("Phpproxy start running \n" );
 
-    daemon(1,1);
+    struct timeval tm;
+    tm.tv_sec = 1;
+    tm.tv_usec = 0;
 
-    while (true)
+    while(1 != stop)
     {
+        event_base_loopexit(g_event_base, &tm);
         event_base_loop(g_event_base, EVLOOP_NONBLOCK);
 
+        ConnectToCenter::Instance()->Reconnect();
         ConnectToOnlinerMgr::Instance()->Reconnect();
 
         //静默加载配置

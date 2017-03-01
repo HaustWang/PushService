@@ -175,7 +175,7 @@ int split_str(const char* ps_str , char* ps_sp , std::vector<std::string> &v_ret
     return 0;
 }
 
-namespace server { 
+namespace server {
 
 const int kMaxProcessMessagePerSecond = 100000;
 inline bool IsSocketOverload()
@@ -201,23 +201,40 @@ inline bool IsSocketOverload()
 void BuffereventEventCallback(struct bufferevent* bev, short what, void* ctx)
 {
     ClientInfo  *client_info = (ClientInfo *)ctx;
-	log_error("connect to server, server_ip:%s, server_port:%hd, %d", client_info->remote_ip.c_str(), client_info->remote_port, what);
+
+    if(client_info->is_register)
+	    log_info("connect to server, server_ip:%s, server_port:%hd, %d, %d", client_info->remote_ip.c_str(), client_info->remote_port, what, BEV_EVENT_CONNECTED);
+    else
+	    printf("[%s:%d] connect to server, server_ip:%s, server_port:%hd, %d, %d\n", __FILE__, __LINE__, client_info->remote_ip.c_str(), client_info->remote_port, what, BEV_EVENT_CONNECTED);
+
+
     if (client_info->fd != bufferevent_getfd(bev) && client_info->fd != -1)
     {
-        log_error("client info fd:%d is not equal bufferevent fd:%d", client_info->fd, bufferevent_getfd(bev));
+        if(client_info->is_register)
+            log_error("client info fd:%d is not equal bufferevent fd:%d", client_info->fd, bufferevent_getfd(bev));
+        else
+            printf("[%s:%d] client info fd:%d is not equal bufferevent fd:%d\n", __FILE__, __LINE__, client_info->fd, bufferevent_getfd(bev));
+
         return;
     }
 
 	if(what & BEV_EVENT_CONNECTED)
 	{
-		log_warning("sucess Connect to server, begin to register! Server_ip:%s, server_port:%hd", client_info->remote_ip.c_str(), client_info->remote_port );
+        if(client_info->is_register)
+	    	log_info("sucess Connect to server, begin to register! Server_ip:%s, server_port:%hd", client_info->remote_ip.c_str(), client_info->remote_port );
+        else
+	    	printf("[%s:%d] sucess Connect to server, begin to register! Server_ip:%s, server_port:%hd\n", __FILE__, __LINE__, client_info->remote_ip.c_str(), client_info->remote_port );
+
 		client_info->processor->RegisterToServer(client_info);
 		return;
 	}
 
 	if ((what & BEV_EVENT_EOF) || (what & BEV_EVENT_ERROR))
    	{
-		log_warning("lost connection to server, Server_ip:%s, server_port:%hd", client_info->remote_ip.c_str(), client_info->remote_port);
+        if(client_info->is_register)
+		    log_warning("lost connection to server, Server_ip:%s, server_port:%hd", client_info->remote_ip.c_str(), client_info->remote_port);
+        else
+		    printf("[%s:%d] lost connection to server, Server_ip:%s, server_port:%hd\n", __FILE__, __LINE__, client_info->remote_ip.c_str(), client_info->remote_port);
 
         if(client_info->bevt)
         {
@@ -240,7 +257,10 @@ void BuffereventReadCallback(struct bufferevent *bev, void *ctx)
     ClientInfo  *client_info = (ClientInfo *)ctx;
     if (client_info->fd != bufferevent_getfd(bev) )
     {
-        log_error("client info fd:%d is not equal bufferevent fd:%d", client_info->fd, bufferevent_getfd(bev));
+        if(client_info->is_register)
+            log_error("client info fd:%d is not equal bufferevent fd:%d", client_info->fd, bufferevent_getfd(bev));
+        else
+            printf("[%s:%d] client info fd:%d is not equal bufferevent fd:%d\n", __FILE__, __LINE__, client_info->fd, bufferevent_getfd(bev));
         return;
     }
 
@@ -253,7 +273,11 @@ void BuffereventReadCallback(struct bufferevent *bev, void *ctx)
         int ret = client_info->processor->GetCompletePackage(bev, pkg_start, &pkg_len);
         if(ret < 0)
         {
-            log_warning("GetCompletePackage err  ret %d", ret);
+            if(client_info->is_register)
+                log_warning("GetCompletePackage err  ret %d", ret);
+            else
+                printf("[%s:%d] GetCompletePackage err  ret %d\n", __FILE__, __LINE__, ret);
+
             break;
         }
         //大于0,表示一个包还不完整, 继续收包
@@ -264,7 +288,10 @@ void BuffereventReadCallback(struct bufferevent *bev, void *ctx)
 
         if(IsSocketOverload())
         {
-            log_error("Svr process message overload! drop msg");
+            if(client_info->is_register)
+                log_error("Svr process message overload! drop msg");
+            else
+                printf("[%s:%d] Svr process message overload! drop msg\n", __FILE__, __LINE__);
             break;
         }
 
@@ -280,7 +307,11 @@ void BuffereventReadCallback(struct bufferevent *bev, void *ctx)
             // ClientManage::Instance()->DeleteConnectToCenter(client_info);
             break;
         }
-        log_debug("msg:%s", svr_msg.ShortDebugString().c_str());
+
+        if(client_info->is_register)
+            log_debug("msg:%s", svr_msg.ShortDebugString().c_str());
+        else
+            printf("[%s:%d] msg:%s\n", __FILE__, __LINE__, svr_msg.ShortDebugString().c_str());
         client_info->processor->ProcessMessage(client_info, &svr_msg.head(), svr_msg.body());
     }
 }
@@ -289,13 +320,14 @@ void BuffereventReadCallback(struct bufferevent *bev, void *ctx)
 void SvrEventCallback(struct bufferevent *bev, short what , void *ctx)
 {
     UNUSED(bev);
-    ClientInfo *client_info = (ClientInfo *)ctx;
-    if(what & BEV_EVENT_CONNECTED)
+    if(what & BEV_EVENT_CONNECTED || NULL == ctx)
     {
         return;
     }
 
-    log_warning("client logout, what: %hd", what);
+    ClientInfo *client_info = (ClientInfo *)ctx;
+
+    log_warning("client logout, what: %hd, client_info:%s", what, client_info->ShortDebugString().c_str());
     client_info->processor->ProcessClose(client_info);
     return;
 }
@@ -320,8 +352,7 @@ void SvrReadCallback(struct bufferevent *bev, void *ctx)
         int ret = client_info->processor->GetCompletePackage(bev, pkg_start, &pkg_len);
         if(ret < 0)
         {
-            log_warning("GetCompletePackage err  ret %d", ret);
-            log_warning("server closed socket, because client:%s packet is wrong\n", GetPeerAddrStr(client_info->address));
+            log_warning("server closed socket, because client:%s packet is wrong, ret:%d\n", GetPeerAddrStr(client_info->address), ret);
             ClientManage::Instance()->DeleteClientInfo(client_info);
             break;
         }
@@ -427,7 +458,7 @@ void SvrListenerErrCallback(struct evconnlistener *listener, void *ctx)
     int err = EVUTIL_SOCKET_ERROR();
     log_error("Got an error %d (%s) on the listener. ""Shutting down.", err, evutil_socket_error_to_string(err));
 
-    event_base_loopexit(base, NULL);
+    event_base_loopbreak(base);
 }
 
 };
@@ -487,9 +518,10 @@ int InitListener(const char *ip, unsigned short port, struct event_base* &base, 
     return 0;
 }
 
+
 int ParseArg (int argc, char **argv, Config& config)
 {
-    const char* option = "p:m:s:h";
+    const char* option = "p:m:s:hd";
     int result;
     while((result = getopt(argc, argv, option)) != -1)
     {
@@ -537,18 +569,13 @@ bool IsAddressListening(const char *ip, unsigned short port)
     return ret;
 }
 
-std::string GetLocalListenIp(std::string const& ip, bool is_lan)
+std::string GetLocalListenIp(unsigned short port)
 {
-    if(ip != "0.0.0.0") return ip;
-
     char cmd[128] = {0};
-    if(is_lan)
-        snprintf(cmd, sizeof(cmd), "ifconfig | grep \"inet addr\" | awk '{print $2}' | awk -F: '{print $2}'| grep 192.168");
-    else
-        snprintf(cmd, sizeof(cmd), "ifconfig eth0 | grep \"inet addr\" | awk '{print $2}' | awk -F: '{print $2}'");
+    snprintf(cmd, sizeof(cmd), "netstat -nl |grep %hd |awk '{print $4}' | awk -F: '{print $1}'", port);
 
     FILE *f = popen(cmd, "r");
-    if(NULL == f)   return false;
+    if(NULL == f)   return "";
 
     char loc_ip[20] = {0};
     char *pret = fgets(loc_ip, sizeof(loc_ip), f);

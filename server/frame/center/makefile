@@ -1,7 +1,7 @@
 BINARY := center
 PROJECT_DIR := ../..
 
-.PHONY: all clean
+.PHONY: all clean cleantarget install
 all: $(BINARY)
 
 -include $(PROJECT_DIR)/makefile.shared
@@ -16,10 +16,11 @@ $(BINARY) : $(OBJ)
 cleantarget:
 	rm -rf $(BINARY)
 
-install:
-	cp -f $(BINARY) ./bin
-
 clean:
 	rm -rf $(BINARY) $(DEP_DIR) *.d.* *.d *.o &2>/dev/null
+
+install:
+	cp -f $(BINARY) $(BIN_DIR)/
+	cp config.json $(BIN_DIR)/
 
 -include $(PROJECT_DIR)/makefile.rule

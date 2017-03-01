@@ -30,7 +30,7 @@ public:
     int InitService();
 
     virtual void InitMessageIdMap();
-	virtual int ProcessClose(const ClientInfo*);
+	virtual int ProcessClose(ClientInfo*);
 
     int ProcessConfigReq(ClientInfo*, const SvrMsgHead*, const google::protobuf::Message*);
 

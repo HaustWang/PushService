@@ -54,37 +54,35 @@ int ConnectToOnlinerMgr::SendPushMsgToDBWorker(int32_t msg_id, Iter begin, Iter 
     return SendMessageToServer(&mh, &insert_msg);
 }
 
-int UserMsgAckHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message* phead, const google::protobuf::Message* pmsg)
+int UserMsgAckHandler::ProcessMessage(ClientInfo*, const google::protobuf::Message*, const google::protobuf::Message* pmsg)
 {
-    if(NULL == pclient_info || NULL == phead || NULL == pmsg)
+    if(NULL == pmsg)
     {
-        log_error("info empty:pclient_info:%p, phead:%p, pmsg:%p", pclient_info, phead, pmsg);
+        log_error("info empty: pmsg:%p", pmsg);
         return -1;
     }
 
-    const SvrMsgHead* head = dynamic_cast<const SvrMsgHead*>(phead);
     const SvrUserMsgAck *msg = dynamic_cast<const SvrUserMsgAck*>(pmsg);
-    if(!head->has_client_id() || !msg->has_msgid())
+    if(!msg->has_client_id() || !msg->has_msgid())
     {
-        log_error("User msg ack but info incomplete, client_id:%s, msg_id:%ld", head->client_id().c_str(), msg->msgid());
+        log_error("User msg ack but info incomplete, client_id:%s, msg_id:%ld", msg->client_id().c_str(), msg->msgid());
         return -1;
     }
     return 0;
 }
 
-int UserReadHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message* phead, const google::protobuf::Message* pmsg)
+int UserReadHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message*, const google::protobuf::Message* pmsg)
 {
-    if(NULL == pclient_info || NULL == phead || NULL == pmsg)
+    if(NULL == pmsg)
     {
-        log_error("info empty:pclient_info:%p, phead:%p, pmsg:%p", pclient_info, phead, pmsg);
+        log_error("info empty: pmsg:%p", pmsg);
         return -1;
     }
 
-    const SvrMsgHead* head = dynamic_cast<const SvrMsgHead*>(phead);
     const SvrUserMsgAck *msg = dynamic_cast<const SvrUserMsgAck*>(pmsg);
-    if(!head->has_client_id() || !msg->has_msgid())
+    if(!msg->has_client_id() || !msg->has_msgid())
     {
-        log_error("User read msg but info incomplete, client_id:%s, msg_id:%ld", head->client_id().c_str(), msg->msgid());
+        log_error("User read msg but info incomplete, client_id:%s, msg_id:%ld", msg->client_id().c_str(), msg->msgid());
         return -1;
     }
 

@@ -16,8 +16,8 @@ void ConnectToCenter::Init(std::string const& ip, unsigned short port, int serve
     m_listen_ip = local_listen_ip;
     m_listen_port = local_listen_port;
 
-    this->server_type = server_type;
-    this->server_id = server_id;
+    this->server_type = SERVER_TYPE_CENTER;
+    this->server_id = 0;
 
     this->processor->SetSvrInfo(server_type, server_id);
 
@@ -35,7 +35,7 @@ void ConnectToCenter::AddServerAddress(google::protobuf::RepeatedPtrField<SvrAdd
 void ConnectToCenter::Reconnect()
 {
     time_t now_time = time(NULL);
-//超过2s重连一次
+    //超过2s重连一次
     if( now_time-m_last_connect_time>5)
         m_last_connect_time = now_time;
     else
@@ -69,11 +69,12 @@ int ConnectToCenter::SendConfigReq()
     if(0 != m_listen_port)
     {
         SvrAddress* address = req.mutable_address();
-        address->set_svr_type(server_type);
+        address->set_svr_type(processor->GetServerType());
         address->set_ip(m_listen_ip);
         address->set_port(m_listen_port);
     }
 
+    printf("[%s:%d] register to center:head:%s, msg:%s\n", __FILE__, __LINE__, mh.ShortDebugString().c_str(), req.ShortDebugString().c_str());
     return SendMessageToServer(&mh, &req);
 }
 
@@ -83,9 +84,9 @@ int  ConnectToCenter::SendMessageToServer(const SvrMsgHead* head, google::protob
 }
 
 //给服务器发送注册消息
-int ConnectCenterMsgProcessor::RegisterToServer(ConnectToCenter* client_info)
+int ConnectCenterMsgProcessor::RegisterToServer(const ClientInfo* client_info)
 {
-    return client_info->SendConfigReq();
+    return ((ConnectToCenter*)client_info)->SendConfigReq();
 }
 
 void ConnectCenterMsgProcessor::InitMessageIdMap()
@@ -95,12 +96,16 @@ void ConnectCenterMsgProcessor::InitMessageIdMap()
 	REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_BROADCAST_CONFIG, new BroadcastConfigHandler, "SvrConfig" );
 }
 
-int ConfigResponseHandler::ProcessMessage(ClientInfo*, const google::protobuf::Message*, const google::protobuf::Message* message)
+int ConfigResponseHandler::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message*, const google::protobuf::Message* message)
 {
+    if(NULL == message)
+        return -1;
+
     const SvrConfigResp* resp = dynamic_cast<const SvrConfigResp*>(message);
     ConnectToCenter::Instance()->Config().CopyFrom(resp->config());
     ConnectToCenter::Instance()->SetNewConfig(true);
 
+    client_info->is_register = true;
     if(0 == resp->peer_addresses_size())
         return 0;
 

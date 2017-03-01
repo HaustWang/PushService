@@ -13,11 +13,12 @@ DBWorkManage::DBWorkManage()
 
 void DBWorkManage::InitMessageIdMap()
 {
+    REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_CONFIG_RESP, new RegReqHandler, "SvrRegRequest");
 }
 
 int DBWorkManage::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, std::string const& body)
 {
-    client_info->ShortDebugString();
+    log_debug("client_info:%s", client_info->ShortDebugString().c_str());
 
     const SvrMsgHead* head = dynamic_cast<const SvrMsgHead*>(phead);
 
@@ -25,7 +26,7 @@ int DBWorkManage::ProcessMessage(ClientInfo* client_info, const google::protobuf
     it = msg_handler_map_.find(head->type());
     if(it == msg_handler_map_.end())
     {
-        log_info("proxy %d transfer msg: src_svr_type:%d, src_svr_id:%d, dst_svr_type:%d, dst_svr_id:%d", GetServerId(), head->src_svr_type(), head->src_svr_id(), head->dst_svr_type(), head->dst_svr_id());
+        log_info("proxy %d transfer msg, head:%s ", GetServerId(), head->ShortDebugString().c_str());
         if(!head->has_dst_svr_type() || ServerType_MIN > head->dst_svr_type() || ServerType_MAX < head->dst_svr_type())
         {
             log_error("proxy %d transfer msg error cause dst_svr_type error! dst_svr_type:%d", GetServerId(), head->dst_svr_type());
@@ -64,7 +65,7 @@ int DBWorkManage::ProcessMessage(ClientInfo* client_info, const google::protobuf
 
         if(NULL == client_info)
         {
-            log_error("proxy %d transfer msg error cause dst_svr_id error! dst_svr_id:%d", GetServerId(), head->dst_svr_id());
+            log_error("proxy %d transfer msg error cause dst_svr_id error! head:%s", GetServerId(), head->ShortDebugString().c_str());
             return -1;
         }
 
@@ -83,7 +84,7 @@ int DBWorkManage::ProcessMessage(ClientInfo* client_info, const google::protobuf
         int ret = it->second.first->ProcessMessage(client_info, head, message);
         if (ret < 0)
         {
-            log_warning("process :%d failed,client_id:%s", head->type(), head->client_id().c_str());
+            log_warning("process :%d failed", head->type());
         }
 
         DestroyMessage(message);
@@ -103,5 +104,25 @@ int DBWorkManage::ProcessClose(ClientInfo* client_info)
 
     ClientManage::Instance()->DeleteClientInfo(client_info);
     return 0;
+}
+
+int RegReqHandler::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, const google::protobuf::Message* pmsg)
+{
+    if(NULL == client_info || NULL == phead)
+        return -1;
+
+    const SvrMsgHead* head = dynamic_cast<const SvrMsgHead*>(phead);
+    const SvrRegRequest* req = dynamic_cast<const SvrRegRequest*>(pmsg);
+
+    client_info->server_type = req->svr_type();
+    client_info->server_id = req->svr_id();
+    client_info->is_register = true;
+
+    SvrMsgHead mh;
+    client_info->processor->FillMsgHead(&mh, SMT_REG_RESP, head->src_svr_type(), head);
+
+    SvrRegResponse resp;
+    resp.set_result(RESULT_SUCCESS);
+    return client_info->processor->SendMessageToServer(client_info, &mh, &resp);
 }
 

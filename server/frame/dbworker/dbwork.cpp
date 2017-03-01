@@ -22,6 +22,7 @@
 #include "connect_center.h"
 
 extern std::map<std::string, std::string> g_reason_to_query;
+extern volatile int stop; 
 
 struct event_base *g_event_base = NULL;
 std::map<int, ClientInfo *> g_map_worker_info;
@@ -31,17 +32,6 @@ std::map<int, ClientInfo *> g_map_worker_info;
 int InitNet()
 {
     InitLibevent(g_event_base);
-    return 0;
-}
-
-int CheckFlag()
-{
-    if (stop)
-    {
-        log_warning("dbworker: recv quit signal, quit......\n");
-        exit(0);
-    }
-
     return 0;
 }
 
@@ -56,6 +46,8 @@ bool ReloadConfig()
         snprintf(log_name, sizeof(log_name), LOG_NAME "_%d", getpid());
         init_log(log_name, config.log_dir().c_str(),config.log_config().c_str());
         set_log_level(config.log_level());
+        ConnectToCenter::Instance()->SetNewConfig(false);
+        return true;
     }
 
     return false;
@@ -88,7 +80,6 @@ int main(int argc, char **argv)
     }
 
     InitSignal();
-    DaemonStart(argc, argv, 1);
 
     int ret = InitNet();
     if (ret != 0)
@@ -101,6 +92,7 @@ int main(int argc, char **argv)
 
     while(true)
     {
+        event_base_loop(g_event_base, EVLOOP_ONCE);
         if(ReloadConfig())
             break;
     }
@@ -117,10 +109,14 @@ int main(int argc, char **argv)
 
     ProxyMgr.init(config.svr_id,config.svr_type, &MessageProcessorInst);
 
-    while (true)
+    struct timeval tm;
+    tm.tv_sec = 1;
+    tm.tv_usec = 0;
+
+    while (1 != stop)
     {
+        event_base_loopexit(g_event_base, &tm);
         event_base_loop(g_event_base, EVLOOP_NONBLOCK);
-        CheckFlag();
 
         ConnectToCenter::Instance()->Reconnect();
         ProxyMgr.Reconnect();

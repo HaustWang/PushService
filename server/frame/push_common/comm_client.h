@@ -49,9 +49,12 @@ public:
         }
     }
 
-    void ShortDebugString() const
+    std::string ShortDebugString() const
     {
-        log_debug("Show ClientInfo,fd:%d, server_addr:%s  ,server_id:%d, server_type:%d,is_register:%s", fd,GetPeerAddrStr(address) ,server_id, server_type, is_register==true?"TRUE":"FALSE");
+        static char log_content[128];
+        memset(log_content, 0, sizeof(log_content));
+        snprintf(log_content, sizeof(log_content), "Show ClientInfo,fd:%d, server_addr:%s  ,server_id:%d, server_type:%d,is_register:%s", fd,GetPeerAddrStr(address) ,server_id, server_type, is_register==true?"TRUE":"FALSE");
+        return log_content;
     }
 
     virtual void Reconnect() {}
@@ -88,7 +91,7 @@ public:
     ClientInfo* GetClientInfo(int fd);
     ClientInfo* GetClientInfoRandom(int svr_type);
 
-    int GetClientCnt(void)
+    size_t GetClientCnt(void)
     {
         return map_client_info_.size();
     }

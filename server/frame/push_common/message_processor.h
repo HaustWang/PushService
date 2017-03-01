@@ -43,7 +43,7 @@ public:
     virtual google::protobuf::Message* CreateMessage(const std::string& type_name, const std::string& message_body);
     virtual void DestroyMessage(google::protobuf::Message* pmsg);
 
-    int FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const int dst_svr_type, const SvrMsgHead* src_head = NULL, const std::string& client_id = "");
+    int FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const int dst_svr_type, const SvrMsgHead* src_head = NULL);
     int FillMsgHead(ClientMsgHead *head, const std::string& deviceId, const ClientMsgType type);
 
     int GetServerType() { return m_SvrType; }

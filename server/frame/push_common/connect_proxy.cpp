@@ -72,7 +72,7 @@ void ProxyInfo::Reconnect()
 }
 
 //给服务器发送注册消息
-int ProxyMessageProcessor::RegisterToServer(ClientInfo* client_info)
+int ProxyMessageProcessor::RegisterToServer(const ClientInfo* client_info)
 {
 	SvrMsgHead mh;
 	SvrRegRequest req;
@@ -80,7 +80,7 @@ int ProxyMessageProcessor::RegisterToServer(ClientInfo* client_info)
 	FillMsgHead(&mh, SMT_REG_REQ, SERVER_TYPE_PROXY);
 	req.set_svr_id(client_info->server_id);
 	req.set_svr_type(client_info->server_type);
-    client_info->ShortDebugString();
+    log_debug("register to server, client_info:%s", client_info->ShortDebugString().c_str());
 	return SendMessageToServer(client_info, &mh, &req);
 }
 
@@ -113,9 +113,7 @@ int  ConnectProxyMgr::SendMessageToServer(const SvrMsgHead* head, google::protob
 
     if(m_ociv.size()>0)
     {
-        unsigned long hash = strhash(head->client_id().c_str(), head->client_id().length());
-
-        select_proxy_idx = hash % m_ociv.size() ;
+        select_proxy_idx = head->dst_svr_id() % m_ociv.size() ;
     }
 
     ((SvrMsgHead*)head)->set_proxy_svr_id(m_ociv[select_proxy_idx].server_id);
@@ -150,8 +148,7 @@ int RegRespHandler::ProcessMessage(ClientInfo* client_info, const google::protob
 
     const SvrMsgHead* head = dynamic_cast<const SvrMsgHead*>(phead);
     client_info->server_id = head->src_svr_id();
-	log_debug("register sucess, %d,client_info is below:", head->type());
+	log_debug("register sucess, %d,client_info:%s", head->type(),  client_info->ShortDebugString().c_str());
 
-    client_info->ShortDebugString();
     return 0;
 }

@@ -51,9 +51,9 @@ public:
         return _instance;
 	}
 
-    void UpdateUserStatus(std::string const& client_id, bool is_online); 
-    void UpdateUserPushAck(std::string const& client_id, int64_t msg_id);
-    void UpdateUserRead(std::string const& client_id, int64_t msg_id);
+    int UpdateUserStatus(std::string const& client_id, bool is_online); 
+    int UpdateUserPushAck(std::string const& client_id, int64_t msg_id, ResultCode code);
+    int UpdateUserRead(std::string const& client_id, int64_t msg_id);
 };
 
 class TransMsgHandler : public MessageHandler

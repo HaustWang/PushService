@@ -53,7 +53,7 @@ public:
     }
 
     virtual void InitMessageIdMap();
-	virtual int RegisterToServer(ClientInfo* );
+	virtual int RegisterToServer(const ClientInfo* );
 };
 
 class ConnectProxyMgr

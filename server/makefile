@@ -45,6 +45,11 @@ clean_module:
 		make clean -C $$dir; \
 	done;
 
-.PHONY: all clean third common module proto clean_proto clean_common clean_module
+install:
+	@for dir in $(MODULE); do \
+		make install -C $$dir;	\
+	done;
+
+.PHONY: all clean third common module proto clean_proto clean_common clean_module install
 
 

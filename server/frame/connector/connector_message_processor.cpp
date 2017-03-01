@@ -170,6 +170,9 @@ int ConnectorMessageProcessor::SendMessageToClient(PushClientInfo* client_info, 
 //处理登录请求
 int ConnectorMessageProcessor::ProcessLoginReq( PushClientInfo* client_info, const ClientMsgHead* head, const google::protobuf::Message* message)
 {
+    if(NULL == client_info || NULL == head || NULL == message)
+        return -1;
+
 	const LoginRequest* request = dynamic_cast<const LoginRequest*>(message);
 
     //没必要重复登陆
@@ -271,7 +274,7 @@ int ConnectorMessageProcessor::ResponseClientLogin(PushClientInfo* client_info, 
     return SendMessageToClient(client_info, &mh,&res);
 }
 
-int ConnectorMessageProcessor::ProcessHeartbeat(PushClientInfo* client_info, const ClientMsgHead* head, const google::protobuf::Message* message)
+int ConnectorMessageProcessor::ProcessHeartbeat(PushClientInfo* client_info, const ClientMsgHead *head, const google::protobuf::Message*)
 {
     if(!client_info)
 	{
@@ -279,8 +282,6 @@ int ConnectorMessageProcessor::ProcessHeartbeat(PushClientInfo* client_info, con
 		return -1;
 	}
 
-    UNUSED(head);
-    UNUSED(message);
     if(!client_info->client_id.empty())
     {
         //更新心跳时间
@@ -306,9 +307,9 @@ int LoginHandler::ProcessMessage(ClientInfo* client_info, const google::protobuf
     return ConnectorMessageProcessor::Instance()->ProcessLoginReq((PushClientInfo*)client_info, (const ClientMsgHead*)phead, message);
 }
 
-int PushAckHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message* phead, const google::protobuf::Message* message)
+int PushAckHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message*, const google::protobuf::Message* message)
 {
-    if(!pclient_info)
+    if(!pclient_info || NULL == message)
 	{
 		log_error("client_info is null");
 		return -1;
@@ -323,13 +324,12 @@ int PushAckHandler::ProcessMessage(ClientInfo* pclient_info, const google::proto
     }
 
     const ClientPushAck *msg = dynamic_cast<const ClientPushAck*>(message);
-    ConnectToOnlinerMgr::Instance()->UpdateUserPushAck(client_info->client_id, msg->msgid());
-    return 0;
+    return ConnectToOnlinerMgr::Instance()->UpdateUserPushAck(client_info->client_id, msg->msgid(), msg->result());
 }
 
-int UserReadHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message* phead, const google::protobuf::Message* message)
+int UserReadHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message*, const google::protobuf::Message* message)
 {
-    if(!pclient_info)
+    if(!pclient_info || NULL == message)
 	{
 		log_error("client_info is null");
 		return -1;
@@ -337,8 +337,7 @@ int UserReadHandler::ProcessMessage(ClientInfo* pclient_info, const google::prot
 
     PushClientInfo* client_info = dynamic_cast<PushClientInfo*>(pclient_info);
     const ClientUpdateRead *msg = dynamic_cast<const ClientUpdateRead*>(message);
-    ConnectToOnlinerMgr::Instance()->UpdateUserRead(client_info->client_id, msg->msgid());
-    return 0;
+    return ConnectToOnlinerMgr::Instance()->UpdateUserRead(client_info->client_id, msg->msgid());
 }
 
 int HeartbeatHandler::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, const google::protobuf::Message* message)
