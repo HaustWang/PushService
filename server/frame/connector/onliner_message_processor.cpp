@@ -16,6 +16,7 @@ OnlinerMessageProcessor::OnlinerMessageProcessor()
 
 void OnlinerMessageProcessor::InitMessageIdMap()
 {
+    ProxyMessageProcessor::InitMessageIdMap();
     REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_TRANSFER_MSG,  new TransMsgHandler, "SvrTransferMsg");
     REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_KICK_USER, new KickUserHandler, "SvrKickUser");
 }
@@ -46,7 +47,7 @@ int KickUserHandler::ProcessMessage(ClientInfo*, const google::protobuf::Message
 
 void ConnectToOnlinerMgr::init(Config const& config)
 {
-    ConnectProxyMgr::init(config.svr_id,config.svr_type,OnlinerMessageProcessor::Instance());
+    ConnectProxyMgr::init(config.svr_id, config.svr_type, OnlinerMessageProcessor::Instance());
 }
 
 int ConnectToOnlinerMgr::UpdateUserStatus(std::string const& client_id, bool is_online)
@@ -54,7 +55,7 @@ int ConnectToOnlinerMgr::UpdateUserStatus(std::string const& client_id, bool is_
     if(client_id.empty())   return -1;
 
     SvrMsgHead head;
-    ConnectorMessageProcessor::Instance()->FillMsgHead(&head, SMT_UPDATE_USER, SERVER_TYPE_DB_WORKER);
+    OnlinerMessageProcessor::Instance()->FillMsgHead(&head, SMT_UPDATE_USER, SERVER_TYPE_DB_WORKER);
 
     SvrUpdateUser msg;
     msg.set_connector_id(ServerId());
@@ -69,7 +70,7 @@ int ConnectToOnlinerMgr::UpdateUserPushAck(std::string const& client_id, int64_t
     if(client_id.empty())   return -1;
 
     SvrMsgHead head;
-    ConnectorMessageProcessor::Instance()->FillMsgHead(&head, SMT_USER_MSG_ACK, SERVER_TYPE_DB_WORKER);
+    OnlinerMessageProcessor::Instance()->FillMsgHead(&head, SMT_USER_MSG_ACK, SERVER_TYPE_DB_WORKER);
 
     SvrUserMsgAck msg;
     msg.set_msgid(msg_id);
@@ -85,7 +86,7 @@ int ConnectToOnlinerMgr::UpdateUserRead(std::string const& client_id, int64_t ms
     if(client_id.empty())   return -1;
 
     SvrMsgHead head;
-    ConnectorMessageProcessor::Instance()->FillMsgHead(&head, SMT_USER_READ_MSG, SERVER_TYPE_PHP_PROXY);
+    OnlinerMessageProcessor::Instance()->FillMsgHead(&head, SMT_USER_READ_MSG, SERVER_TYPE_PHP_PROXY);
 
     SvrUserReadMsg msg;
     msg.set_msgid(msg_id);

@@ -28,6 +28,60 @@ void ConnectorMessageProcessor::InitMessageIdMap()
     REGIST_MESSAGE_PROCESS(msg_handler_map_, CMT_UPDATE_READ, new UserReadHandler, "ClientUpdateRead")
 }
 
+int ConnectorMessageProcessor::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, std::string const& body)
+{
+    log_debug("client_info:%s", client_info->ShortDebugString().c_str());
+
+    const ClientMsgHead* head = dynamic_cast<const ClientMsgHead*>(phead);
+
+    HANDLER_TYPE_IT it;
+    it = msg_handler_map_.find(head->type());
+    if(it == msg_handler_map_.end())
+    {
+        log_warning("message id %d not register!", head->type() );
+        return -1;
+    }
+
+    if(body.empty())
+    {
+        if(0 < it->second.first->ProcessMessage(client_info, head, NULL))
+        {
+            log_warning("process :%d failed", head->type());
+        }
+    }
+    else
+    {
+        if(!it->second.second.empty())
+        {
+            google::protobuf::Message* message = CreateMessage(it->second.second,body);
+            if(!message)
+            {
+                log_error("can not create message body , message head: %s, msg_name:%s", head->ShortDebugString().c_str(), it->second.second.c_str());
+                return -1;
+            }
+
+            log_info("message head:%s, message body:%s",head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
+
+            if(0 < it->second.first->ProcessMessage(client_info, head, message))
+            {
+                log_warning("process :%d failed", head->type());
+            }
+
+            DestroyMessage(message);
+        }
+        else
+        {
+            log_info("message head:%s, dont has message body",head->ShortDebugString().c_str());
+            if(0 < it->second.first->ProcessMessage(client_info, head, NULL))
+            {
+                log_warning("process :%d failed", head->type());
+            }
+        }
+    }
+
+    return 0;
+}
+
 int ConnectorMessageProcessor::ProcessClose(ClientInfo* pclient_info)
 {
 	if(!pclient_info)
@@ -198,6 +252,7 @@ int ConnectorMessageProcessor::ProcessLoginReq( PushClientInfo* client_info, con
     }
 
     client_info->client_id = client_id;
+    client_info->is_register = true;
 
 	CPlayer* player = CPlayerFrame::Instance()->GetPlayer(client_id);
 	if(player == NULL)
@@ -252,6 +307,7 @@ int ConnectorMessageProcessor::ResponseClientLogin(PushClientInfo* client_info, 
 	res.set_result(process_result);
     res.set_key(second_key);
 
+
     AES tmp_aes(second_key, AES_ECB, true);
 	FillMsgHead(&mh, client_info->client_id,  CMT_LOGIN_RESP);
 
@@ -271,6 +327,7 @@ int ConnectorMessageProcessor::ResponseClientLogin(PushClientInfo* client_info, 
 
     res.set_cipher(tmp_cipher);
 
+    log_info("client_id:%s, second_key:%s, last_key:%s", client_info->client_id.c_str(), second_key.c_str(), last_key.c_str());
     return SendMessageToClient(client_info, &mh,&res);
 }
 

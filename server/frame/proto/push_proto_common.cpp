@@ -56,9 +56,9 @@ void protobuf_AddDesc_push_5fproto_5fcommon_2eproto() {
   GOOGLE_PROTOBUF_VERIFY_VERSION;
 
   ::google::protobuf::DescriptorPool::InternalAddGeneratedFile(
-    "\n\027push_proto_common.proto*]\n\nResultCode\022"
+    "\n\027push_proto_common.proto*[\n\nResultCode\022"
     "\022\n\016RESULT_SUCCESS\020\000\022\024\n\020RESULT_FORBIDDEN\020"
-    "\001\022\023\n\017RESULT_CONFLICT\020\002\022\020\n\013RESULT_FAIL\020\220N", 120);
+    "\001\022\021\n\rRESULT_UNLOAD\020\002\022\020\n\013RESULT_FAIL\020\220N", 118);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "push_proto_common.proto", &protobuf_RegisterTypes);
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_push_5fproto_5fcommon_2eproto);

@@ -30,7 +30,6 @@ enum SvrMsgType
 message SvrMsgHead
 {
     optional SvrMsgType type = 1;
-    optional string client_id = 2;
     optional int32 src_svr_type = 4;
     optional int32 src_svr_id = 5;
     optional int32 dst_svr_type = 6;
@@ -61,23 +60,33 @@ message SvrRegResponse
 message SvrUpdateUser
 {
     optional int32 connector_id = 1;
-    optional bool is_online = 2;
+    optional string client_id = 2;
+    optional bool is_online = 3;
+}
+
+message SvrKickUser
+{
+    optional string client_id = 1;
 }
 
 message SvrUserMsgAck
 {
     optional int64 msgid = 1;
+    optional string client_id = 2;
+    optional ResultCode code = 3;
 }
 
 message SvrUserReadMsg
 {
     optional int64 msgid = 1;
+    optional string client_id = 2;
 }
 
 message SvrTransferMsg
 {
     optional int64 msgid = 1;
     optional bytes content = 2;
+    repeated string client_ids = 3;
 }
 
 //客户端发送心跳包

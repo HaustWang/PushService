@@ -4,6 +4,7 @@
 #include "onliner_message_processor.h"
 #include "base.h"
 #include "connect_proxy.h"
+#include "http_manager.h"
 
 
 extern struct event_base * g_event_base;
@@ -14,6 +15,7 @@ OnlinerMessageProcessor::OnlinerMessageProcessor()
 
 void OnlinerMessageProcessor::InitMessageIdMap()
 {
+    ProxyMessageProcessor::InitMessageIdMap();
 	REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_USER_MSG_ACK, new UserMsgAckHandler, "SvrUserMsgAck");
 	REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_USER_READ_MSG, new UserReadHandler, "SvrUserReadMsg");
 }
@@ -68,7 +70,11 @@ int UserMsgAckHandler::ProcessMessage(ClientInfo*, const google::protobuf::Messa
         log_error("User msg ack but info incomplete, client_id:%s, msg_id:%ld", msg->client_id().c_str(), msg->msgid());
         return -1;
     }
-    return 0;
+
+    if(msg->code() == RESULT_UNLOAD)
+        return HttpManager::Instance().ReportData(msg->msgid(), msg->client_id(), REPORT_TYPE_UNLOAD);
+    else
+        return HttpManager::Instance().ReportData(msg->msgid(), msg->client_id(), REPORT_TYPE_RECEIVED);
 }
 
 int UserReadHandler::ProcessMessage(ClientInfo* pclient_info, const google::protobuf::Message*, const google::protobuf::Message* pmsg)
@@ -79,12 +85,12 @@ int UserReadHandler::ProcessMessage(ClientInfo* pclient_info, const google::prot
         return -1;
     }
 
-    const SvrUserMsgAck *msg = dynamic_cast<const SvrUserMsgAck*>(pmsg);
+    const SvrUserReadMsg *msg = dynamic_cast<const SvrUserReadMsg*>(pmsg);
     if(!msg->has_client_id() || !msg->has_msgid())
     {
         log_error("User read msg but info incomplete, client_id:%s, msg_id:%ld", msg->client_id().c_str(), msg->msgid());
         return -1;
     }
 
-    return 0;
+    return HttpManager::Instance().ReportData(msg->msgid(), msg->client_id(), REPORT_TYPE_READ);
 }

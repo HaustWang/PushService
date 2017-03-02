@@ -29,9 +29,7 @@ bool ReloadConfig()
         const SvrConfig& config = ConnectToCenter::Instance()->GetConfig();
         set_log_type(config.log_type());
 
-        char log_name[64] = {0};
-        snprintf(log_name, sizeof(log_name), LOG_NAME "_%d", getpid());
-        init_log(log_name, config.log_dir().c_str(),config.log_config().c_str());
+        init_log(LOG_NAME, config.log_dir().c_str(),config.log_config().c_str());
         set_log_level(config.log_level());
         ConnectToCenter::Instance()->SetNewConfig(false);
         return true;
@@ -111,5 +109,6 @@ int main(int argc, char** argv)
         usleep(1000); //提高了延迟
     }
 
+    event_base_free(g_event_base);
     return 0;
 }

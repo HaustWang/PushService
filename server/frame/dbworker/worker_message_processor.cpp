@@ -18,8 +18,10 @@ WorkerMessageProcessor::~WorkerMessageProcessor()
 
 void WorkerMessageProcessor::InitMessageIdMap()
 {
+    ProxyMessageProcessor::InitMessageIdMap();
     REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_UPDATE_USER, new UserUpdateStatusHandler, "SvrUpdateUser");
     REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_INSERT_MSG, new SvrInsertMsgHandler, "SvrInsertMsg");
+    REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_USER_MSG_ACK, new SvrUserMsgAckHandler, "SvrUserMsgAck");
 }
 
 int WorkerMessageProcessor::SendTransferMsg(std::string const& client_id, uint32_t msgid, int32_t connector_id, std::string const& msg)

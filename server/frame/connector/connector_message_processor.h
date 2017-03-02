@@ -38,6 +38,7 @@ public:
 public:
 	void InitMessageIdMap();
 public:
+    virtual int ProcessMessage(ClientInfo*, const google::protobuf::Message*, std::string const&);
 	virtual int ProcessClose(ClientInfo* );
     int SendMessageToClient(std::string const& client_id, int64_t msgid, std::string const& content);
     int SendMessageToAllClient(int64_t msgid, std::string const& content);

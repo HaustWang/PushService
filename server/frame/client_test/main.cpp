@@ -124,7 +124,7 @@ void SendHeart()
     MessageProcess::Instance()->fill_message_head(&mh, "", CMT_HEATBEAT);
 
     MessageProcess::Instance()->SendMessageToServer(&mh, &req) ;
-    g_error_times++;
+    // g_error_times++;
 }
 
 

@@ -3,7 +3,7 @@ enum ResultCode
 {
 	RESULT_SUCCESS = 0; //成功
     RESULT_FORBIDDEN = 1; //没有权限
-    RESULT_CONFLICT = 2;    //注册的app已经注册并且本次注册的appname与上次不一致
+    RESULT_UNLOAD = 2;    //应用已卸载
 	RESULT_FAIL = 10000; //其他错误
 }
 

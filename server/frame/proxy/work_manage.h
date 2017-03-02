@@ -12,6 +12,7 @@
 #include <netinet/in.h>
 #include "log4cpp_log.h"
 #include "message_processor.h"
+#include "push_common.h"
 
 
 class DBWorkManage : public MessageProcessor
@@ -28,6 +29,7 @@ public:
 
     virtual ~DBWorkManage() {}
 
+    void Init(Config const&);
     virtual void InitMessageIdMap();
     virtual int ProcessMessage(ClientInfo*, const google::protobuf::Message*, const std::string& message_body);
     virtual int ProcessClose(ClientInfo* callback_info);

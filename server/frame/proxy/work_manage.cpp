@@ -11,9 +11,14 @@ DBWorkManage::DBWorkManage()
 	InitMessageIdMap();
 }
 
+void DBWorkManage::Init(Config const& config)
+{
+    SetSvrInfo(config.svr_type, config.svr_id);
+}
+
 void DBWorkManage::InitMessageIdMap()
 {
-    REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_CONFIG_RESP, new RegReqHandler, "SvrRegRequest");
+    REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_REG_REQ, new RegReqHandler, "SvrRegRequest");
 }
 
 int DBWorkManage::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, std::string const& body)

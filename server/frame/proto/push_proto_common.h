@@ -34,7 +34,7 @@ void protobuf_ShutdownFile_push_5fproto_5fcommon_2eproto();
 enum ResultCode {
   RESULT_SUCCESS = 0,
   RESULT_FORBIDDEN = 1,
-  RESULT_CONFLICT = 2,
+  RESULT_UNLOAD = 2,
   RESULT_FAIL = 10000
 };
 bool ResultCode_IsValid(int value);

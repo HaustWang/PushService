@@ -6,6 +6,13 @@
 #include "http_process.h"
 #include "push_proto_server.h"
 
+enum
+{
+    REPORT_TYPE_RECEIVED = 1,
+    REPORT_TYPE_READ = 2,
+    REPORT_TYPE_UNLOAD = 3,
+};
+
 class HttpManager
 {
 public:
@@ -16,6 +23,8 @@ public:
         return instance_;
     }
     int Init();
+
+    int ReportData(int64_t msgid, std::string const client_id, int action);
 private:
     HttpManager();
 private:

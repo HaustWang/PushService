@@ -163,8 +163,11 @@ int MessageProcess::SendMessageToServer( ClientMsgHead* head, google::protobuf::
 
         std::string out;
         AES aes(true_key, AES_ECB, true);
-        if(true_key.empty())
+        if(true_key.empty() || CMT_LOGIN_REQ == head->type())
+        {
             aes.SetCryptKey("]u%t&1v=as^f!/i*");
+            true_key.clear();
+        }
 
         int len = aes.Encrypt(msg_buf, out) + sizeof(int);
         len = htonl(len);
@@ -210,6 +213,7 @@ int MessageProcess::ProcessSvrPushMessage(const  ClientMsgHead* head, google::pr
 
     ClientPushAck ack;
     ack.set_result(RESULT_SUCCESS);
+    ack.set_msgid(msg->msgid());
 
     return SendMessageToServer(&mh, &ack);
 }

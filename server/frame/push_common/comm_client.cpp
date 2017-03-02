@@ -40,6 +40,7 @@ ClientInfo* ClientManage::GetClientInfoRandom(int svr_type)
     std::vector<ClientInfo*> client_vec;
     GetClientInfoList(svr_type, client_vec);
 
+    log_debug("get client info random, svr_type:%d, client_vec.size():%ld, client_size:%ld", svr_type, client_vec.size(), GetClientCnt());
     if(client_vec.empty())  return NULL;
 
     int idx = rand() % client_vec.size();

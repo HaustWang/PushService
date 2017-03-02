@@ -112,6 +112,7 @@ int DbWorkerMgr::InsertMsgToRedis(uint32_t msgid, Iter begin, Iter end, std::str
     static std::string set_key_prefix(MSG_SET_KEY_PREFIX);
     for(Iter it = begin; end != it; ++it)
     {
+        if(it->empty()) continue;
         m_MsgMap[*it].insert(msgid);
         m_RedisManagerMsg.AddSet(set_key_prefix + *it, msgid);
     }
@@ -154,5 +155,5 @@ int DbWorkerMgr::UserReceivedMsg(std::string const& client_id, int64_t msgid)
     if(m_MsgMap[client_id].empty())
         m_MsgMap.erase(client_id);
 
-    return m_RedisManagerMsg.RemSet(std::string(MSG_SET_KEY_PREFIX), msgid);
+    return m_RedisManagerMsg.RemSet(std::string(MSG_SET_KEY_PREFIX) + client_id, msgid);
 }

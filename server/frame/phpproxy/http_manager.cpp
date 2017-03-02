@@ -2,6 +2,8 @@
 #include "log4cpp_log.h"
 #include "connect_center.h"
 
+#include <sstream>
+
 HttpManager::HttpManager()
 {
 }
@@ -29,6 +31,16 @@ int HttpManager::Init()
     }
 
     return 0;
+}
+
+int HttpManager::ReportData(int64_t msgid, std::string const client_id, int action)
+{
+    if(client_id.empty() || msgid < 0 || action < 0)    return -1;
+
+    std::ostringstream oss;
+    oss << "/report?client_id=" << client_id << "&msgid=" << msgid << "&action=" << action;
+
+    return send_msgproxy_client_.Query(oss.str().c_str());
 }
 
 
