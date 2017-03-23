@@ -1,5 +1,7 @@
 import "push_proto_common.proto";
 
+// package push;
+
 enum ServerType
 {
     SERVER_TYPE_CENTER = 0;
@@ -7,7 +9,8 @@ enum ServerType
     SERVER_TYPE_CONNECTOR = 2;
     SERVER_TYPE_PHP_PROXY = 3;
     SERVER_TYPE_DB_WORKER = 4;
-    SERVER_TYPE_THIRD_PROXY = 5;
+    SERVER_TYPE_LOADER = 5;
+    SERVER_TYPE_THIRD_PROXY = 6;
 };
 
 enum SvrMsgType
@@ -25,6 +28,7 @@ enum SvrMsgType
     SMT_CONFIG_RESP = 14;   //中心服相应配置
     SMT_BROADCAST_ADDR = 15; //广播新的服务器地址
     SMT_BROADCAST_CONFIG = 16; //配置修改广播
+    SMT_SYNC_ADDRESS = 17;  //同步服务器地址
 }
 
 message SvrMsgHead
@@ -107,8 +111,9 @@ message SvrInsertMsg
 message SvrAddress
 {
     optional int32 svr_type = 1;
-    optional string ip = 2;
-    optional int32 port = 3;
+    optional int32 svr_id = 2;
+    optional string ip = 3;
+    optional int32 port = 4;
 }
 
 message SvrConfigReq
@@ -148,6 +153,11 @@ message SvrConfigResp
 }
 
 message SvrBroadcastAddress
+{
+    repeated SvrAddress peer_addresses = 1;
+}
+
+message SvrSyncAddress 
 {
     repeated SvrAddress peer_addresses = 1;
 }

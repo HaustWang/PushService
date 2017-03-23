@@ -1,5 +1,7 @@
 import "push_proto_common.proto";
 
+// package push;
+
 enum ClientMsgType
 {
     CMT_LOGIN_REQ = 1;
