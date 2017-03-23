@@ -4,11 +4,12 @@ libdir=`pwd`/libs
 
 Build()
 {
-    if [ -f libs/libevent.a ]
+    if [ -f libs/libevent.a ] && [ -f libs/libevent_openssl.a ]
     then
         echo "libevent ok"
     else
-        cd libevent-2.0.21-stable/ && chmod a+x configure && ./configure --prefix=${libdir}&& make -j 4 && cp .libs/libevent.a ../libs/ && make install
+        # cd libevent-2.0.21-stable/ && chmod a+x configure && ./configure --prefix=${libdir}&& make -j 4 && cp .libs/libevent.a ../libs/ && make install
+        cd libevent-2.1.8-stable/ && chmod a+x configure && ./configure --prefix=${libdir}&& make -j 4 && cp .libs/libevent.a .libs/libevent_openssl.a ../libs/ && make install
         cd ../
     fi
 

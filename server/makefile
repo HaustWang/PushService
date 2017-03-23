@@ -10,6 +10,7 @@ MODULE := frame/client_test \
 			frame/connector \
 			frame/dbworker	\
 			frame/phpproxy \
+			frame/loadsvr 	\
 
 all: third proto common module
 
