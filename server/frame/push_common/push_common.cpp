@@ -63,13 +63,9 @@ std::string GenerateClientId(std::string const& imsi, time_t t)
     memset(info, 0, sizeof(info));
     memcpy(info+sizeof(info)-sizeof(time_t), (unsigned char *)&t, sizeof(time_t));
     if(imsi.length() > sizeof(info) - sizeof(time_t))
-    {
         memcpy(info, imsi.data(), sizeof(info) - sizeof(time_t));
-    }
     else
-    {
         memcpy(info, imsi.data(), imsi.length());
-    }
 
     static unsigned char md5_value[16];
     memset(md5_value, 0, sizeof(md5_value));
@@ -100,7 +96,7 @@ const char key_group[] = "~!@#$%^&*()_+`1234567890-=QWERTYUIOP{}|qwertyuiop[]\\A
 
 int GetIntByte(int in, int seq)
 {
-    return (char)(((in >> (8*seq)) & 0xff) + (int)rand()) % sizeof(key_group);
+    return (char)(((in >> (8*seq)) & 0xff) + (int)rand()) % (sizeof(key_group)-1);
 }
 
 std::string GenerateSecretKey(std::string const& last_key, std::string const& client_id)
@@ -118,35 +114,6 @@ std::string GenerateSecretKey(std::string const& last_key, std::string const& cl
     }
 
     return oss.str();
-}
-
-void GetServerAddr(CConfigFile& config, const char* server_name,std::vector<ServerAddr>& server_addr_vec)
-{
-	int server_num = 0;
-	std::string strnum = std::string(server_name) + "_num";
-   	  config.get_value_of(server_name,strnum.c_str(), server_num,1);
- 	if(server_num <=0)
-	{
-		fprintf(stderr, "server: %s  num :%d is invalid, exit....\n",server_name, server_num);
-		exit(1);
-	}
-
-	server_addr_vec.resize(server_num);
-	for(int i=0; i<server_num; i++)
-	{
-		char s_name[256] = {0};
-		char server_addr_str[64] = {0};
-		snprintf(s_name, sizeof(s_name),"%s%d",server_name,i);
-		config.get_value_of(server_name,s_name,server_addr_str,sizeof(server_addr_str)-1,"0.0.0.0:2222");
-
-		char server_ip[64] = {0};
-		unsigned short server_port = 0;
-
-	    sscanf(server_addr_str, "%[^:]:%hd", server_ip, &server_port);
-		server_addr_vec[i].server_name = s_name;
-		server_addr_vec[i].server_ip = server_ip;
-		server_addr_vec[i].server_port = server_port;
-	}
 }
 
 int split_str(const char* ps_str , char* ps_sp , std::vector<std::string> &v_ret)
@@ -329,7 +296,6 @@ void SvrEventCallback(struct bufferevent *bev, short what , void *ctx)
 
     log_warning("client logout, what: %hd, client_info:%s", what, client_info->ShortDebugString().c_str());
     client_info->processor->ProcessClose(client_info);
-    return;
 }
 
 
@@ -569,7 +535,7 @@ bool IsAddressListening(const char *ip, unsigned short port)
     return ret;
 }
 
-std::string GetLocalListenIp(unsigned short port)
+std::string GetLocalListenIp(unsigned short port, bool islan)
 {
     char cmd[128] = {0};
     snprintf(cmd, sizeof(cmd), "netstat -nl |grep %hd |awk '{print $4}' | awk -F: '{print $1}'", port);
@@ -581,6 +547,40 @@ std::string GetLocalListenIp(unsigned short port)
     char *pret = fgets(loc_ip, sizeof(loc_ip), f);
     pclose(f);
 
+    if(islan)
+    {
+        if(strcmp("0.0.0.0", loc_ip) == 0)
+        {
+            memset(cmd, 0, sizeof(cmd));
+            snprintf(cmd, sizeof(cmd), "ifconfig|grep 192.168|xargs echo|awk -F'[: ]' '{print $3}'");
+
+            f = popen(cmd, "r");
+            if(NULL == f)   return loc_ip;
+
+            pret = fgets(loc_ip, sizeof(loc_ip), f);
+            pclose(f);
+
+            if(NULL == pret)    return "0.0.0.0";
+            return loc_ip;
+        }
+    }
+
     if(NULL == pret)    return "";
     return loc_ip;
+}
+
+std::string GetWlanIp()
+{
+    char cmd[128] = {0};
+    snprintf(cmd, sizeof(cmd), "curl myip.dnsomatic.com");
+
+    FILE *f = popen(cmd, "r");
+    if(NULL == f)   return "";
+
+    char ip[20] = {0};
+    char *pret = fgets(ip, sizeof(ip), f);
+    pclose(f);
+
+    if(NULL == pret)    return "";
+    return ip;
 }

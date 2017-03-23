@@ -7,7 +7,6 @@
 #include <unistd.h>
 #include <vector>
 #include <event2/listener.h>
-#include "comm_config.h"
 #include "log4cpp_log.h"
 
 
@@ -40,13 +39,11 @@ std::string ToHexString(const char *c, int l);
 std::string GenerateClientId(std::string const& imsi, time_t t);
 std::string GenerateSecretKey(std::string const& last_key, std::string const& client_id);
 
-void GetServerAddr(CConfigFile& config, const char* server_name,std::vector<ServerAddr>& server_addr_vec);
-
-
 int ParseArg(int argc, char **argv, Config& config);
 
 bool IsAddressListening(const char *ip, unsigned short port);
-std::string GetLocalListenIp(unsigned short port);
+std::string GetLocalListenIp(unsigned short port, bool islan = false);
+std::string GetWlanIp();
 
 
 class MessageProcessor;

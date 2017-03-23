@@ -11,7 +11,6 @@
 #include <event2/listener.h>
 
 #include "base.h"
-#include "comm_config.h"
 #include "comm_datetime.h"
 #include "log4cpp_log.h"
 #include "comm_server.h"
@@ -74,7 +73,9 @@ int main(int argc, char **argv)
     }
 
     InitLibevent(g_event_base);
-    ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id, "0.0.0.0", config.listen_port);
+    ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id,
+        GetLocalListenIp(config.listen_port, true), config.listen_port);
+
     while(true)
     {
         event_base_loop(g_event_base, EVLOOP_ONCE);
@@ -91,7 +92,7 @@ int main(int argc, char **argv)
     }
 
 	DBWorkManage::Instance()->Init(config);
-	log_warning("dbproxy start runing\n");
+	log_debug("dbproxy start runing\n");
 
     struct timeval tm;
     tm.tv_sec = 1;

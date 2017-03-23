@@ -40,6 +40,7 @@ public:
     time_t last_connect_time; //最近一次连接服务器时间
 };
 
+class ConnectProxyMgr;
 class ProxyMessageProcessor : public MessageProcessor
 {
 public:
@@ -54,6 +55,11 @@ public:
 
     virtual void InitMessageIdMap();
 	virtual int RegisterToServer(const ClientInfo* );
+    virtual int ProcessClose(ClientInfo* client_info);
+
+    void SetProxyMgr(ConnectProxyMgr* mgr) { m_proxymgr = mgr; }
+private:
+    ConnectProxyMgr* m_proxymgr;
 };
 
 class ConnectProxyMgr
@@ -70,19 +76,20 @@ public:
     {
         for(size_t i=0; i<m_ociv.size(); i++)
         {
-           m_ociv[i].Reconnect();
+           m_ociv[i]->Reconnect();
         }
     }
 
-    void AddServer(ServerAddr const& server_addr);
-    void AddServer(std::string const& ip, unsigned short port);
+    void AddProxy(ServerAddr const& server_addr);
+    void AddProxy(std::string const& ip, unsigned short port);
 
     int ServerId() { return m_server_id; }
     int ServerType() { return m_server_type; }
 
     ProxyInfo* GetProxy(int proxy_svr_id);
+    bool RemoveProxy(int proxy_svr_id);
 private:
-	std::vector<ProxyInfo> m_ociv;
+	std::vector<ProxyInfo*> m_ociv;
     ProxyMessageProcessor* m_processor;
 
     int m_server_id;
@@ -94,5 +101,4 @@ class RegRespHandler : public MessageHandler
 public:
     virtual int ProcessMessage(ClientInfo*, const google::protobuf::Message*, const google::protobuf::Message*);
 };
-
 

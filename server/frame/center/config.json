@@ -4,7 +4,8 @@
     "log_level":7,
     "log_type":2,
     "log_dir":"../log/",
-    "port":19988
+    "port":19988,
+    "center_list":["192.168.203.207:19988","192.168.203.207:19988"]
   },
   "connector":{
     "log_level":7,
@@ -36,6 +37,11 @@
     "http_listen":12000,
     "php_host":"127.0.0.1",
     "php_port":80
+  },
+  "loader":{
+    "log_level":7,
+    "log_type":2,
+    "log_dir":"../log/"
   }
 }
 

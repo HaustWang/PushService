@@ -30,8 +30,6 @@ HttpProcess::~HttpProcess()
 
 int HttpProcess::Init(const char *addr, unsigned int port)
 {
-    int iret;
-
     struct evhttp *http = evhttp_new(g_event_base);
     if(!http)
     {
@@ -39,7 +37,7 @@ int HttpProcess::Init(const char *addr, unsigned int port)
         return -1;
     }
     //绑定http的回调函数
-    iret = evhttp_set_cb(http, "/push",api_request_cb, NULL);
+    int iret = evhttp_set_cb(http, "/push",api_request_cb, NULL);
     if(0 != iret)
     {
         log_error("evhttp_set_cb err!");
@@ -118,10 +116,8 @@ void HttpProcess::SendResponse(struct evhttp_request *req, int ret, const std:: 
     evhttp_add_header(req->output_headers, "Connection", "keep-alive");
     evhttp_add_header(req->output_headers, "Cache-Control", "no-cache");
 
-    static char buf[1024 * 8];
-    int len = snprintf(buf, sizeof(buf), "{\"status\":%d,\"msg\":\"%s\"}", ret, msg.c_str());
     struct evbuffer *databuf = evbuffer_new();
-    evbuffer_add(databuf, buf, len);
+    evbuffer_add_printf(databuf, "{\"status\":%d,\"msg\":\"%s\"}", ret, msg.c_str());
     evhttp_send_reply(req, HTTP_OK, "", databuf);
     evbuffer_free(databuf);
 }

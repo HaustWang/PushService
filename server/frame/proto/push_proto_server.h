@@ -49,6 +49,7 @@ class SvrConfigReq;
 class SvrConfig;
 class SvrConfigResp;
 class SvrBroadcastAddress;
+class SvrSyncAddress;
 
 enum ServerType {
   SERVER_TYPE_CENTER = 0,
@@ -56,7 +57,8 @@ enum ServerType {
   SERVER_TYPE_CONNECTOR = 2,
   SERVER_TYPE_PHP_PROXY = 3,
   SERVER_TYPE_DB_WORKER = 4,
-  SERVER_TYPE_THIRD_PROXY = 5
+  SERVER_TYPE_LOADER = 5,
+  SERVER_TYPE_THIRD_PROXY = 6
 };
 bool ServerType_IsValid(int value);
 const ServerType ServerType_MIN = SERVER_TYPE_CENTER;
@@ -86,11 +88,12 @@ enum SvrMsgType {
   SMT_CONFIG_REQ = 13,
   SMT_CONFIG_RESP = 14,
   SMT_BROADCAST_ADDR = 15,
-  SMT_BROADCAST_CONFIG = 16
+  SMT_BROADCAST_CONFIG = 16,
+  SMT_SYNC_ADDRESS = 17
 };
 bool SvrMsgType_IsValid(int value);
 const SvrMsgType SvrMsgType_MIN = SMT_REG_REQ;
-const SvrMsgType SvrMsgType_MAX = SMT_BROADCAST_CONFIG;
+const SvrMsgType SvrMsgType_MAX = SMT_SYNC_ADDRESS;
 const int SvrMsgType_ARRAYSIZE = SvrMsgType_MAX + 1;
 
 const ::google::protobuf::EnumDescriptor* SvrMsgType_descriptor();
@@ -1299,10 +1302,17 @@ class SvrAddress : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 svr_type() const;
   inline void set_svr_type(::google::protobuf::int32 value);
 
-  // optional string ip = 2;
+  // optional int32 svr_id = 2;
+  inline bool has_svr_id() const;
+  inline void clear_svr_id();
+  static const int kSvrIdFieldNumber = 2;
+  inline ::google::protobuf::int32 svr_id() const;
+  inline void set_svr_id(::google::protobuf::int32 value);
+
+  // optional string ip = 3;
   inline bool has_ip() const;
   inline void clear_ip();
-  static const int kIpFieldNumber = 2;
+  static const int kIpFieldNumber = 3;
   inline const ::std::string& ip() const;
   inline void set_ip(const ::std::string& value);
   inline void set_ip(const char* value);
@@ -1311,10 +1321,10 @@ class SvrAddress : public ::google::protobuf::Message {
   inline ::std::string* release_ip();
   inline void set_allocated_ip(::std::string* ip);
 
-  // optional int32 port = 3;
+  // optional int32 port = 4;
   inline bool has_port() const;
   inline void clear_port();
-  static const int kPortFieldNumber = 3;
+  static const int kPortFieldNumber = 4;
   inline ::google::protobuf::int32 port() const;
   inline void set_port(::google::protobuf::int32 value);
 
@@ -1322,6 +1332,8 @@ class SvrAddress : public ::google::protobuf::Message {
  private:
   inline void set_has_svr_type();
   inline void clear_has_svr_type();
+  inline void set_has_svr_id();
+  inline void clear_has_svr_id();
   inline void set_has_ip();
   inline void clear_has_ip();
   inline void set_has_port();
@@ -1329,12 +1341,13 @@ class SvrAddress : public ::google::protobuf::Message {
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
-  ::std::string* ip_;
   ::google::protobuf::int32 svr_type_;
+  ::google::protobuf::int32 svr_id_;
+  ::std::string* ip_;
   ::google::protobuf::int32 port_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(3 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(4 + 31) / 32];
 
   friend void  protobuf_AddDesc_push_5fproto_5fserver_2eproto();
   friend void protobuf_AssignDesc_push_5fproto_5fserver_2eproto();
@@ -1800,6 +1813,91 @@ class SvrBroadcastAddress : public ::google::protobuf::Message {
 
   void InitAsDefaultInstance();
   static SvrBroadcastAddress* default_instance_;
+};
+// -------------------------------------------------------------------
+
+class SvrSyncAddress : public ::google::protobuf::Message {
+ public:
+  SvrSyncAddress();
+  virtual ~SvrSyncAddress();
+
+  SvrSyncAddress(const SvrSyncAddress& from);
+
+  inline SvrSyncAddress& operator=(const SvrSyncAddress& from) {
+    CopyFrom(from);
+    return *this;
+  }
+
+  inline const ::google::protobuf::UnknownFieldSet& unknown_fields() const {
+    return _unknown_fields_;
+  }
+
+  inline ::google::protobuf::UnknownFieldSet* mutable_unknown_fields() {
+    return &_unknown_fields_;
+  }
+
+  static const ::google::protobuf::Descriptor* descriptor();
+  static const SvrSyncAddress& default_instance();
+
+  void Swap(SvrSyncAddress* other);
+
+  // implements Message ----------------------------------------------
+
+  SvrSyncAddress* New() const;
+  void CopyFrom(const ::google::protobuf::Message& from);
+  void MergeFrom(const ::google::protobuf::Message& from);
+  void CopyFrom(const SvrSyncAddress& from);
+  void MergeFrom(const SvrSyncAddress& from);
+  void Clear();
+  bool IsInitialized() const;
+
+  int ByteSize() const;
+  bool MergePartialFromCodedStream(
+      ::google::protobuf::io::CodedInputStream* input);
+  void SerializeWithCachedSizes(
+      ::google::protobuf::io::CodedOutputStream* output) const;
+  ::google::protobuf::uint8* SerializeWithCachedSizesToArray(::google::protobuf::uint8* output) const;
+  int GetCachedSize() const { return _cached_size_; }
+  private:
+  void SharedCtor();
+  void SharedDtor();
+  void SetCachedSize(int size) const;
+  public:
+
+  ::google::protobuf::Metadata GetMetadata() const;
+
+  // nested types ----------------------------------------------------
+
+  // accessors -------------------------------------------------------
+
+  // repeated .SvrAddress peer_addresses = 1;
+  inline int peer_addresses_size() const;
+  inline void clear_peer_addresses();
+  static const int kPeerAddressesFieldNumber = 1;
+  inline const ::SvrAddress& peer_addresses(int index) const;
+  inline ::SvrAddress* mutable_peer_addresses(int index);
+  inline ::SvrAddress* add_peer_addresses();
+  inline const ::google::protobuf::RepeatedPtrField< ::SvrAddress >&
+      peer_addresses() const;
+  inline ::google::protobuf::RepeatedPtrField< ::SvrAddress >*
+      mutable_peer_addresses();
+
+  // @@protoc_insertion_point(class_scope:SvrSyncAddress)
+ private:
+
+  ::google::protobuf::UnknownFieldSet _unknown_fields_;
+
+  ::google::protobuf::RepeatedPtrField< ::SvrAddress > peer_addresses_;
+
+  mutable int _cached_size_;
+  ::google::protobuf::uint32 _has_bits_[(1 + 31) / 32];
+
+  friend void  protobuf_AddDesc_push_5fproto_5fserver_2eproto();
+  friend void protobuf_AssignDesc_push_5fproto_5fserver_2eproto();
+  friend void protobuf_ShutdownFile_push_5fproto_5fserver_2eproto();
+
+  void InitAsDefaultInstance();
+  static SvrSyncAddress* default_instance_;
 };
 // ===================================================================
 
@@ -2911,15 +3009,37 @@ inline void SvrAddress::set_svr_type(::google::protobuf::int32 value) {
   svr_type_ = value;
 }
 
-// optional string ip = 2;
-inline bool SvrAddress::has_ip() const {
+// optional int32 svr_id = 2;
+inline bool SvrAddress::has_svr_id() const {
   return (_has_bits_[0] & 0x00000002u) != 0;
 }
-inline void SvrAddress::set_has_ip() {
+inline void SvrAddress::set_has_svr_id() {
   _has_bits_[0] |= 0x00000002u;
 }
-inline void SvrAddress::clear_has_ip() {
+inline void SvrAddress::clear_has_svr_id() {
   _has_bits_[0] &= ~0x00000002u;
+}
+inline void SvrAddress::clear_svr_id() {
+  svr_id_ = 0;
+  clear_has_svr_id();
+}
+inline ::google::protobuf::int32 SvrAddress::svr_id() const {
+  return svr_id_;
+}
+inline void SvrAddress::set_svr_id(::google::protobuf::int32 value) {
+  set_has_svr_id();
+  svr_id_ = value;
+}
+
+// optional string ip = 3;
+inline bool SvrAddress::has_ip() const {
+  return (_has_bits_[0] & 0x00000004u) != 0;
+}
+inline void SvrAddress::set_has_ip() {
+  _has_bits_[0] |= 0x00000004u;
+}
+inline void SvrAddress::clear_has_ip() {
+  _has_bits_[0] &= ~0x00000004u;
 }
 inline void SvrAddress::clear_ip() {
   if (ip_ != &::google::protobuf::internal::kEmptyString) {
@@ -2981,15 +3101,15 @@ inline void SvrAddress::set_allocated_ip(::std::string* ip) {
   }
 }
 
-// optional int32 port = 3;
+// optional int32 port = 4;
 inline bool SvrAddress::has_port() const {
-  return (_has_bits_[0] & 0x00000004u) != 0;
+  return (_has_bits_[0] & 0x00000008u) != 0;
 }
 inline void SvrAddress::set_has_port() {
-  _has_bits_[0] |= 0x00000004u;
+  _has_bits_[0] |= 0x00000008u;
 }
 inline void SvrAddress::clear_has_port() {
-  _has_bits_[0] &= ~0x00000004u;
+  _has_bits_[0] &= ~0x00000008u;
 }
 inline void SvrAddress::clear_port() {
   port_ = 0;
@@ -3554,6 +3674,35 @@ SvrBroadcastAddress::peer_addresses() const {
 }
 inline ::google::protobuf::RepeatedPtrField< ::SvrAddress >*
 SvrBroadcastAddress::mutable_peer_addresses() {
+  return &peer_addresses_;
+}
+
+// -------------------------------------------------------------------
+
+// SvrSyncAddress
+
+// repeated .SvrAddress peer_addresses = 1;
+inline int SvrSyncAddress::peer_addresses_size() const {
+  return peer_addresses_.size();
+}
+inline void SvrSyncAddress::clear_peer_addresses() {
+  peer_addresses_.Clear();
+}
+inline const ::SvrAddress& SvrSyncAddress::peer_addresses(int index) const {
+  return peer_addresses_.Get(index);
+}
+inline ::SvrAddress* SvrSyncAddress::mutable_peer_addresses(int index) {
+  return peer_addresses_.Mutable(index);
+}
+inline ::SvrAddress* SvrSyncAddress::add_peer_addresses() {
+  return peer_addresses_.Add();
+}
+inline const ::google::protobuf::RepeatedPtrField< ::SvrAddress >&
+SvrSyncAddress::peer_addresses() const {
+  return peer_addresses_;
+}
+inline ::google::protobuf::RepeatedPtrField< ::SvrAddress >*
+SvrSyncAddress::mutable_peer_addresses() {
   return &peer_addresses_;
 }
 

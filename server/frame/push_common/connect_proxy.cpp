@@ -17,11 +17,11 @@ void ConnectProxyMgr::init(int server_id, int server_type, ProxyMessageProcessor
     m_processor->SetSvrInfo(m_server_type, m_server_id);
 }
 
-void ConnectProxyMgr::AddServer(ServerAddr const& server_addr)
+void ConnectProxyMgr::AddProxy(ServerAddr const& server_addr)
 {
-    m_ociv.push_back(ProxyInfo());
+    m_ociv.push_back(new ProxyInfo());
 
-    ProxyInfo& info = m_ociv.back();
+    ProxyInfo& info = *m_ociv.back();
     info.remote_ip = server_addr.server_ip;
     info.remote_port = server_addr.server_port;
     info.server_id = m_server_id;
@@ -30,18 +30,17 @@ void ConnectProxyMgr::AddServer(ServerAddr const& server_addr)
     info.Reconnect();
 }
 
-void ConnectProxyMgr::AddServer(std::string const& ip, unsigned short port)
+void ConnectProxyMgr::AddProxy(std::string const& ip, unsigned short port)
 {
-    m_ociv.push_back(ProxyInfo());
+    m_ociv.push_back(new ProxyInfo());
 
-    ProxyInfo& info = m_ociv.back();
+    ProxyInfo& info = *m_ociv.back();
     info.remote_ip = ip;
     info.remote_port = port;
     info.server_id = m_server_id;
     info.server_type = m_server_type;
     info.processor = m_processor;
     info.Reconnect();
-
 }
 
 void ProxyInfo::Reconnect()
@@ -89,6 +88,14 @@ void ProxyMessageProcessor::InitMessageIdMap()
     REGIST_MESSAGE_PROCESS(msg_handler_map_, SMT_REG_RESP, new RegRespHandler, "SvrRegResponse");
 }
 
+int ProxyMessageProcessor::ProcessClose(ClientInfo* client_info)
+{
+    if(NULL == client_info || NULL == m_proxymgr)
+        return -1;
+
+    return m_proxymgr->RemoveProxy(client_info->server_id)?0:-1;
+}
+
 int  ConnectProxyMgr::SendMessageToServer(const SvrMsgHead* head, google::protobuf::Message* message)
 {
     if(head->has_proxy_svr_id())
@@ -102,8 +109,8 @@ int  ConnectProxyMgr::SendMessageToServer(const SvrMsgHead* head, google::protob
     {
         for(int i = 0; i < m_ociv.size(); ++i)
         {
-            ((SvrMsgHead*)head)->set_proxy_svr_id(m_ociv[i].server_id);
-	        m_processor->SendMessageToServer(&m_ociv[i], head, message);
+            ((SvrMsgHead*)head)->set_proxy_svr_id(m_ociv[i]->server_id);
+	        m_processor->SendMessageToServer(m_ociv[i], head, message);
         }
 
         return 0;
@@ -116,23 +123,38 @@ int  ConnectProxyMgr::SendMessageToServer(const SvrMsgHead* head, google::protob
         select_proxy_idx = head->dst_svr_id() % m_ociv.size() ;
     }
 
-    ((SvrMsgHead*)head)->set_proxy_svr_id(m_ociv[select_proxy_idx].server_id);
+    ((SvrMsgHead*)head)->set_proxy_svr_id(m_ociv[select_proxy_idx]->server_id);
 
-	return m_processor->SendMessageToServer(&m_ociv[select_proxy_idx], head, message);
+	return m_processor->SendMessageToServer(m_ociv[select_proxy_idx], head, message);
 }
 
 ProxyInfo* ConnectProxyMgr::GetProxy(int proxy_svr_id)
 {
-    std::vector<ProxyInfo>::iterator it = m_ociv.begin(); 
+    std::vector<ProxyInfo*>::iterator it = m_ociv.begin(); 
     for(; it != m_ociv.end(); ++it)
     {
-        if(it->server_id == proxy_svr_id)
-            return &(*it);
+        if((*it)->server_id == proxy_svr_id)
+            return *it;
     }
 
     return NULL;
 }
 
+bool ConnectProxyMgr::RemoveProxy(int proxy_svr_id)
+{
+    std::vector<ProxyInfo*>::iterator it = m_ociv.begin(); 
+    for(; it != m_ociv.end(); ++it)
+    {
+        if((*it)->server_id == proxy_svr_id)
+        {
+            delete *it;
+            m_ociv.erase(it);
+            return true;
+        }
+    }
+
+    return false;
+}
 
 int RegRespHandler::ProcessMessage(ClientInfo* client_info, const google::protobuf::Message* phead, const google::protobuf::Message* message)
 {

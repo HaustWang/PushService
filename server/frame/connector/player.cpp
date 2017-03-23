@@ -2,7 +2,6 @@
 #include <vector>
 #include "event2/listener.h"
 #include "log4cpp_log.h"
-#include "comm_config.h"
 #include "comm_datetime.h"
 #include "base.h"
 #include "comm_server.h"

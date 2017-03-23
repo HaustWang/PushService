@@ -241,8 +241,7 @@ int ConnectorMessageProcessor::ProcessLoginReq( PushClientInfo* client_info, con
             && (head->client_id().empty() || client_info->client_id != head->client_id()))
     {
         log_info("User change account, old client_id:%s, new client_id:%s", client_info->client_id.c_str(), head->client_id().c_str());
-        ProcessClose(client_info);
-        return 0;
+        return ProcessClose(client_info);
     }
 
     std::string client_id(head->client_id());

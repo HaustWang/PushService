@@ -2,7 +2,6 @@
 #include <netinet/in.h>
 #include <netinet/tcp.h>
 
-#include "comm_config.h"
 #include "log4cpp_log.h"
 
 #include "dbworker_manager.h"
@@ -155,5 +154,6 @@ int DbWorkerMgr::UserReceivedMsg(std::string const& client_id, int64_t msgid)
     if(m_MsgMap[client_id].empty())
         m_MsgMap.erase(client_id);
 
+    log_info("User %s received msg:%ld", client_id.c_str(), msgid);
     return m_RedisManagerMsg.RemSet(std::string(MSG_SET_KEY_PREFIX) + client_id, msgid);
 }

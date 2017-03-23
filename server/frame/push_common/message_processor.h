@@ -35,7 +35,7 @@ public:
 
     virtual int GetCompletePackage(struct bufferevent* bev, char* pkg, int* len);
     virtual int ProcessMessage(ClientInfo*, const google::protobuf::Message*, const std::string& message_body);
-    virtual int ProcessClose(ClientInfo*) {return 0;};
+    virtual int ProcessClose(ClientInfo*) = 0;
     virtual int SendMessageToServer(const ClientInfo*,const SvrMsgHead*, const google::protobuf::Message*);
     virtual int SendMessageToServer(const ClientInfo*,const SvrMsgHead*, const std::string& message);
     virtual int RegisterToServer(const ClientInfo*){return 0;}

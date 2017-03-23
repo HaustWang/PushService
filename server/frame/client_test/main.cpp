@@ -10,6 +10,7 @@
 struct event_base* g_event_base = NULL;
 SvrConfigure svr_cfg;
 int g_error_times = 0;
+std::string client_id;
 
 
 void BuffereventReadCallback(struct bufferevent *bev, void *ctx)
@@ -94,7 +95,7 @@ void login()
     ClientMsgHead mh;
     LoginRequest req;
 
-    MessageProcess::Instance()->fill_message_head(&mh, "", CMT_LOGIN_REQ);
+    MessageProcess::Instance()->fill_message_head(&mh, client_id, CMT_LOGIN_REQ);
     req.set_imsi("123huoiadhaijga12316145aaj");
     req.set_time(time(NULL));
 
@@ -121,7 +122,7 @@ void SendHeart()
     ClientMsgHead mh;
     HeartbeatMsg req;
     req.set_time(time(NULL));
-    MessageProcess::Instance()->fill_message_head(&mh, "", CMT_HEATBEAT);
+    MessageProcess::Instance()->fill_message_head(&mh, client_id, CMT_HEATBEAT);
 
     MessageProcess::Instance()->SendMessageToServer(&mh, &req) ;
     // g_error_times++;

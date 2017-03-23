@@ -7,6 +7,7 @@
         message_id_map_[msg_id] = std::pair<std::string, CallFunc>(message_name, &MessageProcess::process_func);
 
 extern SvrConfigure svr_cfg;
+extern std::string client_id;
 
 MessageProcess::MessageProcess()
 {
@@ -18,66 +19,66 @@ MessageProcess::~MessageProcess()
 
 inline google::protobuf::Message* MessageProcess::CreateMessage(const std::string& type_name, const std::string& message_body)
 {
-        google::protobuf::Message* message = NULL;
-        const google::protobuf::Descriptor* descriptor =
-                google::protobuf::DescriptorPool::generated_pool()->FindMessageTypeByName(type_name);
-        if (descriptor)
+    google::protobuf::Message* message = NULL;
+    const google::protobuf::Descriptor* descriptor =
+            google::protobuf::DescriptorPool::generated_pool()->FindMessageTypeByName(type_name);
+    if (descriptor)
+    {
+        const google::protobuf::Message* prototype =
+                google::protobuf::MessageFactory::generated_factory()->GetPrototype(descriptor);
+        if (prototype)
         {
-                const google::protobuf::Message* prototype =
-                        google::protobuf::MessageFactory::generated_factory()->GetPrototype(descriptor);
-                if (prototype)
-                {
-                        message = prototype->New();
-                        message->ParseFromString(message_body);
-                }
+            message = prototype->New();
+            message->ParseFromString(message_body);
         }
+    }
 
-        return message;
+    return message;
 }
 
 int MessageProcess::InitMessageIdMap()
 {
-        //注册消息处理函数
-        REGIST_MESSAGE_PROCESS(CMT_LOGIN_RESP, "LoginResponse", ProcessLoginResponse);
-        REGIST_MESSAGE_PROCESS(CMT_PUSH_MSG, "SvrPushMessage", ProcessSvrPushMessage);
-        REGIST_MESSAGE_PROCESS(CMT_HEATBEAT, "HeartbeatMsg", ProcessHeartbeat);
-        return 0;
+    //注册消息处理函数
+    REGIST_MESSAGE_PROCESS(CMT_LOGIN_RESP, "LoginResponse", ProcessLoginResponse);
+    REGIST_MESSAGE_PROCESS(CMT_PUSH_MSG, "SvrPushMessage", ProcessSvrPushMessage);
+    REGIST_MESSAGE_PROCESS(CMT_HEATBEAT, "HeartbeatMsg", ProcessHeartbeat);
+    return 0;
 }
 
 
 
 int MessageProcess::GetCompletePackage(struct bufferevent* bev, char* pkg, int* len)
 {
-        int32_t pkg_len = 0;
+    int32_t pkg_len = 0;
 
-        if(evbuffer_copyout(bev->input, &pkg_len, sizeof(pkg_len)) != sizeof(pkg_len))
-        {
-                //不足四个字节，需要继续收包
-                return 1;
-        }
+    if(evbuffer_copyout(bev->input, &pkg_len, sizeof(pkg_len)) != sizeof(pkg_len))
+    {
+        //不足四个字节，需要继续收包
+        return 1;
+    }
 
-        //转换字节序
-        pkg_len = htonl(pkg_len);
-        log_debug("pkg len : %d", pkg_len);
+    //转换字节序
+    pkg_len = htonl(pkg_len);
+    log_debug("pkg len : %d", pkg_len);
 
-        if(pkg_len > *len || pkg_len <= (int)sizeof(int))
-        {
-                log_warning("pkg len :%d is invalid", pkg_len);
-                evbuffer_drain(bev->input, pkg_len);
-                return -1;
-        }
+    if(pkg_len > *len || pkg_len <= (int)sizeof(int))
+    {
+        log_warning("pkg len :%d is invalid", pkg_len);
+        evbuffer_drain(bev->input, pkg_len);
+        return -1;
+    }
 
-        if(evbuffer_get_length(bev->input) < (size_t)pkg_len)
-        {
-                //不足一个完整的包，需要继续收包
-                return 1;
-        }
+    if(evbuffer_get_length(bev->input) < (size_t)pkg_len)
+    {
+        //不足一个完整的包，需要继续收包
+        return 1;
+    }
 
-        *len = pkg_len;
+    *len = pkg_len;
 
-        //拷贝一个完整的数据包
-        evbuffer_remove(bev->input, pkg, pkg_len);
-        return 0;
+    //拷贝一个完整的数据包
+    evbuffer_remove(bev->input, pkg, pkg_len);
+    return 0;
 }
 
 int MessageProcess::ProcessMessage(const char *data, const int len)
@@ -114,67 +115,67 @@ int MessageProcess::ProcessMessage(const char *data, const int len)
 
 int MessageProcess::ProcessMessage( const ClientMsgHead*  head, const std::string& message_body)
 {
-        std::map<ClientMsgType, std::pair<std::string, CallFunc> >::iterator it = message_id_map_.find(head->type());
-        if(it == message_id_map_.end())
-        {
-                log_warning("message id %d not register!", head->type());
-                return -1;
-        }
+    std::map<ClientMsgType, std::pair<std::string, CallFunc> >::iterator it = message_id_map_.find(head->type());
+    if(it == message_id_map_.end())
+    {
+        log_warning("message id %d not register!", head->type());
+        return -1;
+    }
 
-        svr_cfg.ShortDebugString();
-        google::protobuf::Message* message = CreateMessage(it->second.first,message_body);
-        if(!message)
-        {
-                log_error("can not create message body , message head: %s", head->ShortDebugString().c_str());
-                return -1;
-        }
-        log_debug("message head:%s, message body:%s",head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
-        int ret = (this->*(it->second.second))( head, message);
-        if (ret < 0)
-        {
-                log_warning("process :%d failed,client_id:%s", head->type(), head->client_id().c_str()  );
-        }
+    svr_cfg.ShortDebugString();
+    google::protobuf::Message* message = CreateMessage(it->second.first,message_body);
+    if(!message)
+    {
+        log_error("can not create message body , message head: %s", head->ShortDebugString().c_str());
+        return -1;
+    }
+    log_debug("message head:%s, message body:%s",head->ShortDebugString().c_str(), message->ShortDebugString().c_str());
+    int ret = (this->*(it->second.second))( head, message);
+    if (ret < 0)
+    {
+        log_warning("process :%d failed,client_id:%s", head->type(), head->client_id().c_str()  );
+    }
 
-        delete message;
+    delete message;
 
-        return 0;
+    return 0;
 
 }
 
 int MessageProcess::SendMessageToServer( ClientMsgHead* head, google::protobuf::Message* message)
 {
-        svr_cfg.ShortDebugString();
+    svr_cfg.ShortDebugString();
 
-        PushMessage imsg;
-        ClientMsgHead* ph = imsg.mutable_message_head();
-        ph->CopyFrom(*head);
-        std::string* message_body_str = imsg.mutable_message_body();
-        message->SerializeToString(message_body_str);
+    PushMessage imsg;
+    ClientMsgHead* ph = imsg.mutable_message_head();
+    ph->CopyFrom(*head);
+    std::string* message_body_str = imsg.mutable_message_body();
+    message->SerializeToString(message_body_str);
 
-        std::string msg_buf;
-        log_debug("message head:%s, message body:%s", ph->ShortDebugString().c_str(), message->ShortDebugString().c_str());
-        if (!imsg.SerializeToString(&msg_buf))
-        {
-                log_error("uid:%s SerializeToArray failed", head->client_id().c_str());
-                return -10;
-        }
+    std::string msg_buf;
+    log_debug("message head:%s, message body:%s", ph->ShortDebugString().c_str(), message->ShortDebugString().c_str());
+    if (!imsg.SerializeToString(&msg_buf))
+    {
+            log_error("uid:%s SerializeToArray failed", head->client_id().c_str());
+            return -10;
+    }
 
-        log_info("send msg to server: msg len:%ld", msg_buf.length());
+    log_info("send msg to server: msg len:%ld", msg_buf.length());
 
-        std::string out;
-        AES aes(true_key, AES_ECB, true);
-        if(true_key.empty() || CMT_LOGIN_REQ == head->type())
-        {
-            aes.SetCryptKey("]u%t&1v=as^f!/i*");
-            true_key.clear();
-        }
+    std::string out;
+    AES aes(true_key, AES_ECB, true);
+    if(true_key.empty() || CMT_LOGIN_REQ == head->type())
+    {
+        aes.SetCryptKey("]u%t&1v=as^f!/i*");
+        true_key.clear();
+    }
 
-        int len = aes.Encrypt(msg_buf, out) + sizeof(int);
-        len = htonl(len);
+    int len = aes.Encrypt(msg_buf, out) + sizeof(int);
+    len = htonl(len);
 
-        bufferevent_write(svr_cfg.bufevt, &len, sizeof(int));
-        bufferevent_write(svr_cfg.bufevt, out.data(), out.length());
-        return 0;
+    bufferevent_write(svr_cfg.bufevt, &len, sizeof(int));
+    bufferevent_write(svr_cfg.bufevt, out.data(), out.length());
+    return 0;
 }
 
 int MessageProcess::ProcessLoginResponse(const ClientMsgHead* head, google::protobuf::Message *message)
@@ -193,6 +194,7 @@ int MessageProcess::ProcessLoginResponse(const ClientMsgHead* head, google::prot
 
     true_key = cipher_content->true_key();
 
+    client_id = head->client_id();
     log_debug("client_id:%s, true_key:%s, head_client_id:%s", cipher_content->client_id().c_str(), cipher_content->true_key().c_str(), head->client_id().c_str());
 
     return 0;

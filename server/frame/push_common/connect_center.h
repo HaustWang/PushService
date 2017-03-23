@@ -100,6 +100,7 @@ public:
     int ProcessConfigResponse(ConnectToCenter*, const SvrMsgHead*, const google::protobuf::Message*);
     int ProcessBroadcastAddr(ConnectToCenter*, const SvrMsgHead*, const google::protobuf::Message*);
     int ProcessBroadcastConfig(ConnectToCenter*, const SvrMsgHead*, const google::protobuf::Message*);
+    int ProcessClose(ClientInfo*) {return 0;}
 };
 
 class ConfigResponseHandler : public MessageHandler

@@ -9,7 +9,6 @@
 #include <map>
 #include "event2/listener.h"
 #include "log4cpp_log.h"
-#include "comm_config.h"
 #include "comm_datetime.h"
 #include "onliner_message_processor.h"
 #include "base.h"
@@ -44,7 +43,7 @@ void NewConnect()
     {
         const std::vector<SvrAddress>& addrs = ConnectToCenter::Instance()->GetNewAddress(SERVER_TYPE_PROXY);
         for(std::vector<SvrAddress>::const_iterator it = addrs.begin(); it != addrs.end(); ++it)
-            ConnectToOnlinerMgr::Instance()->AddServer(it->ip(), it->port());
+            ConnectToOnlinerMgr::Instance()->AddProxy(it->ip(), it->port());
 
         ConnectToCenter::Instance()->EraseNewAddress(SERVER_TYPE_PROXY);
     }

@@ -66,6 +66,9 @@ const ::google::protobuf::internal::GeneratedMessageReflection*
 const ::google::protobuf::Descriptor* SvrBroadcastAddress_descriptor_ = NULL;
 const ::google::protobuf::internal::GeneratedMessageReflection*
   SvrBroadcastAddress_reflection_ = NULL;
+const ::google::protobuf::Descriptor* SvrSyncAddress_descriptor_ = NULL;
+const ::google::protobuf::internal::GeneratedMessageReflection*
+  SvrSyncAddress_reflection_ = NULL;
 const ::google::protobuf::EnumDescriptor* ServerType_descriptor_ = NULL;
 const ::google::protobuf::EnumDescriptor* SvrMsgType_descriptor_ = NULL;
 
@@ -262,8 +265,9 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrInsertMsg));
   SvrAddress_descriptor_ = file->message_type(11);
-  static const int SvrAddress_offsets_[3] = {
+  static const int SvrAddress_offsets_[4] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrAddress, svr_type_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrAddress, svr_id_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrAddress, ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrAddress, port_),
   };
@@ -348,6 +352,21 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::DescriptorPool::generated_pool(),
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrBroadcastAddress));
+  SvrSyncAddress_descriptor_ = file->message_type(16);
+  static const int SvrSyncAddress_offsets_[1] = {
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrSyncAddress, peer_addresses_),
+  };
+  SvrSyncAddress_reflection_ =
+    new ::google::protobuf::internal::GeneratedMessageReflection(
+      SvrSyncAddress_descriptor_,
+      SvrSyncAddress::default_instance_,
+      SvrSyncAddress_offsets_,
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrSyncAddress, _has_bits_[0]),
+      GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrSyncAddress, _unknown_fields_),
+      -1,
+      ::google::protobuf::DescriptorPool::generated_pool(),
+      ::google::protobuf::MessageFactory::generated_factory(),
+      sizeof(SvrSyncAddress));
   ServerType_descriptor_ = file->enum_type(0);
   SvrMsgType_descriptor_ = file->enum_type(1);
 }
@@ -394,6 +413,8 @@ void protobuf_RegisterTypes(const ::std::string&) {
     SvrConfigResp_descriptor_, &SvrConfigResp::default_instance());
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
     SvrBroadcastAddress_descriptor_, &SvrBroadcastAddress::default_instance());
+  ::google::protobuf::MessageFactory::InternalRegisterGeneratedMessage(
+    SvrSyncAddress_descriptor_, &SvrSyncAddress::default_instance());
 }
 
 }  // namespace
@@ -431,6 +452,8 @@ void protobuf_ShutdownFile_push_5fproto_5fserver_2eproto() {
   delete SvrConfigResp_reflection_;
   delete SvrBroadcastAddress::default_instance_;
   delete SvrBroadcastAddress_reflection_;
+  delete SvrSyncAddress::default_instance_;
+  delete SvrSyncAddress_reflection_;
 }
 
 void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
@@ -460,30 +483,33 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
     "\001(\003\022\017\n\007content\030\002 \001(\014\022\022\n\nclient_ids\030\003 \003(\t"
     "\"\037\n\017SvrHeartbeatMsg\022\014\n\004time\030\001 \001(\003\"S\n\014Svr"
     "InsertMsg\022\r\n\005msgid\030\001 \001(\r\022\022\n\nclient_ids\030\002"
-    " \003(\t\022\013\n\003msg\030\003 \001(\014\022\023\n\013expire_time\030\004 \001(\005\"8"
-    "\n\nSvrAddress\022\020\n\010svr_type\030\001 \001(\005\022\n\n\002ip\030\002 \001"
-    "(\t\022\014\n\004port\030\003 \001(\005\",\n\014SvrConfigReq\022\034\n\007addr"
-    "ess\030\001 \001(\0132\013.SvrAddress\"\316\001\n\tSvrConfig\022\020\n\010"
-    "log_type\030\001 \001(\005\022\017\n\007log_dir\030\002 \001(\t\022\021\n\tlog_l"
-    "evel\030\003 \001(\005\022\022\n\nlog_config\030\004 \001(\014\022\030\n\020client"
-    "_outoftime\030\025 \001(\005\022\023\n\013http_listen\030\037 \001(\005\022\020\n"
-    "\010php_host\030  \001(\t\022\020\n\010php_port\030! \001(\005\022\020\n\010red"
-    "is_ip\030) \001(\t\022\022\n\nredis_port\030* \001(\005\"P\n\rSvrCo"
-    "nfigResp\022\032\n\006config\030\001 \001(\0132\n.SvrConfig\022#\n\016"
-    "peer_addresses\030\002 \003(\0132\013.SvrAddress\":\n\023Svr"
-    "BroadcastAddress\022#\n\016peer_addresses\030\001 \003(\013"
-    "2\013.SvrAddress*\251\001\n\nServerType\022\026\n\022SERVER_T"
-    "YPE_CENTER\020\000\022\025\n\021SERVER_TYPE_PROXY\020\001\022\031\n\025S"
-    "ERVER_TYPE_CONNECTOR\020\002\022\031\n\025SERVER_TYPE_PH"
-    "P_PROXY\020\003\022\031\n\025SERVER_TYPE_DB_WORKER\020\004\022\033\n\027"
-    "SERVER_TYPE_THIRD_PROXY\020\005*\233\002\n\nSvrMsgType"
-    "\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_REG_RESP\020\002\022\023\n\017S"
-    "MT_UPDATE_USER\020\003\022\024\n\020SMT_USER_MSG_ACK\020\004\022\025"
-    "\n\021SMT_USER_READ_MSG\020\005\022\021\n\rSMT_KICK_USER\020\007"
-    "\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n\014SMT_PUSH_MSG\020\t"
-    "\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016SMT_CONFIG_REQ\020\r"
-    "\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022SMT_BROADCAST_A"
-    "DDR\020\017\022\030\n\024SMT_BROADCAST_CONFIG\020\020", 1711);
+    " \003(\t\022\013\n\003msg\030\003 \001(\014\022\023\n\013expire_time\030\004 \001(\005\"H"
+    "\n\nSvrAddress\022\020\n\010svr_type\030\001 \001(\005\022\016\n\006svr_id"
+    "\030\002 \001(\005\022\n\n\002ip\030\003 \001(\t\022\014\n\004port\030\004 \001(\005\",\n\014SvrC"
+    "onfigReq\022\034\n\007address\030\001 \001(\0132\013.SvrAddress\"\316"
+    "\001\n\tSvrConfig\022\020\n\010log_type\030\001 \001(\005\022\017\n\007log_di"
+    "r\030\002 \001(\t\022\021\n\tlog_level\030\003 \001(\005\022\022\n\nlog_config"
+    "\030\004 \001(\014\022\030\n\020client_outoftime\030\025 \001(\005\022\023\n\013http"
+    "_listen\030\037 \001(\005\022\020\n\010php_host\030  \001(\t\022\020\n\010php_p"
+    "ort\030! \001(\005\022\020\n\010redis_ip\030) \001(\t\022\022\n\nredis_por"
+    "t\030* \001(\005\"P\n\rSvrConfigResp\022\032\n\006config\030\001 \001(\013"
+    "2\n.SvrConfig\022#\n\016peer_addresses\030\002 \003(\0132\013.S"
+    "vrAddress\":\n\023SvrBroadcastAddress\022#\n\016peer"
+    "_addresses\030\001 \003(\0132\013.SvrAddress\"5\n\016SvrSync"
+    "Address\022#\n\016peer_addresses\030\001 \003(\0132\013.SvrAdd"
+    "ress*\301\001\n\nServerType\022\026\n\022SERVER_TYPE_CENTE"
+    "R\020\000\022\025\n\021SERVER_TYPE_PROXY\020\001\022\031\n\025SERVER_TYP"
+    "E_CONNECTOR\020\002\022\031\n\025SERVER_TYPE_PHP_PROXY\020\003"
+    "\022\031\n\025SERVER_TYPE_DB_WORKER\020\004\022\026\n\022SERVER_TY"
+    "PE_LOADER\020\005\022\033\n\027SERVER_TYPE_THIRD_PROXY\020\006"
+    "*\261\002\n\nSvrMsgType\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_"
+    "REG_RESP\020\002\022\023\n\017SMT_UPDATE_USER\020\003\022\024\n\020SMT_U"
+    "SER_MSG_ACK\020\004\022\025\n\021SMT_USER_READ_MSG\020\005\022\021\n\r"
+    "SMT_KICK_USER\020\007\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n"
+    "\014SMT_PUSH_MSG\020\t\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016S"
+    "MT_CONFIG_REQ\020\r\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022"
+    "SMT_BROADCAST_ADDR\020\017\022\030\n\024SMT_BROADCAST_CO"
+    "NFIG\020\020\022\024\n\020SMT_SYNC_ADDRESS\020\021", 1828);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "push_proto_server.proto", &protobuf_RegisterTypes);
   SvrMsgHead::default_instance_ = new SvrMsgHead();
@@ -502,6 +528,7 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
   SvrConfig::default_instance_ = new SvrConfig();
   SvrConfigResp::default_instance_ = new SvrConfigResp();
   SvrBroadcastAddress::default_instance_ = new SvrBroadcastAddress();
+  SvrSyncAddress::default_instance_ = new SvrSyncAddress();
   SvrMsgHead::default_instance_->InitAsDefaultInstance();
   SvrMsg::default_instance_->InitAsDefaultInstance();
   SvrRegRequest::default_instance_->InitAsDefaultInstance();
@@ -518,6 +545,7 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
   SvrConfig::default_instance_->InitAsDefaultInstance();
   SvrConfigResp::default_instance_->InitAsDefaultInstance();
   SvrBroadcastAddress::default_instance_->InitAsDefaultInstance();
+  SvrSyncAddress::default_instance_->InitAsDefaultInstance();
   ::google::protobuf::internal::OnShutdown(&protobuf_ShutdownFile_push_5fproto_5fserver_2eproto);
 }
 
@@ -539,6 +567,7 @@ bool ServerType_IsValid(int value) {
     case 3:
     case 4:
     case 5:
+    case 6:
       return true;
     default:
       return false;
@@ -564,6 +593,7 @@ bool SvrMsgType_IsValid(int value) {
     case 14:
     case 15:
     case 16:
+    case 17:
       return true;
     default:
       return false;
@@ -3710,6 +3740,7 @@ void SvrInsertMsg::Swap(SvrInsertMsg* other) {
 
 #ifndef _MSC_VER
 const int SvrAddress::kSvrTypeFieldNumber;
+const int SvrAddress::kSvrIdFieldNumber;
 const int SvrAddress::kIpFieldNumber;
 const int SvrAddress::kPortFieldNumber;
 #endif  // !_MSC_VER
@@ -3731,6 +3762,7 @@ SvrAddress::SvrAddress(const SvrAddress& from)
 void SvrAddress::SharedCtor() {
   _cached_size_ = 0;
   svr_type_ = 0;
+  svr_id_ = 0;
   ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   port_ = 0;
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
@@ -3772,6 +3804,7 @@ SvrAddress* SvrAddress::New() const {
 void SvrAddress::Clear() {
   if (_has_bits_[0 / 32] & (0xffu << (0 % 32))) {
     svr_type_ = 0;
+    svr_id_ = 0;
     if (has_ip()) {
       if (ip_ != &::google::protobuf::internal::kEmptyString) {
         ip_->clear();
@@ -3800,12 +3833,28 @@ bool SvrAddress::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(18)) goto parse_ip;
+        if (input->ExpectTag(16)) goto parse_svr_id;
         break;
       }
 
-      // optional string ip = 2;
+      // optional int32 svr_id = 2;
       case 2: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
+         parse_svr_id:
+          DO_((::google::protobuf::internal::WireFormatLite::ReadPrimitive<
+                   ::google::protobuf::int32, ::google::protobuf::internal::WireFormatLite::TYPE_INT32>(
+                 input, &svr_id_)));
+          set_has_svr_id();
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(26)) goto parse_ip;
+        break;
+      }
+
+      // optional string ip = 3;
+      case 3: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
          parse_ip:
@@ -3817,12 +3866,12 @@ bool SvrAddress::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
-        if (input->ExpectTag(24)) goto parse_port;
+        if (input->ExpectTag(32)) goto parse_port;
         break;
       }
 
-      // optional int32 port = 3;
-      case 3: {
+      // optional int32 port = 4;
+      case 4: {
         if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
             ::google::protobuf::internal::WireFormatLite::WIRETYPE_VARINT) {
          parse_port:
@@ -3860,18 +3909,23 @@ void SvrAddress::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(1, this->svr_type(), output);
   }
 
-  // optional string ip = 2;
+  // optional int32 svr_id = 2;
+  if (has_svr_id()) {
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(2, this->svr_id(), output);
+  }
+
+  // optional string ip = 3;
   if (has_ip()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->ip().data(), this->ip().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     ::google::protobuf::internal::WireFormatLite::WriteString(
-      2, this->ip(), output);
+      3, this->ip(), output);
   }
 
-  // optional int32 port = 3;
+  // optional int32 port = 4;
   if (has_port()) {
-    ::google::protobuf::internal::WireFormatLite::WriteInt32(3, this->port(), output);
+    ::google::protobuf::internal::WireFormatLite::WriteInt32(4, this->port(), output);
   }
 
   if (!unknown_fields().empty()) {
@@ -3887,19 +3941,24 @@ void SvrAddress::SerializeWithCachedSizes(
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(1, this->svr_type(), target);
   }
 
-  // optional string ip = 2;
+  // optional int32 svr_id = 2;
+  if (has_svr_id()) {
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(2, this->svr_id(), target);
+  }
+
+  // optional string ip = 3;
   if (has_ip()) {
     ::google::protobuf::internal::WireFormat::VerifyUTF8String(
       this->ip().data(), this->ip().length(),
       ::google::protobuf::internal::WireFormat::SERIALIZE);
     target =
       ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
-        2, this->ip(), target);
+        3, this->ip(), target);
   }
 
-  // optional int32 port = 3;
+  // optional int32 port = 4;
   if (has_port()) {
-    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(3, this->port(), target);
+    target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(4, this->port(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -3920,14 +3979,21 @@ int SvrAddress::ByteSize() const {
           this->svr_type());
     }
 
-    // optional string ip = 2;
+    // optional int32 svr_id = 2;
+    if (has_svr_id()) {
+      total_size += 1 +
+        ::google::protobuf::internal::WireFormatLite::Int32Size(
+          this->svr_id());
+    }
+
+    // optional string ip = 3;
     if (has_ip()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::StringSize(
           this->ip());
     }
 
-    // optional int32 port = 3;
+    // optional int32 port = 4;
     if (has_port()) {
       total_size += 1 +
         ::google::protobuf::internal::WireFormatLite::Int32Size(
@@ -3964,6 +4030,9 @@ void SvrAddress::MergeFrom(const SvrAddress& from) {
     if (from.has_svr_type()) {
       set_svr_type(from.svr_type());
     }
+    if (from.has_svr_id()) {
+      set_svr_id(from.svr_id());
+    }
     if (from.has_ip()) {
       set_ip(from.ip());
     }
@@ -3994,6 +4063,7 @@ bool SvrAddress::IsInitialized() const {
 void SvrAddress::Swap(SvrAddress* other) {
   if (other != this) {
     std::swap(svr_type_, other->svr_type_);
+    std::swap(svr_id_, other->svr_id_);
     std::swap(ip_, other->ip_);
     std::swap(port_, other->port_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
@@ -5309,6 +5379,209 @@ void SvrBroadcastAddress::Swap(SvrBroadcastAddress* other) {
   ::google::protobuf::Metadata metadata;
   metadata.descriptor = SvrBroadcastAddress_descriptor_;
   metadata.reflection = SvrBroadcastAddress_reflection_;
+  return metadata;
+}
+
+
+// ===================================================================
+
+#ifndef _MSC_VER
+const int SvrSyncAddress::kPeerAddressesFieldNumber;
+#endif  // !_MSC_VER
+
+SvrSyncAddress::SvrSyncAddress()
+  : ::google::protobuf::Message() {
+  SharedCtor();
+}
+
+void SvrSyncAddress::InitAsDefaultInstance() {
+}
+
+SvrSyncAddress::SvrSyncAddress(const SvrSyncAddress& from)
+  : ::google::protobuf::Message() {
+  SharedCtor();
+  MergeFrom(from);
+}
+
+void SvrSyncAddress::SharedCtor() {
+  _cached_size_ = 0;
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+}
+
+SvrSyncAddress::~SvrSyncAddress() {
+  SharedDtor();
+}
+
+void SvrSyncAddress::SharedDtor() {
+  if (this != default_instance_) {
+  }
+}
+
+void SvrSyncAddress::SetCachedSize(int size) const {
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+}
+const ::google::protobuf::Descriptor* SvrSyncAddress::descriptor() {
+  protobuf_AssignDescriptorsOnce();
+  return SvrSyncAddress_descriptor_;
+}
+
+const SvrSyncAddress& SvrSyncAddress::default_instance() {
+  if (default_instance_ == NULL) protobuf_AddDesc_push_5fproto_5fserver_2eproto();
+  return *default_instance_;
+}
+
+SvrSyncAddress* SvrSyncAddress::default_instance_ = NULL;
+
+SvrSyncAddress* SvrSyncAddress::New() const {
+  return new SvrSyncAddress;
+}
+
+void SvrSyncAddress::Clear() {
+  peer_addresses_.Clear();
+  ::memset(_has_bits_, 0, sizeof(_has_bits_));
+  mutable_unknown_fields()->Clear();
+}
+
+bool SvrSyncAddress::MergePartialFromCodedStream(
+    ::google::protobuf::io::CodedInputStream* input) {
+#define DO_(EXPRESSION) if (!(EXPRESSION)) return false
+  ::google::protobuf::uint32 tag;
+  while ((tag = input->ReadTag()) != 0) {
+    switch (::google::protobuf::internal::WireFormatLite::GetTagFieldNumber(tag)) {
+      // repeated .SvrAddress peer_addresses = 1;
+      case 1: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_peer_addresses:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadMessageNoVirtual(
+                input, add_peer_addresses()));
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(10)) goto parse_peer_addresses;
+        if (input->ExpectAtEnd()) return true;
+        break;
+      }
+
+      default: {
+      handle_uninterpreted:
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_END_GROUP) {
+          return true;
+        }
+        DO_(::google::protobuf::internal::WireFormat::SkipField(
+              input, tag, mutable_unknown_fields()));
+        break;
+      }
+    }
+  }
+  return true;
+#undef DO_
+}
+
+void SvrSyncAddress::SerializeWithCachedSizes(
+    ::google::protobuf::io::CodedOutputStream* output) const {
+  // repeated .SvrAddress peer_addresses = 1;
+  for (int i = 0; i < this->peer_addresses_size(); i++) {
+    ::google::protobuf::internal::WireFormatLite::WriteMessageMaybeToArray(
+      1, this->peer_addresses(i), output);
+  }
+
+  if (!unknown_fields().empty()) {
+    ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
+        unknown_fields(), output);
+  }
+}
+
+::google::protobuf::uint8* SvrSyncAddress::SerializeWithCachedSizesToArray(
+    ::google::protobuf::uint8* target) const {
+  // repeated .SvrAddress peer_addresses = 1;
+  for (int i = 0; i < this->peer_addresses_size(); i++) {
+    target = ::google::protobuf::internal::WireFormatLite::
+      WriteMessageNoVirtualToArray(
+        1, this->peer_addresses(i), target);
+  }
+
+  if (!unknown_fields().empty()) {
+    target = ::google::protobuf::internal::WireFormat::SerializeUnknownFieldsToArray(
+        unknown_fields(), target);
+  }
+  return target;
+}
+
+int SvrSyncAddress::ByteSize() const {
+  int total_size = 0;
+
+  // repeated .SvrAddress peer_addresses = 1;
+  total_size += 1 * this->peer_addresses_size();
+  for (int i = 0; i < this->peer_addresses_size(); i++) {
+    total_size +=
+      ::google::protobuf::internal::WireFormatLite::MessageSizeNoVirtual(
+        this->peer_addresses(i));
+  }
+
+  if (!unknown_fields().empty()) {
+    total_size +=
+      ::google::protobuf::internal::WireFormat::ComputeUnknownFieldsSize(
+        unknown_fields());
+  }
+  GOOGLE_SAFE_CONCURRENT_WRITES_BEGIN();
+  _cached_size_ = total_size;
+  GOOGLE_SAFE_CONCURRENT_WRITES_END();
+  return total_size;
+}
+
+void SvrSyncAddress::MergeFrom(const ::google::protobuf::Message& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  const SvrSyncAddress* source =
+    ::google::protobuf::internal::dynamic_cast_if_available<const SvrSyncAddress*>(
+      &from);
+  if (source == NULL) {
+    ::google::protobuf::internal::ReflectionOps::Merge(from, this);
+  } else {
+    MergeFrom(*source);
+  }
+}
+
+void SvrSyncAddress::MergeFrom(const SvrSyncAddress& from) {
+  GOOGLE_CHECK_NE(&from, this);
+  peer_addresses_.MergeFrom(from.peer_addresses_);
+  mutable_unknown_fields()->MergeFrom(from.unknown_fields());
+}
+
+void SvrSyncAddress::CopyFrom(const ::google::protobuf::Message& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+void SvrSyncAddress::CopyFrom(const SvrSyncAddress& from) {
+  if (&from == this) return;
+  Clear();
+  MergeFrom(from);
+}
+
+bool SvrSyncAddress::IsInitialized() const {
+
+  return true;
+}
+
+void SvrSyncAddress::Swap(SvrSyncAddress* other) {
+  if (other != this) {
+    peer_addresses_.Swap(&other->peer_addresses_);
+    std::swap(_has_bits_[0], other->_has_bits_[0]);
+    _unknown_fields_.Swap(&other->_unknown_fields_);
+    std::swap(_cached_size_, other->_cached_size_);
+  }
+}
+
+::google::protobuf::Metadata SvrSyncAddress::GetMetadata() const {
+  protobuf_AssignDescriptorsOnce();
+  ::google::protobuf::Metadata metadata;
+  metadata.descriptor = SvrSyncAddress_descriptor_;
+  metadata.reflection = SvrSyncAddress_reflection_;
   return metadata;
 }
 
