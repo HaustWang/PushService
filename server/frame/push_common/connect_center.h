@@ -41,6 +41,7 @@ public:
 	}
 
     void Init(std::string const& ip, unsigned short port, int server_type, int server_id, std::string const& local_listen_ip = "", int local_listen_port = 0);
+    void SetMessageProcessor(ConnectCenterMsgProcessor* processor);
 
     void ShortDebugString() const
     {

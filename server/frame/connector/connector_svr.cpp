@@ -294,7 +294,7 @@ int main(int argc, char** argv)
     }
 
     InitLibevent(g_event_base);
-    ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id);
+    ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id, GetWlanIp(), config.listen_port);
     while(true)
     {
         event_base_loop(g_event_base, EVLOOP_ONCE);

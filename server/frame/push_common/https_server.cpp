@@ -37,8 +37,8 @@
 
 
 #define DEFAULT_HTTPS_PORT 8421
-#define CA_CERT "ca.cert"
-#define SERVER_CERT "server.cert"
+#define CA_CERT "ca.crt"
+#define SERVER_CERT "server.crt"
 #define SERVER_KEY  "server.key"
 
 typedef union
@@ -75,7 +75,7 @@ void HttpsServer::InitEnv(unsigned short port, handle http_handle)
     SSL_load_error_strings ();
     OpenSSL_add_all_algorithms ();
 
-    log_info ("Using OpenSSL version \"%s\"\nand libevent version \"%s\"\n",
+    log_info ("Using OpenSSL version \"%s\" and libevent version \"%s\"",
           SSLeay_version (SSLEAY_VERSION),
           event_get_version ());
 
@@ -165,12 +165,12 @@ int HttpsServer::StartHttpsService (void)
 
     addr = evutil_inet_ntop (ss.ss.ss_family, inaddr, addrbuf,
                              sizeof (addrbuf));
-    if (NULL == addr)
+    if (NULL != addr)
         log_info ("https Listening on %s:%d\n", addr, got_port);
     else
     {
         log_error("evutil_inet_ntop failed\n");
-        return 1;
+        return -1;
     }
 
   return 0;

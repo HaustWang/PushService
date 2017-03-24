@@ -13,6 +13,7 @@
 #include "comm_server.h"
 #include "push_common.h"
 
+
 #define CONFIG_PATH "../conf/config.json"
 #define DEFAULT_PORT 19988
 #define DEFAULT_LOG_DIR "../log/"
@@ -22,6 +23,8 @@ extern volatile int loadcmd;
 extern volatile int stop;
 
 const static char server_name[][20] = {"center", "proxy", "connector", "phpproxy", "dbworker", "loader"};
+
+const int SYNC_INTER_TIME = 5;
 
 CenterInfo::CenterInfo() : ClientInfo()
 {
@@ -105,7 +108,7 @@ int Center::ProcessConfigReq(ClientInfo* client_info, const SvrMsgHead* head, co
     client_info->server_id = head->src_svr_id();
     client_info->is_register = true;
 
-    if(SERVER_TYPE_CENTER == head->src_svr_type() == SERVER_TYPE_CENTER)
+    if(SERVER_TYPE_CENTER == head->src_svr_type())
         return 0;
 
     //response get config
@@ -208,6 +211,8 @@ int Center::ProcessSyncAddr(ClientInfo* client_info, const SvrMsgHead* head, con
 
 int Center::SyncAddrToOther()
 {
+    if(m_server_addr.empty())   return 0;
+
     SvrMsgHead msg_head;
     SvrSyncAddress sync_addr;
 
@@ -221,6 +226,8 @@ int Center::SyncAddrToOther()
         }
     }
 
+    if(0 == sync_addr.peer_addresses_size())    return 0;
+
     for(int i = 0; i < m_ociv.size(); ++i)
     {
         FillMsgHead(&msg_head, SMT_SYNC_ADDRESS, m_ociv[i]->server_type);
@@ -232,6 +239,8 @@ int Center::SyncAddrToOther()
 
 int Center::SyncConnectorAddr()
 {
+    if(m_server_addr.empty())   return 0;
+
     SvrMsgHead msg_head;
     FillMsgHead(&msg_head, SMT_SYNC_ADDRESS, SERVER_TYPE_LOADER);
 
@@ -249,6 +258,7 @@ int Center::SyncConnectorAddr()
         }
     }
 
+    if(0 == sync_addr.peer_addresses_size())    return 0;
     const std::map<int, ClientInfo*>& client_map = ClientManage::Instance()->GetClientMap();
     for(std::map<int, ClientInfo*>::const_iterator client_it = client_map.begin(); client_it != client_map.end(); ++client_it)
     {
@@ -332,7 +342,6 @@ int Center::LoadConfig()
                 info.server_id = GetServerId();
                 info.server_type = SERVER_TYPE_CENTER;
                 info.processor = this;
-                info.Reconnect();
             }
         }
     }
@@ -407,12 +416,23 @@ int Center::Run(int argc, char **argv)
         return 0;
     }
 
+    time_t start = time(NULL);
+    time_t now = start;
     while (1 != stop)
     {
         event_base_loop(m_event_base, EVLOOP_NONBLOCK);
 
         //静默加载配置
         ReloadConfig();
+
+        now = time(NULL);
+        if(now - start > SYNC_INTER_TIME)
+        {
+            SyncAddrToOther();
+            SyncConnectorAddr();
+            start = now;
+        }
+
         usleep(1000);
     }
 

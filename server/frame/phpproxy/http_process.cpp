@@ -20,8 +20,6 @@ static void api_request_cb(struct evhttp_request *req, void *arg)
 
 HttpProcess::HttpProcess()
 {
-    srand(time(NULL));
-    seq = rand();
 }
 
 HttpProcess::~HttpProcess()
@@ -74,6 +72,7 @@ void HttpProcess::HttpRequest(struct evhttp_request *req, void *arg)
     int length = (int)evbuffer_get_length(evinput);
     evbuffer_remove(evinput, data, length);
 
+    log_info("push msg:%s", data);
     Json::Reader reader;
     Json::Value value;
     if(!reader.parse((const char*)data, (const char*)data+length, value))

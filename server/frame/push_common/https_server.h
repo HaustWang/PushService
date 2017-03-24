@@ -4,8 +4,7 @@
 
 #include "common_singleton.h"
 
-#define COMMON_PASSCODE "R23"
-
+struct evhttp_request;
 typedef void (*handle)(struct evhttp_request *req, void *arg);
 
 class HttpsServer

@@ -27,13 +27,8 @@ public:
 
 private:
     void GetRequestParam(struct evhttp_request *req, std::map<std::string, std::string> *request_parm);
-    unsigned int GetSeq()
-    {
-        return seq++;
-    }
     void SendResponse(struct evhttp_request *req, int ret, const std::string& msg);
 private:
-    unsigned int seq;
 };
 
 #endif /* HTTP_PROCESS_H_ */

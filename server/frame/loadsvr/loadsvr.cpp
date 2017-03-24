@@ -1,13 +1,3 @@
-#include "https_server.h"
-#include "log4cpp_log.h"
-#include "push_common.h"
-#include "push_proto_common.h"
-#include "push_proto_server.h"
-#include "comm_server.h"
-#include "connect_center.h"
-#include "https_server.h"
-#include "center_message_processor.h"
-
 #include <event2/bufferevent.h>
 #include <event2/bufferevent_ssl.h>
 #include <event2/event.h>
@@ -15,7 +5,17 @@
 #include <event2/buffer.h>
 #include <event2/util.h>
 #include <event2/keyvalq_struct.h>
+#include <evhttp.h>
 #include <vector>
+
+#include "https_server.h"
+#include "log4cpp_log.h"
+#include "push_common.h"
+#include "push_proto_common.h"
+#include "push_proto_server.h"
+#include "comm_server.h"
+#include "connect_center.h"
+#include "center_message_processor.h"
 
 
 #define LOG_NAME "loader"
@@ -36,49 +36,35 @@ static void send_document_cb (struct evhttp_request *req, void *arg)
 
     log_debug ("get request for <%s>\n", uri);
 
-    struct evhttp_uri *decoded = evhttp_uri_parse (uri);
-    if (NULL == decoded)
+    struct evkeyvalq all_param;
+    struct evkeyval *cur_param;
+    int iret = evhttp_parse_query_str(evhttp_uri_get_query(req->uri_elems), &all_param);
+
+    std::map<std::string,std::string> request_parm ;
+    if(0 == iret)
     {
-        printf ("It's not a good URI. Sending BADREQUEST\n");
-        evhttp_send_error (req, HTTP_BADREQUEST, 0);
-        return;
+        for (cur_param = all_param.tqh_first; cur_param != NULL; cur_param = cur_param->next.tqe_next)
+        {
+            request_parm[cur_param->key] = cur_param->value;
+            log_debug("request_parameter:key:%s, value=%s", cur_param->key, cur_param->value);
+        }
+        evhttp_clear_headers(&all_param);
     }
 
-    struct evkeyvalq kv;
-    memset (&kv, 0, sizeof (kv));
-    struct evbuffer *buf = evhttp_request_get_input_buffer (req);
-    evbuffer_add (buf, "", 1);    /* NUL-terminate the buffer */
-    char *payload = (char *) evbuffer_pullup (buf, -1);
-    if (0 != evhttp_parse_query_str (payload, &kv))
-    { printf ("Malformed payload. Sending BADREQUEST\n");
-      evhttp_send_error (req, HTTP_BADREQUEST, 0);
-      return;
-    }
+    std::string resp;
+    CENTERMSGPROINST.GetAddress(request_parm["client_id"], resp);
 
-    char *peer_addr;
-    ev_uint16_t peer_port;
-    struct evhttp_connection *con = evhttp_request_get_connection (req);
-    evhttp_connection_get_peer (con, &peer_addr, &peer_port);
-
-    const char *passcode = evhttp_find_header (&kv, "passcode");
-    char response[256];
-    evutil_snprintf (response, sizeof (response),
-                   "Hi %s!  I %s your passcode.\n", peer_addr,
-                   (0 == strcmp (passcode, COMMON_PASSCODE)
-                    ?  "liked"
-                    :  "didn't like"));
-    evhttp_clear_headers (&kv);   /* to free memory held by kv */
+    if(resp.empty())
+        resp.assign("doesnt have any connector running");
 
     struct evbuffer *evb = evbuffer_new ();
 
     evhttp_add_header (evhttp_request_get_output_headers (req),
                        "Content-Type", "application/x-yaml");
-    evbuffer_add (evb, response, strlen (response));
+    evbuffer_add (evb, resp.c_str(), resp.length());
 
     evhttp_send_reply (req, 200, "OK", evb);
 
-    if (NULL != decoded)
-        evhttp_uri_free (decoded);
     if (NULL != evb)
         evbuffer_free (evb);
 }
@@ -106,20 +92,10 @@ bool ReloadConfig()
     return false;
 }
 
-void NewConnect()
-{
-    if(ConnectToCenter::Instance()->HasNewAddress(SERVER_TYPE_CONNECTOR))
-    {
-        const std::vector<SvrAddress>& addrs = ConnectToCenter::Instance()->GetNewAddress(SERVER_TYPE_CONNECTOR);
-        for(std::vector<SvrAddress>::const_iterator it = addrs.begin(); it != addrs.end(); ++it)
-            CENTERMSGPROINST.AddConnectorAddr(ConnectToCenter::Instance()->fd, *it);
-
-        ConnectToCenter::Instance()->EraseNewAddress(SERVER_TYPE_CONNECTOR);
-    }
-}
-
 int main(int argc, char **argv)
 {
+    SingleInstance(argv[0]);
+
     Config config;
     config.svr_type = SERVER_TYPE_LOADER;
     config.need_listen = true;
@@ -140,7 +116,9 @@ int main(int argc, char **argv)
         return ret;
     }
 
+    CENTERMSGPROINST.Init(SERVER_TYPE_LOADER, config.svr_id);
     ConnectToCenter::Instance()->Init(config.center_ip, config.center_port, config.svr_type, config.svr_id);
+    ConnectToCenter::Instance()->SetMessageProcessor(&CENTERMSGPROINST);
 
     while(true)
     {
@@ -170,8 +148,6 @@ int main(int argc, char **argv)
 
         //检查是否有新配置
         ReloadConfig();
-
-        NewConnect();
 
         usleep(1000);
     }

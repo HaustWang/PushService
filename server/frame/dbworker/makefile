@@ -6,8 +6,7 @@ all: $(BINARY)
 
 -include $(PROJECT_DIR)/makefile.shared
 
-INC_FLAGS += -I/usr/local/mysql/include/
-LD_FLAGS += -BStatic -lmysql_wrap -lhiredis -rdynamic -lmysqlclient_r
+LD_FLAGS += -BStatic -lhiredis -rdynamic
 
 SRCS = $(wildcard *.cpp *.c *.cc *.cxx)
 OBJ = $(patsubst %.cpp, $(DEP_DIR)/%.o, $(patsubst %.c ,$(DEP_DIR)/%.o, $(patsubst %.cc, $(DEP_DIR)/%.o, $(patsubst %.cxx, $(DEP_DIR)/%.o, $(SRCS) ) ) ) )

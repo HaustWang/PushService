@@ -24,6 +24,18 @@ void ConnectToCenter::Init(std::string const& ip, unsigned short port, int serve
     Reconnect();
 }
 
+void ConnectToCenter::SetMessageProcessor(ConnectCenterMsgProcessor* processor)
+{
+    if(NULL == processor)
+        return ;
+
+    if(NULL != this->processor)
+        delete this->processor;
+
+    this->processor = processor;
+    this->processor->InitMessageIdMap();
+}
+
 void ConnectToCenter::AddServerAddress(google::protobuf::RepeatedPtrField<SvrAddress> const& field)
 {
     for(google::protobuf::RepeatedPtrField<SvrAddress>::const_iterator it = field.begin(); it != field.end(); ++it)
