@@ -26,7 +26,6 @@
 #include <dirent.h>
 #include <string>
 #include <vector>
-#include "comm_config.h"
 
 #define FLG_CTRL_QUIT	((BYTE)0x01)
 #define FLG_CTRL_RELOAD	((BYTE)0x02)
