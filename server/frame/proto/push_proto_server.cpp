@@ -298,7 +298,7 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
       ::google::protobuf::MessageFactory::generated_factory(),
       sizeof(SvrConfigReq));
   SvrConfig_descriptor_ = file->message_type(13);
-  static const int SvrConfig_offsets_[10] = {
+  static const int SvrConfig_offsets_[12] = {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_type_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_dir_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, log_level_),
@@ -309,6 +309,8 @@ void protobuf_AssignDesc_push_5fproto_5fserver_2eproto() {
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, php_port_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, redis_ip_),
     GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, redis_port_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, env_),
+    GOOGLE_PROTOBUF_GENERATED_MESSAGE_FIELD_OFFSET(SvrConfig, password_),
   };
   SvrConfig_reflection_ =
     new ::google::protobuf::internal::GeneratedMessageReflection(
@@ -486,30 +488,31 @@ void protobuf_AddDesc_push_5fproto_5fserver_2eproto() {
     " \003(\t\022\013\n\003msg\030\003 \001(\014\022\023\n\013expire_time\030\004 \001(\005\"H"
     "\n\nSvrAddress\022\020\n\010svr_type\030\001 \001(\005\022\016\n\006svr_id"
     "\030\002 \001(\005\022\n\n\002ip\030\003 \001(\t\022\014\n\004port\030\004 \001(\005\",\n\014SvrC"
-    "onfigReq\022\034\n\007address\030\001 \001(\0132\013.SvrAddress\"\316"
+    "onfigReq\022\034\n\007address\030\001 \001(\0132\013.SvrAddress\"\355"
     "\001\n\tSvrConfig\022\020\n\010log_type\030\001 \001(\005\022\017\n\007log_di"
     "r\030\002 \001(\t\022\021\n\tlog_level\030\003 \001(\005\022\022\n\nlog_config"
     "\030\004 \001(\014\022\030\n\020client_outoftime\030\025 \001(\005\022\023\n\013http"
     "_listen\030\037 \001(\005\022\020\n\010php_host\030  \001(\t\022\020\n\010php_p"
     "ort\030! \001(\005\022\020\n\010redis_ip\030) \001(\t\022\022\n\nredis_por"
-    "t\030* \001(\005\"P\n\rSvrConfigResp\022\032\n\006config\030\001 \001(\013"
-    "2\n.SvrConfig\022#\n\016peer_addresses\030\002 \003(\0132\013.S"
-    "vrAddress\":\n\023SvrBroadcastAddress\022#\n\016peer"
-    "_addresses\030\001 \003(\0132\013.SvrAddress\"5\n\016SvrSync"
-    "Address\022#\n\016peer_addresses\030\001 \003(\0132\013.SvrAdd"
-    "ress*\301\001\n\nServerType\022\026\n\022SERVER_TYPE_CENTE"
-    "R\020\000\022\025\n\021SERVER_TYPE_PROXY\020\001\022\031\n\025SERVER_TYP"
-    "E_CONNECTOR\020\002\022\031\n\025SERVER_TYPE_PHP_PROXY\020\003"
-    "\022\031\n\025SERVER_TYPE_DB_WORKER\020\004\022\026\n\022SERVER_TY"
-    "PE_LOADER\020\005\022\033\n\027SERVER_TYPE_THIRD_PROXY\020\006"
-    "*\261\002\n\nSvrMsgType\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_"
-    "REG_RESP\020\002\022\023\n\017SMT_UPDATE_USER\020\003\022\024\n\020SMT_U"
-    "SER_MSG_ACK\020\004\022\025\n\021SMT_USER_READ_MSG\020\005\022\021\n\r"
-    "SMT_KICK_USER\020\007\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n"
-    "\014SMT_PUSH_MSG\020\t\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016S"
-    "MT_CONFIG_REQ\020\r\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022"
-    "SMT_BROADCAST_ADDR\020\017\022\030\n\024SMT_BROADCAST_CO"
-    "NFIG\020\020\022\024\n\020SMT_SYNC_ADDRESS\020\021", 1828);
+    "t\030* \001(\005\022\013\n\003env\030+ \001(\t\022\020\n\010password\030, \001(\t\"P"
+    "\n\rSvrConfigResp\022\032\n\006config\030\001 \001(\0132\n.SvrCon"
+    "fig\022#\n\016peer_addresses\030\002 \003(\0132\013.SvrAddress"
+    "\":\n\023SvrBroadcastAddress\022#\n\016peer_addresse"
+    "s\030\001 \003(\0132\013.SvrAddress\"5\n\016SvrSyncAddress\022#"
+    "\n\016peer_addresses\030\001 \003(\0132\013.SvrAddress*\301\001\n\n"
+    "ServerType\022\026\n\022SERVER_TYPE_CENTER\020\000\022\025\n\021SE"
+    "RVER_TYPE_PROXY\020\001\022\031\n\025SERVER_TYPE_CONNECT"
+    "OR\020\002\022\031\n\025SERVER_TYPE_PHP_PROXY\020\003\022\031\n\025SERVE"
+    "R_TYPE_DB_WORKER\020\004\022\026\n\022SERVER_TYPE_LOADER"
+    "\020\005\022\033\n\027SERVER_TYPE_THIRD_PROXY\020\006*\261\002\n\nSvrM"
+    "sgType\022\017\n\013SMT_REG_REQ\020\001\022\020\n\014SMT_REG_RESP\020"
+    "\002\022\023\n\017SMT_UPDATE_USER\020\003\022\024\n\020SMT_USER_MSG_A"
+    "CK\020\004\022\025\n\021SMT_USER_READ_MSG\020\005\022\021\n\rSMT_KICK_"
+    "USER\020\007\022\024\n\020SMT_TRANSFER_MSG\020\010\022\020\n\014SMT_PUSH"
+    "_MSG\020\t\022\022\n\016SMT_INSERT_MSG\020\n\022\022\n\016SMT_CONFIG"
+    "_REQ\020\r\022\023\n\017SMT_CONFIG_RESP\020\016\022\026\n\022SMT_BROAD"
+    "CAST_ADDR\020\017\022\030\n\024SMT_BROADCAST_CONFIG\020\020\022\024\n"
+    "\020SMT_SYNC_ADDRESS\020\021", 1859);
   ::google::protobuf::MessageFactory::InternalRegisterGeneratedFile(
     "push_proto_server.proto", &protobuf_RegisterTypes);
   SvrMsgHead::default_instance_ = new SvrMsgHead();
@@ -4307,6 +4310,8 @@ const int SvrConfig::kPhpHostFieldNumber;
 const int SvrConfig::kPhpPortFieldNumber;
 const int SvrConfig::kRedisIpFieldNumber;
 const int SvrConfig::kRedisPortFieldNumber;
+const int SvrConfig::kEnvFieldNumber;
+const int SvrConfig::kPasswordFieldNumber;
 #endif  // !_MSC_VER
 
 SvrConfig::SvrConfig()
@@ -4335,6 +4340,8 @@ void SvrConfig::SharedCtor() {
   php_port_ = 0;
   redis_ip_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   redis_port_ = 0;
+  env_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
 }
 
@@ -4354,6 +4361,12 @@ void SvrConfig::SharedDtor() {
   }
   if (redis_ip_ != &::google::protobuf::internal::kEmptyString) {
     delete redis_ip_;
+  }
+  if (env_ != &::google::protobuf::internal::kEmptyString) {
+    delete env_;
+  }
+  if (password_ != &::google::protobuf::internal::kEmptyString) {
+    delete password_;
   }
   if (this != default_instance_) {
   }
@@ -4410,6 +4423,16 @@ void SvrConfig::Clear() {
       }
     }
     redis_port_ = 0;
+    if (has_env()) {
+      if (env_ != &::google::protobuf::internal::kEmptyString) {
+        env_->clear();
+      }
+    }
+    if (has_password()) {
+      if (password_ != &::google::protobuf::internal::kEmptyString) {
+        password_->clear();
+      }
+    }
   }
   ::memset(_has_bits_, 0, sizeof(_has_bits_));
   mutable_unknown_fields()->Clear();
@@ -4577,6 +4600,40 @@ bool SvrConfig::MergePartialFromCodedStream(
         } else {
           goto handle_uninterpreted;
         }
+        if (input->ExpectTag(346)) goto parse_env;
+        break;
+      }
+
+      // optional string env = 43;
+      case 43: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_env:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_env()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->env().data(), this->env().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
+        if (input->ExpectTag(354)) goto parse_password;
+        break;
+      }
+
+      // optional string password = 44;
+      case 44: {
+        if (::google::protobuf::internal::WireFormatLite::GetTagWireType(tag) ==
+            ::google::protobuf::internal::WireFormatLite::WIRETYPE_LENGTH_DELIMITED) {
+         parse_password:
+          DO_(::google::protobuf::internal::WireFormatLite::ReadString(
+                input, this->mutable_password()));
+          ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+            this->password().data(), this->password().length(),
+            ::google::protobuf::internal::WireFormat::PARSE);
+        } else {
+          goto handle_uninterpreted;
+        }
         if (input->ExpectAtEnd()) return true;
         break;
       }
@@ -4662,6 +4719,24 @@ void SvrConfig::SerializeWithCachedSizes(
     ::google::protobuf::internal::WireFormatLite::WriteInt32(42, this->redis_port(), output);
   }
 
+  // optional string env = 43;
+  if (has_env()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->env().data(), this->env().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      43, this->env(), output);
+  }
+
+  // optional string password = 44;
+  if (has_password()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->password().data(), this->password().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    ::google::protobuf::internal::WireFormatLite::WriteString(
+      44, this->password(), output);
+  }
+
   if (!unknown_fields().empty()) {
     ::google::protobuf::internal::WireFormat::SerializeUnknownFields(
         unknown_fields(), output);
@@ -4735,6 +4810,26 @@ void SvrConfig::SerializeWithCachedSizes(
   // optional int32 redis_port = 42;
   if (has_redis_port()) {
     target = ::google::protobuf::internal::WireFormatLite::WriteInt32ToArray(42, this->redis_port(), target);
+  }
+
+  // optional string env = 43;
+  if (has_env()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->env().data(), this->env().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        43, this->env(), target);
+  }
+
+  // optional string password = 44;
+  if (has_password()) {
+    ::google::protobuf::internal::WireFormat::VerifyUTF8String(
+      this->password().data(), this->password().length(),
+      ::google::protobuf::internal::WireFormat::SERIALIZE);
+    target =
+      ::google::protobuf::internal::WireFormatLite::WriteStringToArray(
+        44, this->password(), target);
   }
 
   if (!unknown_fields().empty()) {
@@ -4820,6 +4915,20 @@ int SvrConfig::ByteSize() const {
           this->redis_port());
     }
 
+    // optional string env = 43;
+    if (has_env()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->env());
+    }
+
+    // optional string password = 44;
+    if (has_password()) {
+      total_size += 2 +
+        ::google::protobuf::internal::WireFormatLite::StringSize(
+          this->password());
+    }
+
   }
   if (!unknown_fields().empty()) {
     total_size +=
@@ -4879,6 +4988,12 @@ void SvrConfig::MergeFrom(const SvrConfig& from) {
     if (from.has_redis_port()) {
       set_redis_port(from.redis_port());
     }
+    if (from.has_env()) {
+      set_env(from.env());
+    }
+    if (from.has_password()) {
+      set_password(from.password());
+    }
   }
   mutable_unknown_fields()->MergeFrom(from.unknown_fields());
 }
@@ -4912,6 +5027,8 @@ void SvrConfig::Swap(SvrConfig* other) {
     std::swap(php_port_, other->php_port_);
     std::swap(redis_ip_, other->redis_ip_);
     std::swap(redis_port_, other->redis_port_);
+    std::swap(env_, other->env_);
+    std::swap(password_, other->password_);
     std::swap(_has_bits_[0], other->_has_bits_[0]);
     _unknown_fields_.Swap(&other->_unknown_fields_);
     std::swap(_cached_size_, other->_cached_size_);

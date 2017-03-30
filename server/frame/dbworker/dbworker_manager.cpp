@@ -28,7 +28,8 @@ DbWorkerMgr::~DbWorkerMgr()
 
 int DbWorkerMgr::Init()
 {
-    int iRet = m_RedisManagerMsg.InitClient(ConnectToCenter::Instance()->GetConfig().redis_ip(), ConnectToCenter::Instance()->GetConfig().redis_port());
+    const SvrConfig& svr_config = ConnectToCenter::Instance()->GetConfig();
+    int iRet = m_RedisManagerMsg.InitClient(svr_config.redis_ip(), svr_config.redis_port(), svr_config.env(), svr_config.password());
     if (iRet != 0)
     {
         log_warning("Init redis message failed, ret :%d\n", iRet);

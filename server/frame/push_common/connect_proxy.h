@@ -10,6 +10,7 @@
 #include <google/protobuf/message.h>
 #include "log4cpp_log.h"
 #include "push_proto_common.h"
+#include "push_proto_server.h"
 #include "push_common.h"
 #include "base.h"
 #include "message_processor.h"
@@ -80,8 +81,7 @@ public:
         }
     }
 
-    void AddProxy(ServerAddr const& server_addr);
-    void AddProxy(std::string const& ip, unsigned short port);
+    void AddProxy(SvrAddress const& svr_addr);
 
     int ServerId() { return m_server_id; }
     int ServerType() { return m_server_type; }

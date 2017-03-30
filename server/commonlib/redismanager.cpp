@@ -18,10 +18,12 @@ RedisManager::~RedisManager()
     }
 }
 
-int RedisManager::InitClient(std::string const& ip, unsigned short port)
+int RedisManager::InitClient(std::string const& ip, unsigned short port, std::string const& env, std::string const& passwd)
 {
     redis_server_ip_ = ip;
     port_ = port;
+    env_ = env;
+    passwd_ = passwd;
     return Connect();
 }
 
@@ -42,7 +44,7 @@ int RedisManager::Connect()
         return RedisServerInvaild;
     }
 
-    return RedisSuccess;
+    return Authorize();
 }
 
 int RedisManager::ReConnect()
@@ -53,6 +55,32 @@ int RedisManager::ReConnect()
         connect_ = NULL;
     }
     return Connect();
+}
+
+int RedisManager::Authorize()
+{
+    if("test" == env_)   return RedisSuccess;
+
+    if("AliCloud" == env_)
+    {
+        redisReply* reply = (redisReply *)redisCommand(connect_, "auth %s", passwd_.c_str());
+        if (NULL == reply)
+        {
+            log_error("auth failed:%s", passwd_.c_str()); 
+            return RedisSystemError;
+        }
+
+        if (reply->type != REDIS_REPLY_STATUS || 0 != strncasecmp(reply->str, "OK", 2))
+        {
+            log_error("auth failed, type%d err:%s, passwd_:%s\n", reply->type, reply->str, passwd_.c_str());
+            freeReplyObject(reply);
+            return RedisSystemError;
+        }
+
+        return RedisSuccess; 
+    }
+
+    return RedisServerInvaild;
 }
 
 int RedisManager::UpdateOneHashField(std::string const& key_name, FieldInfo const& field, int expire_time)

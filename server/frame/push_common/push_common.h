@@ -45,7 +45,6 @@ bool IsAddressListening(const char *ip, unsigned short port);
 std::string GetLocalListenIp(unsigned short port, bool islan = false);
 std::string GetWlanIp();
 
-
 class MessageProcessor;
 
 int InitLibevent(struct event_base* &base);

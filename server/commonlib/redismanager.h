@@ -46,7 +46,7 @@ public:
     }
     RedisManager();
     ~RedisManager();
-    int InitClient(std::string const& ip, unsigned short port);
+    int InitClient(std::string const& ip, unsigned short port, std::string const &env, std::string const& passwd);
 
     //get hash里多个field
     int GetMultiHashField(int key, std::vector<std::string>& field_name, std::vector<FieldInfo>& field_list);
@@ -111,10 +111,13 @@ public:
 private:
     int Connect();
     int ReConnect();
+    int Authorize();
 private:
     std::string redis_server_ip_;
     unsigned short port_;
     char command_[kMaxCommandLen];
+    std::string env_;
+    std::string passwd_;
 
     redisContext* connect_;
 };

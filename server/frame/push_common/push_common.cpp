@@ -2,6 +2,7 @@
 #include <openssl/md5.h>
 #include <sys/time.h>
 #include <sstream>
+#include <stdio.h>
 
 #include <event2/util.h>
 
@@ -442,8 +443,6 @@ int ClientConnect(const char *ip, unsigned short port, struct event_base* &base,
 
 }
 
-
-
 int InitLibevent(struct event_base* &base)
 {
     if(NULL == base)
@@ -507,14 +506,14 @@ int ParseArg (int argc, char **argv, Config& config)
         }
         else if (result == 'h')
         {
-	        printf("usage %s -s 1 -m 127.0.0.1:19988 %s\n", argv[0], config.need_listen?"-p 3333":"");
+	        printf("[%s:%d] usage %s -s 1 -m 127.0.0.1:19988 %s\n", __FILE__, __LINE__, argv[0], config.need_listen?"-p 3333":"");
 	        exit(1);
         }
     }
 
     if (config.svr_id < 0)
     {
-        printf("usage %s -s 1 -m 127.0.0.1:19988 %s\n", argv[0], config.need_listen?"-p 3333":"");
+        printf("[%s:%d] usage %s -s 1 -m 127.0.0.1:19988 %s\n", __FILE__, __LINE__, argv[0], config.need_listen?"-p 3333":"");
         exit(1);
     }
     return 0;
@@ -535,11 +534,26 @@ bool IsAddressListening(const char *ip, unsigned short port)
     return ret;
 }
 
+void ReplaceLastSpace(char *str)
+{
+    if(NULL == str || 0 == strlen(str))     return;
+
+    int len = strlen(str);
+    while(0 != len)
+    {
+        if(!isspace(str[len-1]))  break;
+
+        str[len-1] = '\0';
+        --len;
+    }
+}
+
 std::string GetLocalListenIp(unsigned short port, bool islan)
 {
     char cmd[128] = {0};
-    snprintf(cmd, sizeof(cmd), "netstat -nl |grep %hd |awk '{print $4}' | awk -F: '{print $1}'", port);
+    snprintf(cmd, sizeof(cmd), "netstat -nl|grep %hd|awk \'{print $4}\'|awk -F: \'{print $1}\'", port);
 
+    printf("[%s:%d] get local ip | cmd=\"%s\" | islan:%s\n", __FILE__, __LINE__, cmd, islan?"true":"false");
     FILE *f = popen(cmd, "r");
     if(NULL == f)   return "";
 
@@ -547,12 +561,14 @@ std::string GetLocalListenIp(unsigned short port, bool islan)
     char *pret = fgets(loc_ip, sizeof(loc_ip), f);
     pclose(f);
 
-    if(islan)
+    ReplaceLastSpace(loc_ip);
+    printf("[%s:%d] get local ip | cmd=\"%s\" | ip=%s | islan=%s | pret=%p\n", __FILE__, __LINE__, cmd, loc_ip, islan?"true":"false", pret);
+	if(islan)
     {
-        if(strcmp("0.0.0.0", loc_ip) == 0)
+        if(strncmp("0.0.0.0", loc_ip, 7) == 0)
         {
             memset(cmd, 0, sizeof(cmd));
-            snprintf(cmd, sizeof(cmd), "ifconfig|grep 192.168|xargs echo|awk -F'[: ]' '{print $3}'");
+            snprintf(cmd, sizeof(cmd), "ifconfig|grep 192.168|xargs echo|awk -F\'[: ]\' \'{print $3}\'");
 
             f = popen(cmd, "r");
             if(NULL == f)   return loc_ip;
@@ -560,12 +576,16 @@ std::string GetLocalListenIp(unsigned short port, bool islan)
             pret = fgets(loc_ip, sizeof(loc_ip), f);
             pclose(f);
 
+            ReplaceLastSpace(loc_ip);
+            printf("[%s:%d] get local ip | cmd=\"%s\" | ip=%s | islan=%s | pret=%p\n", __FILE__, __LINE__, cmd, loc_ip, islan?"true":"false", pret);
+
             if(NULL == pret)    return "0.0.0.0";
             return loc_ip;
         }
     }
 
     if(NULL == pret)    return "";
+
     return loc_ip;
 }
 
@@ -582,5 +602,7 @@ std::string GetWlanIp()
     pclose(f);
 
     if(NULL == pret)    return "";
+
+    ReplaceLastSpace(ip);
     return ip;
 }

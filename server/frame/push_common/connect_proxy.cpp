@@ -17,28 +17,17 @@ void ConnectProxyMgr::init(int server_id, int server_type, ProxyMessageProcessor
     m_processor->SetSvrInfo(m_server_type, m_server_id);
 }
 
-void ConnectProxyMgr::AddProxy(ServerAddr const& server_addr)
+void ConnectProxyMgr::AddProxy(SvrAddress const& svr_addr)
 {
+    if(GetProxy(svr_addr.svr_id()) != NULL)   return;
+
     m_ociv.push_back(new ProxyInfo());
 
     ProxyInfo& info = *m_ociv.back();
-    info.remote_ip = server_addr.server_ip;
-    info.remote_port = server_addr.server_port;
-    info.server_id = m_server_id;
-    info.server_type = m_server_type;
-    info.processor = m_processor;
-    info.Reconnect();
-}
-
-void ConnectProxyMgr::AddProxy(std::string const& ip, unsigned short port)
-{
-    m_ociv.push_back(new ProxyInfo());
-
-    ProxyInfo& info = *m_ociv.back();
-    info.remote_ip = ip;
-    info.remote_port = port;
-    info.server_id = m_server_id;
-    info.server_type = m_server_type;
+    info.remote_ip = svr_addr.ip();
+    info.remote_port = svr_addr.port();
+    info.server_id = svr_addr.svr_id();
+    info.server_type = SERVER_TYPE_PROXY;
     info.processor = m_processor;
     info.Reconnect();
 }
@@ -77,8 +66,8 @@ int ProxyMessageProcessor::RegisterToServer(const ClientInfo* client_info)
 	SvrRegRequest req;
 
 	FillMsgHead(&mh, SMT_REG_REQ, SERVER_TYPE_PROXY);
-	req.set_svr_id(client_info->server_id);
-	req.set_svr_type(client_info->server_type);
+	req.set_svr_id(GetServerId());
+	req.set_svr_type(GetServerType());
     log_debug("register to server, client_info:%s", client_info->ShortDebugString().c_str());
 	return SendMessageToServer(client_info, &mh, &req);
 }

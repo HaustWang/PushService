@@ -180,11 +180,11 @@ void SingleInstance(const char* prog_name)
 	int lock_fd = open(prog_name, O_RDONLY);
 	if (lock_fd < 0)
 	{
-		printf("Open lock file %s failed, server init failed! %s\n", prog_name, strerror(errno));
+		printf("[%s:%d] Open lock file %s failed, server init failed! %s\n", __FILE__, __LINE__, prog_name, strerror(errno));
 		exit(1);
 	}
 	if (::flock(lock_fd, LOCK_EX | LOCK_NB) < 0) {
-		printf("%s is already running!\n", prog_name);
+		printf("[%s:%d] %s is already running!\n", __FILE__, __LINE__, prog_name);
 		exit(1);
 	}
 	close(lock_fd);

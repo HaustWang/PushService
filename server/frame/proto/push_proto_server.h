@@ -1586,6 +1586,30 @@ class SvrConfig : public ::google::protobuf::Message {
   inline ::google::protobuf::int32 redis_port() const;
   inline void set_redis_port(::google::protobuf::int32 value);
 
+  // optional string env = 43;
+  inline bool has_env() const;
+  inline void clear_env();
+  static const int kEnvFieldNumber = 43;
+  inline const ::std::string& env() const;
+  inline void set_env(const ::std::string& value);
+  inline void set_env(const char* value);
+  inline void set_env(const char* value, size_t size);
+  inline ::std::string* mutable_env();
+  inline ::std::string* release_env();
+  inline void set_allocated_env(::std::string* env);
+
+  // optional string password = 44;
+  inline bool has_password() const;
+  inline void clear_password();
+  static const int kPasswordFieldNumber = 44;
+  inline const ::std::string& password() const;
+  inline void set_password(const ::std::string& value);
+  inline void set_password(const char* value);
+  inline void set_password(const char* value, size_t size);
+  inline ::std::string* mutable_password();
+  inline ::std::string* release_password();
+  inline void set_allocated_password(::std::string* password);
+
   // @@protoc_insertion_point(class_scope:SvrConfig)
  private:
   inline void set_has_log_type();
@@ -1608,6 +1632,10 @@ class SvrConfig : public ::google::protobuf::Message {
   inline void clear_has_redis_ip();
   inline void set_has_redis_port();
   inline void clear_has_redis_port();
+  inline void set_has_env();
+  inline void clear_has_env();
+  inline void set_has_password();
+  inline void clear_has_password();
 
   ::google::protobuf::UnknownFieldSet _unknown_fields_;
 
@@ -1621,9 +1649,11 @@ class SvrConfig : public ::google::protobuf::Message {
   ::std::string* redis_ip_;
   ::google::protobuf::int32 php_port_;
   ::google::protobuf::int32 redis_port_;
+  ::std::string* env_;
+  ::std::string* password_;
 
   mutable int _cached_size_;
-  ::google::protobuf::uint32 _has_bits_[(10 + 31) / 32];
+  ::google::protobuf::uint32 _has_bits_[(12 + 31) / 32];
 
   friend void  protobuf_AddDesc_push_5fproto_5fserver_2eproto();
   friend void protobuf_AssignDesc_push_5fproto_5fserver_2eproto();
@@ -3579,6 +3609,146 @@ inline ::google::protobuf::int32 SvrConfig::redis_port() const {
 inline void SvrConfig::set_redis_port(::google::protobuf::int32 value) {
   set_has_redis_port();
   redis_port_ = value;
+}
+
+// optional string env = 43;
+inline bool SvrConfig::has_env() const {
+  return (_has_bits_[0] & 0x00000400u) != 0;
+}
+inline void SvrConfig::set_has_env() {
+  _has_bits_[0] |= 0x00000400u;
+}
+inline void SvrConfig::clear_has_env() {
+  _has_bits_[0] &= ~0x00000400u;
+}
+inline void SvrConfig::clear_env() {
+  if (env_ != &::google::protobuf::internal::kEmptyString) {
+    env_->clear();
+  }
+  clear_has_env();
+}
+inline const ::std::string& SvrConfig::env() const {
+  return *env_;
+}
+inline void SvrConfig::set_env(const ::std::string& value) {
+  set_has_env();
+  if (env_ == &::google::protobuf::internal::kEmptyString) {
+    env_ = new ::std::string;
+  }
+  env_->assign(value);
+}
+inline void SvrConfig::set_env(const char* value) {
+  set_has_env();
+  if (env_ == &::google::protobuf::internal::kEmptyString) {
+    env_ = new ::std::string;
+  }
+  env_->assign(value);
+}
+inline void SvrConfig::set_env(const char* value, size_t size) {
+  set_has_env();
+  if (env_ == &::google::protobuf::internal::kEmptyString) {
+    env_ = new ::std::string;
+  }
+  env_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SvrConfig::mutable_env() {
+  set_has_env();
+  if (env_ == &::google::protobuf::internal::kEmptyString) {
+    env_ = new ::std::string;
+  }
+  return env_;
+}
+inline ::std::string* SvrConfig::release_env() {
+  clear_has_env();
+  if (env_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = env_;
+    env_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SvrConfig::set_allocated_env(::std::string* env) {
+  if (env_ != &::google::protobuf::internal::kEmptyString) {
+    delete env_;
+  }
+  if (env) {
+    set_has_env();
+    env_ = env;
+  } else {
+    clear_has_env();
+    env_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
+}
+
+// optional string password = 44;
+inline bool SvrConfig::has_password() const {
+  return (_has_bits_[0] & 0x00000800u) != 0;
+}
+inline void SvrConfig::set_has_password() {
+  _has_bits_[0] |= 0x00000800u;
+}
+inline void SvrConfig::clear_has_password() {
+  _has_bits_[0] &= ~0x00000800u;
+}
+inline void SvrConfig::clear_password() {
+  if (password_ != &::google::protobuf::internal::kEmptyString) {
+    password_->clear();
+  }
+  clear_has_password();
+}
+inline const ::std::string& SvrConfig::password() const {
+  return *password_;
+}
+inline void SvrConfig::set_password(const ::std::string& value) {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  password_->assign(value);
+}
+inline void SvrConfig::set_password(const char* value) {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  password_->assign(value);
+}
+inline void SvrConfig::set_password(const char* value, size_t size) {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  password_->assign(reinterpret_cast<const char*>(value), size);
+}
+inline ::std::string* SvrConfig::mutable_password() {
+  set_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    password_ = new ::std::string;
+  }
+  return password_;
+}
+inline ::std::string* SvrConfig::release_password() {
+  clear_has_password();
+  if (password_ == &::google::protobuf::internal::kEmptyString) {
+    return NULL;
+  } else {
+    ::std::string* temp = password_;
+    password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+    return temp;
+  }
+}
+inline void SvrConfig::set_allocated_password(::std::string* password) {
+  if (password_ != &::google::protobuf::internal::kEmptyString) {
+    delete password_;
+  }
+  if (password) {
+    set_has_password();
+    password_ = password;
+  } else {
+    clear_has_password();
+    password_ = const_cast< ::std::string*>(&::google::protobuf::internal::kEmptyString);
+  }
 }
 
 // -------------------------------------------------------------------

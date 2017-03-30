@@ -82,6 +82,7 @@ int ConnectToCenter::SendConfigReq()
     {
         SvrAddress* address = req.mutable_address();
         address->set_svr_type(processor->GetServerType());
+        address->set_svr_id(processor->GetServerId());
         address->set_ip(m_listen_ip);
         address->set_port(m_listen_port);
     }

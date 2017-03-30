@@ -86,6 +86,7 @@ int MessageProcessor::FillMsgHead(SvrMsgHead* head, const SvrMsgType type, const
     if(NULL == src_head)
     {
         head->set_dst_svr_type(dst_svr_type);
+        head->set_dst_svr_id(0);
     }
     else
     {

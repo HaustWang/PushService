@@ -34,14 +34,17 @@ int InitNet()
     return 0;
 }
 
-bool ReloadConfig()
+bool ReloadConfig(int svr_id)
 {
     if(ConnectToCenter::Instance()->IsNewConfig())
     {
         const SvrConfig& config = ConnectToCenter::Instance()->GetConfig();
         set_log_type(config.log_type());
 
-        init_log(LOG_NAME, config.log_dir().c_str(),config.log_config().c_str());
+        char log_name[64] = {0};
+        snprintf(log_name, sizeof(log_name), LOG_NAME "_%d", svr_id);
+
+        init_log(log_name, config.log_dir().c_str(),config.log_config().c_str());
         set_log_level(config.log_level());
         ConnectToCenter::Instance()->SetNewConfig(false);
         return true;
@@ -56,7 +59,7 @@ void NewConnect()
     {
         const std::vector<SvrAddress>& addrs = ConnectToCenter::Instance()->GetNewAddress(SERVER_TYPE_PROXY);
         for(std::vector<SvrAddress>::const_iterator it = addrs.begin(); it != addrs.end(); ++it)
-            ProxyMgr.AddProxy(it->ip(), it->port());
+            ProxyMgr.AddProxy(*it);
 
         ConnectToCenter::Instance()->EraseNewAddress(SERVER_TYPE_PROXY);
     }
@@ -72,7 +75,7 @@ int main(int argc, char **argv)
     ParseArg(argc, argv, config);
     if(!IsAddressListening(config.center_ip.c_str(), config.center_port))
     {
-        printf("center server not startted! address:%s:%hd\n", config.center_ip.c_str(), config.center_port);
+        printf("[%s:%d] center server not startted! address:%s:%hd\n", __FILE__, __LINE__, config.center_ip.c_str(), config.center_port);
         return -1;
     }
 
@@ -81,7 +84,7 @@ int main(int argc, char **argv)
     int ret = InitNet();
     if (ret != 0)
     {
-        printf("InitNet failed, ret:%d\n", ret);
+        printf("[%s:%d] InitNet failed, ret:%d\n", __FILE__, __LINE__, ret);
         return ret;
     }
 
@@ -90,7 +93,7 @@ int main(int argc, char **argv)
     while(true)
     {
         event_base_loop(g_event_base, EVLOOP_ONCE);
-        if(ReloadConfig())
+        if(ReloadConfig(config.svr_id))
             break;
     }
 
@@ -121,7 +124,7 @@ int main(int argc, char **argv)
         DbWorkerMgrInst.CheckMsg();
 
         //检查是否有新配置
-        ReloadConfig();
+        ReloadConfig(config.svr_id);
 
         NewConnect();
 

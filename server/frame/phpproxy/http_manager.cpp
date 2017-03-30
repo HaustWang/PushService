@@ -38,7 +38,7 @@ int HttpManager::ReportData(int64_t msgid, std::string const client_id, int acti
     if(client_id.empty() || msgid < 0 || action < 0)    return -1;
 
     std::ostringstream oss;
-    oss << "/push/report?client_id=" << client_id << "&msgid=" << msgid << "&action=" << action;
+    oss << "/pushd/report?client_id=" << client_id << "&msgid=" << msgid << "&action=" << action;
 
     return send_msgproxy_client_.Query(oss.str().c_str());
 }

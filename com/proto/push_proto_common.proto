@@ -1,5 +1,3 @@
-// package push;
-
 //通用正确和错误码
 enum ResultCode
 {

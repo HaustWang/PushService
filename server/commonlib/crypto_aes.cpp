@@ -1,4 +1,5 @@
 #include "crypto_aes.h"
+#include <string.h>
 
 AES::AES()
 {
